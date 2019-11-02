@@ -1,0 +1,8 @@
+.classpath
+.project
+.settings
+.sts4-cache
+
+target
+*~
+*.class
