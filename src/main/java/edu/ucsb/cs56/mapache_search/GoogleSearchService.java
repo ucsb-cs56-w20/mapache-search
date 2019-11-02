@@ -23,7 +23,7 @@ public class GoogleSearchService implements SearchService {
 
     private Logger logger = LoggerFactory.getLogger(GoogleSearchService.class);
     private String searchId = "001539284272632380888:kn5n6ubsr7x";
-    private String apiKey;
+    private String apiKey; // TODO: set API key per user somehow
 
     public GoogleSearchService(@Value("${google.search.api.key}") String apiKey) {
         this.apiKey = apiKey;
