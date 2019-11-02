@@ -19,27 +19,24 @@ import org.springframework.web.client.RestTemplate;
  * Service object that wraps the Google Custom Search API
  */
 @Service
-public class GoogleSearchService implements SeachService {
+public class GoogleSearchService implements SearchService {
 
     private Logger logger = LoggerFactory.getLogger(GoogleSearchService.class);
+    private String searchId = "001539284272632380888:kn5n6ubsr7x";
     private String apiKey;
-    private String searchId;
 
-    /*public GoogleSearchService(@Value("${google.search.api.key}") String apiKey, @Value("${google.search.id}") String searchId) {
+    public GoogleSearchService(@Value("${google.search.api.key}") String apiKey) {
+        this.apiKey = apiKey;
+        logger.info("apiKey=" + apiKey);
+    }
+
+    /*public GoogleSearchService(String apiKey, String searchId) {
         this.apiKey = apiKey;
         logger.info("apiKey=" + apiKey);
 
         this.searchId = searchId;
         logger.info("searchId=" + searchId);
     }*/
-
-    public GoogleSearchService(String apiKey, String searchId) {
-        this.apiKey = apiKey;
-        logger.info("apiKey=" + apiKey);
-
-        this.searchId = searchId;
-        logger.info("searchId=" + searchId);
-    }
 
     public String getJSON(String query) {
 
@@ -54,7 +51,7 @@ public class GoogleSearchService implements SeachService {
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
 
         String uri = "https://www.googleapis.com/customsearch/v1";
-        String params = String.format("?key=%s&cx=%s&q=%s&alt=json"",
+        String params = String.format("?key=%s&cx=%s&q=%s&alt=json",
             apiKey, searchId, query);
         String url = uri + params;
         logger.info("url=" + url);

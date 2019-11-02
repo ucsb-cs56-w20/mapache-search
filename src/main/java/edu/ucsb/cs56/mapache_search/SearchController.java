@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SearchController {
 
-    //@Autowired   
-    //private SearchService searchService;
-    // Replace with autowired after you get config working
-    private SearchService searchService = new GoogleSearchService("AIzaSyCgpvqRMLouvFw-LfBiDFO8v0oY1YZUmaw", "001539284272632380888:kn5n6ubsr7x");
+    @Autowired   
+    private SearchService searchService;
 
     @GetMapping("/")
     public String home(Model model) {

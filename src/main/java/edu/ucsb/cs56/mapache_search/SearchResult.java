@@ -6,13 +6,13 @@ public class SearchResult  {
 
     }
 
-    private String result;
+    private String query;
 
-    public String getResult() {
-        return this.result;
+    public String getQuery() {
+        return this.query;
     }
-    public void setResult(String result) {
-        this.result = result;
+    public void setQuery(String query) {
+        this.query = query;
     }
 
 } 
