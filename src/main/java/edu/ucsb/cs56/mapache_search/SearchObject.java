@@ -1,8 +1,8 @@
 package edu.ucsb.cs56.mapache_search;
 
-public class SearchResult  {
+public class SearchObject  {
 
-    public SearchResult() {
+    public SearchObject() {
 
     }
 
