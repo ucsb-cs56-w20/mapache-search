@@ -1,3 +1,4 @@
 {
- "google.search.api.key":"fill-it-in"
+    "google.search.api.id":"fill-it-in",
+    "google.search.api.key":"fill-it-in"
 }

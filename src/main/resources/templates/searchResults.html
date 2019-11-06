@@ -11,18 +11,42 @@
     <div th:replace="fragments/bootstrap_nav_header.html"></div>
     <h1>Search Results</h1>
 
-   <table class="table">
-     <thead>
-      <tr>
-        <th>Result</th>
-      </tr>
-     </thead>
-     <tbody>
-      <tr>
-        <td th:text="${result}"></td> 
-      </tr>
-     </tbody>
-   </table>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Kind</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td th:text="${searchResult.kind}"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Items</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>kind</th>
+          <th>title</th>
+          <th>htmlTitle</th>
+          <th>link</th>
+          <th>displayLink</th>
+          <th>snippet</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="i: ${searchResult.items}">
+          <td th:text="${i.kind}"></td>
+          <td th:text="${i.title}"></td>
+          <td th:text="${i.htmlTitle}"></td>
+          <td th:text="${i.link}"></td>
+          <td th:text="${i.displayLink}"></td>
+          <td th:text="${i.snippet}"></td>
+        </tr>
+      </tbody>
+    </table>
 
     <div th:replace="fragments/bootstrap_footer.html"></div>
   </div>

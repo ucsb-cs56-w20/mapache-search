@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.ucsb.cs56.mapache_search.search.SearchResult;
+
 @Controller
 public class SearchController {
 
@@ -15,7 +17,7 @@ public class SearchController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("searchObject", new SearchResult());
+        model.addAttribute("searchObject", new SearchObject());
         return "index";
     }
 
@@ -27,8 +29,11 @@ public class SearchController {
         ) {
         model.addAttribute("query", query);
 
-        searchService.getJSON(query);
+        String json = searchService.getJSON(query);
 
+        SearchResult sr = SearchResult.fromJSON(json);
+        model.addAttribute("searchResult", sr);
+        
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
