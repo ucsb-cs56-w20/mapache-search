@@ -23,10 +23,15 @@ public class SearchResult {
     private static Logger logger = LoggerFactory.getLogger(SearchResult.class);
 
     private String kind;
-    private int pageSize;
-    private int total;
     private List<Item> items;
 
+    public String getKind() {
+        return this.kind;
+    }
+
+    public List<Item> getItems() {
+        return this.items;
+    }
     /**
      * Create a CoursePage object from json representation
      * 
