@@ -25,7 +25,11 @@ public class GoogleSearchService implements SearchService {
     private String searchId = "001539284272632380888:kn5n6ubsr7x";
     private String apiKey; // TODO: set API key per user somehow
 
-    public GoogleSearchService(@Value("${google.search.api.key}") String apiKey) {
+    public GoogleSearchService(@Value("${google.search.api.key:}") String apiKey) {
+        if (apiKey.isEmpty()) {
+            throw new IllegalStateException("dude, you need an api key in your localhost.json, kthxbye.");
+        }
+
         this.apiKey = apiKey;
         logger.info("apiKey=" + apiKey);
     }
@@ -57,7 +61,7 @@ public class GoogleSearchService implements SearchService {
         logger.info("url=" + url);
 
         String retVal="";
-        try {   
+        try {
             ResponseEntity<String> re = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
              MediaType contentType = re.getHeaders().getContentType();
             HttpStatus statusCode = re.getStatusCode();
