@@ -23,7 +23,13 @@ public class Item {
     private String kind;
     private String title;
     private String htmlTitle;
-    private String link;
-    private String displayLink;
-    private String snippet;
+    public String getKind() {
+        return kind;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public String getHtmlTitle() {
+        return htmlTitle;
+    }
 }
