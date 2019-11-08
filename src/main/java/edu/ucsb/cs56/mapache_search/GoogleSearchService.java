@@ -27,7 +27,7 @@ public class GoogleSearchService implements SearchService {
 
     public GoogleSearchService(@Value("${google.search.api.key:}") String apiKey) {
         if (apiKey.isEmpty()) {
-            throw new IllegalStateException("dude, you need an api key in your localhost.json, kthxbye.");
+            throw new IllegalStateException("google.search.api.key is not defined. Check the README.md for more instructions.");
         }
 
         this.apiKey = apiKey;
