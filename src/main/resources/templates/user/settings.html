@@ -25,5 +25,28 @@
         <div th:replace="fragments/bootstrap_nav_header.html"></div>
         <p th:text="'Hello, ' + ${username} + '!'"></p>
       </div>
+    </div>
+    <div class="container my-5">
+      <p th:text="'Here is your apiKey:' + ${apiKey}"></p>
+      <form action="#" th:action="@{/user/update/}" th:object="${user}" method="get">
+        <div class="row">
+            <div>
+                <input type="submit" class="btn btn-primary" value="Update API Key">
+            </div>
+        </div>    
+    </form>
+    </div>
+
+    <!--
+      <div class="form-group col-md-6">
+      <form action="#" th:action="@{/user/settings/update/{username}(username=${user.username})}" th:object="${user}" method="post">
+        <div class="form-group col-md-6">
+        <label for="apiKey" class="col-form-label">API Key</label>
+        <input type="text" th:field="*{apiKey}" class="form-control" id="username" placeholder="EMPTY">
+        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></span>
+      </div>  
+      </form>
+    </div>
+  -->
 </tbody>
 </html>
