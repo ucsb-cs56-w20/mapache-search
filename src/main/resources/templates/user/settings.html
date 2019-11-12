@@ -28,8 +28,13 @@
     </div>
     <div class="container my-5">
       <p th:text="'Here is your apiKey:' + ${apiKey}"></p>
-      <form action="#" th:action="@{/user/update/}" th:object="${user}" method="get">
+      <form action="#" th:action="@{/user/settings/update/}" th:object="${user}" method="get">
         <div class="row">
+            <div class="form-group col-md-6">
+                <label for="apiKey" class="col-form-label">Enter New API Key: </label>
+                <input type="text" th:field="*{apiKey}" class="form-control" id="apiKey" placeholder="Stub">
+                <span th:if="${#fields.hasErrors('apiKey')}" th:errors="*{apiKey}" class="text-danger"></span>
+            </div>
             <div>
                 <input type="submit" class="btn btn-primary" value="Update API Key">
             </div>

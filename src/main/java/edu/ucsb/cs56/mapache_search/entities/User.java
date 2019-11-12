@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search.user;
+package edu.ucsb.cs56.mapache_search.entities;
 
 //import javax.persistence.Entity;
 //import javax.persistence.GeneratedValue;
