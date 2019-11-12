@@ -2,7 +2,9 @@ package edu.ucsb.cs56.mapache_search;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 
+@EnableOAuth2Sso
 @SpringBootApplication
 public class Application {
 
