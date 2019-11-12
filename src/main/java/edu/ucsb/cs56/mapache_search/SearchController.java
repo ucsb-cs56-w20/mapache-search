@@ -1,5 +1,6 @@
 package edu.ucsb.cs56.mapache_search;
 
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,12 @@ public class SearchController {
 
     @Autowired   
     private SearchService searchService;
+
+    @GetMapping("user/settings")
+    public String UserSettings(Principal principal, Model model) {
+        model.addAttribute("username", principal.getName());
+        return "user/settings";
+    }
 
     @GetMapping("/")
     public String home(Model model) {
