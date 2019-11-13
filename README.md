@@ -4,11 +4,10 @@ A project to:
 * Wrap a custom Google search for programming-related queries
 * Add features like upvoting good results
 
-# Before you run anything:
-* Create new file localhost.json, and copy data from localhost.json.SAMPLE
-* DO NOT DELETE localhost.json.sample
-* Change the stubs in localhost.json
-* In terminal, type . env.sh
+### Before running:
+* Copy `localhost.json.SAMPLE` into a new file `localhost.json`
+* Fill in the stubs in `localhost.json`
+* At the terminal, type `source env.sh`
 
 | Type this | to get this result |
 |-----------|------------|
@@ -16,3 +15,8 @@ A project to:
 | `mvn spring-boot:run` | to run the web app|
 | in browser: `http://localhost:8080/` | to see search page |
 
+
+### If you are getting the error `IllegalStateException: google.search.api.key is not defined.`
+
+* Ensure that `google.search.api.key` is defined in `localhost.json`
+* Run `source env.sh` in the terminal instance you are running the web app in
