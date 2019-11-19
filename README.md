@@ -7,7 +7,6 @@ A project to:
 ### Before running:
 * Copy `localhost.json.SAMPLE` into a new file `localhost.json`
 * Fill in the stubs in `localhost.json`
-* At the terminal, type `source env.sh`
 
 | Type this | to get this result |
 |-----------|------------|
@@ -18,5 +17,4 @@ A project to:
 
 ### If you are getting the error `IllegalStateException: google.search.api.key is not defined.`
 
-* Ensure that `google.search.api.key` is defined in `localhost.json`
-* Run `source env.sh` in the terminal instance you are running the web app in
+Ensure that `google.search.api.key` is defined in `localhost.json`
