@@ -65,5 +65,16 @@
                 </div>
               </li>
           </ul>
+          <div>
+              <div class="row">
+                      <form action="#" th:action="@{/user/settings}" th:object="${user}" method="get">
+                          <div class="row">
+                              <div>
+                                  <input type="submit" class="btn btn-primary" value="User Settings">
+                              </div>
+                          </div>    
+                      </form>
+              </div>
+          </div>
     </div>
 </nav>
