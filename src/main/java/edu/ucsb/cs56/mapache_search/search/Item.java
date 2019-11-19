@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import lombok.Data;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +16,6 @@ import org.slf4j.LoggerFactory;
  * <a href="https://developers.google.com/custom-search/v1/introduction">https://developers.google.com/custom-search/v1/introduction</a>
  */
 
-@Data
 public class Item {
     private String kind;
     private String title;
@@ -31,5 +28,17 @@ public class Item {
     }
     public String getHtmlTitle() {
         return htmlTitle;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setHtmlTitle(String htmlTitle) {
+        this.htmlTitle = htmlTitle;
     }
 }
