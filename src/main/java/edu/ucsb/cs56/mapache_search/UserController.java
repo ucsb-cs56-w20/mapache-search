@@ -8,6 +8,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
@@ -38,6 +40,16 @@ public class UserController {
     public String settingsForm(Model model, OAuth2AuthenticationToken token) {
 
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        model.addAttribute("user", u);
+        model.addAttribute("user_template", new AppUser());
+        return "user/settings";
+    }
+
+    @PostMapping("user/settings/update")
+    public String updateKey(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
+        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        u.setApikey(user.getApikey());
+        userRepository.save(u);
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
         return "user/settings";

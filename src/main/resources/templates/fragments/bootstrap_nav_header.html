@@ -81,12 +81,7 @@
                   <ul class="dropdown-menu  pull-left">
                       <li role="separator" class="divider"></li>
                       <li class="dropdown-item">
-                          <form method="GET" th:action="@{admin/users}" class="form-inline" th:if="${isLoggedIn} and ${isAdmin}">
-                            <button class="btn btn-primary" type="submit">All Users</button>
-                      </li>
-                      <li class="dropdown-item">
-                        <form method="GET" th:action="@{/user/settings}" class="form-inline" th:if="${isLoggedIn}">
-                          <!--<button class="navbar-btn" type="submit">Logout</button>-->
+                        <form method="GET" th:action="@{user/settings}" class="form-inline" th:if="${isLoggedIn}">
                           <button class="btn btn-primary" type="submit">Settings</button>
                       </form>
                       </li>

@@ -16,3 +16,8 @@ A project to:
 | `mvn spring-boot:run` | to run the web app|
 | in browser: `http://localhost:8080/` | to see search page |
 
+
+NOTE:
+What's really weird is I have both "All Users" and "Settings" in my drop-down when selecting the user drop-down menu. For some reason, if I include both, even if I click "Settings" with explicit th:action=/user/settings, it will keep directing me to /admin/users
+I can't resolve this so I'll be taking it out for now
+

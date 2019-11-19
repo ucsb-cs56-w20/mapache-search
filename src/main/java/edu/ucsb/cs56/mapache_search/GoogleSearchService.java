@@ -1,9 +1,11 @@
 package edu.ucsb.cs56.mapache_search;
 
+import java.security.Principal;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,9 +13,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 
 /**
  * Service object that wraps the Google Custom Search API
@@ -23,11 +29,9 @@ public class GoogleSearchService implements SearchService {
 
     private Logger logger = LoggerFactory.getLogger(GoogleSearchService.class);
     private String searchId = "001539284272632380888:kn5n6ubsr7x";
-    private String apiKey; // TODO: set API key per user somehow
 
-    public GoogleSearchService(@Value("${google.search.api.key}") String apiKey) {
-        this.apiKey = apiKey;
-        logger.info("apiKey=" + apiKey);
+    //We can't have OAuth2AuthenticationToken token as argument, otherwise it'll give us instantiate bean error
+    public GoogleSearchService() {
     }
 
     /*public GoogleSearchService(String apiKey, String searchId) {
@@ -38,7 +42,8 @@ public class GoogleSearchService implements SearchService {
         logger.info("searchId=" + searchId);
     }*/
 
-    public String getJSON(String query) {
+    public String getJSON(String query, String apiKey) {
+        logger.info("apiKey=" + apiKey);
 
         RestTemplate restTemplate = new RestTemplate();
 

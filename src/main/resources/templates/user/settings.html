@@ -25,6 +25,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="../css/shards.min.css" />
+        <div th:replace="fragments/bootstrap_head.html"></div>
   </head>
 
   <tbody>
@@ -32,15 +33,13 @@
         <div th:replace="fragments/bootstrap_nav_header.html"></div>
         <p th:text="'Hello, ' + ${user.username} + '!'"></p>
       </div>
-    </div>
     <div class="container my-5">
-      <p class="bigfont" th:text="'Here is your API Key:' + ${user.apikey}" th:if="${user.apikey != null}"></p>
-      <p class="bigfont" th:text="'PLEASE UPDATE YOUR API KEY!'" th:if="${user.apikey == null}"></p>
-      <form action="#" th:action="@{/user/settings/update/}" th:object="${user_template}" method="get">
-        <div class="row">
-            <div class="form-group col-md-6">
-                <label for="apiKey" class="col-form-label">Enter New API Key: </label>
-                <input type="text" th:field="*{apikey}" class="form-control" id="apikey" placeholder="Stub">
+      <p class="bigfont" th:text="'Here is your current API Key:' + ${user.apikey}" th:if="${user.apikey != null}"></p>
+      <p class="bigfont" th:text="'PLEASE UPDATE YOUR API KEY; CURRENTLY NULL!'" th:if="${user.apikey == null}"></p>
+      <form action="#" th:action="@{/user/settings/update/}" th:object="${user_template}" method="post">
+            <div class="form-group col-md-5">
+                <label for="apiKey" class="col-form-label">ENTER NEW API KEY: </label>
+                <input type="text" th:field="*{apikey}" class="form-control" id="apikey" placeholder="Put stuff here">
                 <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}" class="text-danger"></span>
             </div>
             <div>
@@ -48,6 +47,7 @@
             </div>
         </div>    
     </form>
+    
     </div>
 
     <!--
