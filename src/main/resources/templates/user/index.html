@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"> 
+  <head>
+    <title>Users List</title>
+    <div th:replace="fragments/bootstrap_head.html"></div>
+  </head>
+  <body>
+    <div class="container">
+      <div th:replace="fragments/bootstrap_nav_header.html"></div>
+
+      <h3>Users</h3>
+      <table class="table">
+          <thead>
+              <tr>
+                  <th>id</th>
+                  <th>uid</th>
+                  <th>username</th>
+                  <th>apikey</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr th:each="u: ${users}">
+                <td th:text="*{u.id}"></td>
+                <td th:text="${u.uid}"></td>
+                <td th:text="${u.username}"></td>
+                <td th:text="${u.apikey}"></td>
+              </tr>
+          </tbody>
+      </table>
+
+      <div th:replace="fragments/bootstrap_footer.html"></div>
+    </div>
+    <div th:replace="fragments/bootstrap_scripts.html"></div>
+  </body>
+</html>

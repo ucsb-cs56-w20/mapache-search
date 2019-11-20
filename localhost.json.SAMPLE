@@ -1,11 +1,8 @@
 {
-    "google.search.api.id":"random-sutb",
-    "google.search.api.key":"fill-it-in",
-    "security.oauth2.client.clientId": "fill-it-in-with-github-clientid",
-    "security.oauth2.client.clientSecret": "fill-it-in-with-github-clientsecret",
-    "security.oauth2.client.accessTokenUri": "https://github.com/login/oauth/access_token",
-    "security.oauth2.client.userAuthorizationUri": "https://github.com/login/oauth/authorize",
-    "security.oauth2.client.clientAuthenticationScheme": "form",
-    "security.oauth2.resource.user-info-uri": "https://api.github.com/user",
-    "security.oauth2.resource.prefer-token-info": "false"
+    "spring.security.oauth2.client.registration.github.client-id":"copy-from-github",
+    "spring.security.oauth2.client.registration.github.client-secret":"copy-from-github",
+    "app_github_org":"ucsb-cs56-f19",
+    "spring.datasource.url":"jdbc:postgresql://localhost:5432/postgres",
+    "spring.datasource.username" : "postgres",
+    "spring.datasource.password" : "password"
 }
