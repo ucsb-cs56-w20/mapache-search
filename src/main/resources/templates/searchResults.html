@@ -28,16 +28,16 @@
     <table class="table">
       <thead>
         <tr>
-          <th>kind</th>
+          <th>site</th>
+          <th>url</th>
           <th>title</th>
-          <th>htmlTitle</th>
         </tr>
       </thead>
       <tbody>
         <tr th:each="i: ${searchResult.items}">
-          <td th:text="${i.kind}"></td>
-          <td th:text="${i.title}"></td>
-          <td th:text="${i.htmlTitle}"></td>
+          <td th:text="${i.displayLink}"></td>
+          <td ><a th:utext="${i.htmlFormattedUrl}" th:href="${i.link}"></a></td>
+          <td th:utext="${i.htmlTitle}"></td>
         </tr>
       </tbody>
     </table>

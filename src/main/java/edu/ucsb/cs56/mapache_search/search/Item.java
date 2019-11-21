@@ -20,6 +20,10 @@ public class Item {
     private String kind;
     private String title;
     private String htmlTitle;
+    private String link;
+    private String displayLink;
+    private String htmlFormattedUrl;
+
     public String getKind() {
         return kind;
     }
@@ -29,16 +33,31 @@ public class Item {
     public String getHtmlTitle() {
         return htmlTitle;
     }
-
+    public String getLink() {
+        return link;
+    }
+    public String getDisplayLink() {
+        return displayLink;
+    }
+    public String getHtmlFormattedUrl() {
+        return htmlFormattedUrl;
+    }
     public void setKind(String kind) {
         this.kind = kind;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
     public void setHtmlTitle(String htmlTitle) {
         this.htmlTitle = htmlTitle;
+    }
+    public void setLink(String link) {
+        this.link = link;
+    }
+    public void setDisplayLink(String displayLink) {
+        this.displayLink = displayLink;
+    }
+    public void setHtmlFormattedUrl(String htmlFormattedUrl) {
+        this.htmlFormattedUrl = htmlFormattedUrl;
     }
 }
