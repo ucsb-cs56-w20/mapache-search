@@ -4,6 +4,12 @@ A project to:
 * Wrap a custom Google search for programming-related queries
 * Add features like upvoting good results
 
+### Get a Google Search API Key
+- Navigate to [here](https://developers.google.com/custom-search/v1/overview).
+- Scroll down to the "API key" header and click the blue button that says, "Get a Key".
+- Create a new "project"; you can name it whatever you like, something like "mapache-search" is fine.
+- Then, you should have generated an API key. Copy it. 
+
 ### Before running:
 * Copy `localhost.json.SAMPLE` into a new file `localhost.json`
 * Fill in the stubs in `localhost.json`
