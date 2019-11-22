@@ -1,4 +1,5 @@
-<div th:fragment="row (item)">
+<div class="d-flex flex-column" th:fragment="row (item)">
   <a target="_blank" rel="noopener noreferrer" th:href="${item.link}" th:utext="${item.htmlTitle}"></a>
+  <a target="_blank" rel="noopener noreferrer" th:href="${'//' + item.displayLink}" th:text="${item.displayLink}"></a>
   <p th:utext="${item.htmlSnippet.replace('<br>', '')}"></p>
 </div>
