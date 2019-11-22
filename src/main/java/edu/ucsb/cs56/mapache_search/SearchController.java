@@ -56,6 +56,7 @@ public class SearchController {
 
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
+        model.addAttribute("searchObject", new SearchObject());
         
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
