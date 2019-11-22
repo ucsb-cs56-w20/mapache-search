@@ -58,7 +58,7 @@ public class SearchController {
 
     @Autowired
     public SearchController(SearchResultRepository searchRepository) {
-        this.searchRepository = searchRepository;   
+        this.searchRepository = searchRepository;
     }
 
     @GetMapping("/")
@@ -74,34 +74,34 @@ public class SearchController {
     }
 
 
-    
-    
+
+
 
     @GetMapping("/searchResults")
-    public String search(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
-        model.addAttribute("query", query);
+    public String search(SearchParameters params, Model model, OAuth2AuthenticationToken token) throws IOException {
+        model.addAttribute("searchParams", params);
 
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
-        Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long 
+        Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long
 
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         u.setSearches(searches);
         userRepository.save(u);
-        
+
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){
             userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(1l);
             userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setTime(currentTime);
         }
 
-        String json = searchService.getJSON(query, apiKey);
+        String json = searchService.getJSON(params, apiKey);
 
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
         model.addAttribute("searchObject", new SearchObject());
-        model.addAttribute("previousSearch", query);
+        model.addAttribute("previousSearch", params.getQuery());
 
         if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
@@ -111,10 +111,9 @@ public class SearchController {
         model.addAttribute("api_uses", searches);
         model.addAttribute("max_api_uses", AppUser.MAX_API_USES);
 
-        logger.info("currentTime=" + Long.toString(currentTime)); 
-        logger.info("searches=" + Long.toString(searches)); 
-        logger.info("max_api_uses=" + Long.toString(AppUser.MAX_API_USES)); 
-
+        logger.info("currentTime=" + Long.toString(currentTime));
+        logger.info("searches=" + Long.toString(searches));
+        logger.info("max_api_uses=" + Long.toString(AppUser.MAX_API_USES));
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
@@ -171,13 +170,13 @@ public class SearchController {
     }
 
     @GetMapping("/searchUpDownResults")
-    public String searchUpDown(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
-        model.addAttribute("query", query);
+    public String searchUpDown(SearchParameters params, Model model, OAuth2AuthenticationToken token) throws IOException {
+        model.addAttribute("searchParams", params);
 
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
 
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
-        String json = searchService.getJSON(query, apiKey);
+        String json = searchService.getJSON(params, apiKey);
 
 
 
@@ -210,7 +209,7 @@ public class SearchController {
                     }
                 }
                 voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted));
-                
+
 
                 if (++count == 10)
                     break;
@@ -219,7 +218,7 @@ public class SearchController {
             Collections.sort(voteResults, Collections.reverseOrder());
             model.addAttribute("voteResult", voteResults);
         }
-        
+
         return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
@@ -228,14 +227,14 @@ public class SearchController {
     public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
         long voteCount = 0;
 
-        List<SearchResultEntity> matchingResults = searchRepository.findById(id);        
+        List<SearchResultEntity> matchingResults = searchRepository.findById(id);
         if (!matchingResults.isEmpty()) {
 
             SearchResultEntity result = matchingResults.get(0);
             AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
 
             List<UserVote> byUserAndResult = voteRepository.findByUserAndResult(user, result);
-            
+
             if(byUserAndResult.size() > 0){
                 voteRepository.delete(byUserAndResult.get(0));
             }

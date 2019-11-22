@@ -24,9 +24,9 @@ public class GoogleSearchService implements SearchService {
     }
 
     private static final String SEARCH_ENDPOINT =
-        "https://www.googleapis.com/customsearch/v1?key={key}&cx={searchId}&q={query}&alt={outputFormat}";
+        "https://www.googleapis.com/customsearch/v1?key={key}&cx={searchId}&q={query}&alt={outputFormat}&start={start}";
 
-    public String getJSON(String query, String apiKey) {
+    public String getJSON(SearchParameters params, String apiKey) {
         logger.info("apiKey=" + apiKey);
 
         RestTemplate restTemplate = new RestTemplate();
@@ -37,12 +37,15 @@ public class GoogleSearchService implements SearchService {
 
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
 
+        int startIndex = ((params.getPage() - 1) * 10) + 1;
+
         Map<String, String> uriVariables =
             Map.of(
                 "key", apiKey,
                 "searchId", searchId,
-                "query", query,
-                "outputFormat", "json"
+                "query", params.getQuery(),
+                "outputFormat", "json",
+                "start", Integer.toString(startIndex)
             );
 
         String retVal = "";
