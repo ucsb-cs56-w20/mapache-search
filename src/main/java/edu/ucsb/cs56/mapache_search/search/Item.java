@@ -23,6 +23,7 @@ public class Item {
     private String link;
     private String displayLink;
     private String htmlFormattedUrl;
+    private int rating;
 
     public String getKind() {
         return kind;
@@ -42,6 +43,11 @@ public class Item {
     public String getHtmlFormattedUrl() {
         return htmlFormattedUrl;
     }
+
+    public int getRating(){
+        return rating;
+    }
+
     public void setKind(String kind) {
         this.kind = kind;
     }
@@ -59,5 +65,9 @@ public class Item {
     }
     public void setHtmlFormattedUrl(String htmlFormattedUrl) {
         this.htmlFormattedUrl = htmlFormattedUrl;
+    }
+
+    public void setRating(int rating){
+        this.rating = rating;
     }
 }
