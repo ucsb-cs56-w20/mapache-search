@@ -47,6 +47,12 @@ public class SearchController {
         return "index";
     }
 
+    @GetMapping("/UpDownSearch")
+    public String upDownSearch(Model model) {
+        model.addAttribute("searchObject", new SearchObject());
+        return "upDownIndex";
+    }
+
     @GetMapping("/searchResults")
     public String search(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
         model.addAttribute("query", query);
