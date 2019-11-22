@@ -1,4 +1,4 @@
 <div th:fragment="row (item)">
   <a target="_blank" rel="noopener noreferrer" th:href="${item.link}" th:utext="${item.htmlTitle}"></a>
-  <p th:utext="${item.htmlSnippet}"></p>
+  <p th:utext="${item.htmlSnippet.replace('<br>', '')}"></p>
 </div>
