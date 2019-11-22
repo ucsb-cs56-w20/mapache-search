@@ -155,21 +155,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- PostgreSQL -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
         <!-- jpa, crud repository -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
         <dependency>
@@ -282,5 +271,54 @@
         </plugins>
     </reporting>
     <!-- (28) <profiles/> -->
+    <profiles>
+        <profile>
+            <id>localhost</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/config/localhost</directory>
+                    </resource>
+                </resources>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <scope>runtime</scope>
+                 </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>heroku</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/config/heroku</directory>
+                    </resource>
+                </resources>
+
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.postgresql</groupId>
+                    <artifactId>postgresql</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-jdbc</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
