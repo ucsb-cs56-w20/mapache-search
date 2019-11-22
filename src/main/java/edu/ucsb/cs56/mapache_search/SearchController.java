@@ -65,7 +65,6 @@ public class SearchController {
         String json = searchService.getJSON(query, apiKey);
 
         SearchResult sr = SearchResult.fromJSON(json);
-        System.out.println("\n\n\n" + sr.getItems().size() + "\n\n\n");
         model.addAttribute("searchResult", sr);
 
         List<SearchResultEntity> voteResults = new ArrayList<>();
