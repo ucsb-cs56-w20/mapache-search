@@ -32,7 +32,13 @@
     <div class="container">
         <div th:replace="fragments/bootstrap_nav_header.html"></div>
         <p th:text="'Hello, ' + ${user.username} + '!'"></p>
-      </div>
+    </div>
+
+    <h1>Instructions for getting API Key</h1>
+    <a href="https://developers.google.com/custom-search/v1/overview">
+      Click Here to get API Key
+    </a>
+
     <div class="container my-5">
       <p class="bigfont" th:text="'Here is your current API Key:' + ${user.apikey}" th:if="${user.apikey != null}"></p>
       <p class="bigfont" th:text="'PLEASE UPDATE YOUR API KEY; CURRENTLY NULL!'" th:if="${user.apikey == null}"></p>
