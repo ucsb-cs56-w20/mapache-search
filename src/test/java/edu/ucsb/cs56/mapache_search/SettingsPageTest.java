@@ -1,3 +1,5 @@
+package edu.ucsb.cs56.mapache_search;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,7 +22,7 @@ public class SettingsPageTest {
         mvc.perform(MockMvcRequestBuilders.get("/user/settings").accept(MediaType.TEXT_HTML))
             .andExpect(status().isOk())
             .andExpect()
-            
+
     }
     */
 
