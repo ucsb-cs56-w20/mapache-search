@@ -23,6 +23,7 @@ public class SearchResult {
 
     private String kind;
     private List<Item> items;
+    private SearchInformation searchInformation;
 
     public String getKind() {
         return this.kind;
@@ -32,9 +33,19 @@ public class SearchResult {
         return this.items;
     }
 
+    public SearchInformation getSearchInformation() {
+        return this.searchInformation;
+    }
+
+    public int getPageCount() {
+        long totalResults = Long.parseLong(searchInformation.getTotalResults());
+
+        return (int) Math.min(Math.ceil(totalResults / 10.0), 10);
+    }
+
     /**
      * Create a CoursePage object from json representation
-     * 
+     *
      * @param json String of json returned by API endpoint {@code /classes/search}
      * @return a new CoursePage object
      * @throws IOException
@@ -56,7 +67,7 @@ public class SearchResult {
             logger.error("JsonProcessingException:" + jpe);
             return null;
         }
-    }
+}
 
     private static SearchResult handleApiError() {
         SearchResult e = new SearchResult();
