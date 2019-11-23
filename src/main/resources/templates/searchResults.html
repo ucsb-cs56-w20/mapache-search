@@ -13,10 +13,14 @@
 
     <div th:replace="fragments/basic_search_form.html"></div>
 
+    <th:block th:replace="fragments/pagination"></th:block>
+
     <h2>Items</h2>
     <th:block th:each="item : ${searchResult.items}">
       <th:block th:replace="fragments/result_row :: row (item=${item})"></th:block>
     </th:block>
+
+    <th:block th:replace="fragments/pagination"></th:block>
 
     <div th:replace="fragments/bootstrap_footer.html"></div>
   </div>

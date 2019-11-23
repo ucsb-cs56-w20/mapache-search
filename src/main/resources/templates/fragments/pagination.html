@@ -1,0 +1,30 @@
+<nav>
+  <ul
+      class="pagination justify-content-center"
+      th:with="pageCount=${searchResult.getPageCount()}, currentPage=${searchParams.getPage()}"
+  >
+    <li th:if="${currentPage == 1}" class="page-item disabled">
+      <a class="page-link" tabindex="-1">Previous</a>
+    </li>
+    <li th:unless="${currentPage == 1}" class="page-item">
+      <a class="page-link" th:href="${searchParams.editor().setPage(currentPage - 1).build().toURLQuery()}">Previous</a>
+    </li>
+
+    <th:block th:each="i: ${#numbers.sequence(1, pageCount)}">
+      <li class="page-item" th:classappend="${i == currentPage} ? active">
+        <a
+            class="page-link"
+            th:href="${searchParams.editor().setPage(i).build().toURLQuery()}"
+            th:text="${i}">
+        </a>
+      </li>
+    </th:block>
+
+    <li th:if="${currentPage == pageCount}" class="page-item disabled">
+      <a class="page-link" tabindex="-1">Next</a>
+    </li>
+    <li th:unless="${currentPage == pageCount}" class="page-item">
+      <a class="page-link" th:href="${searchParams.editor().setPage(currentPage + 1).build().toURLQuery()}">Next</a>
+    </li>
+  </ul>
+</nav>
