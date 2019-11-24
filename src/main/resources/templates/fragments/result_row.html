@@ -10,5 +10,6 @@
     from
     <a target="_blank" rel="noopener noreferrer" th:href="${'//' + item.displayLink}" th:text="${item.displayLink}"></a>
   </span>
-  <span th:utext="${item.htmlSnippet.replace('<br>', '')}"></span>
+
+  <th:block th:replace="fragments/result_preview :: ${@previewProvider.getPreviewType(item)} (item=${item})"></th:block>
 </div>

@@ -1,0 +1,10 @@
+<div th:fragment="stackexchange (item)" th:with="question=${stackExchangeQuestions.get(item).getQuestion()}">
+  <th:block th:if="*{question == null}" th:replace=":: default"></th:block>
+  <th:block th:unless="*{question == null}" th:object="${question}">
+    <div th:utext="*{body}"></div>
+  </th:block>
+</div>
+
+<th:block th:fragment="default">
+  <span th:utext="${item.htmlSnippet.replace('<br>', '')}"></span>
+</th:block>
