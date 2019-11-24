@@ -59,6 +59,16 @@
           data-toggle="collapse"
           th:data-target="${'#searchresult-' + iterStat.index + ' .stackexchange-answer'}"
       >Show Full Answer</button>
+
+      <th:block th:if="${question.answers.size() > 1}" th:with="count=${question.answers.size() - 1}">
+        <a
+            class="d-block"
+            target="_blank"
+            rel="noopener noreferrer"
+            th:href="${item.link}"
+            th:text="${'View (' + count + ') other answer' + (count == 1 ? '' : 's') + ' on ' + item.displayLink}">
+        </a>
+      </th:block>
     </th:block>
 
   </th:block>
