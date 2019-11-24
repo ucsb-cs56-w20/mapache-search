@@ -49,8 +49,8 @@
         th:data-target="${'#searchresult-' + iterStat.index + ' .stackexchange-question'}"
     >Show Full Question</button>
 
-    <h5>Top Answer</h5>
-    <th:block th:unless="*{answers.size() == 0}" th:object="${question.answers.get(0)}">
+    <th:block th:if="*{answers?.size() > 0}" th:object="${question.answers.get(0)}">
+      <h5>Top Answer</h5>
       <div class="card bg-light collapse stackexchange-answer">
         <div class="stackexchange-body" th:utext="*{body}"></div>
       </div>
