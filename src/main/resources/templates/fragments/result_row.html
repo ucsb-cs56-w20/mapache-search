@@ -1,15 +1,23 @@
-<style th:fragment="styles">
-  /* adapted from https://getbootstrap.com/docs/4.3/utilities/embed/ */
-  .searchresult-row img {
-    position: relative;
-    display: block;
-    max-width: 100%;
-    padding: 0;
-    overflow: hidden;
-  }
-</style>
+<th:block th:fragment="styles">
+  <style>
+    /* adapted from https://getbootstrap.com/docs/4.3/utilities/embed/ */
+    .searchresult-row img {
+      position: relative;
+      display: block;
+      max-width: 100%;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
 
-<div class="searchresult-row card p-4 my-2 d-flex flex-column" th:fragment="row (item)">
+  <th:block th:replace="fragments/result_preview :: styles"></th:block>
+</th:block>
+
+<div
+    class="searchresult-row card p-4 my-2 d-flex flex-column"
+    th:fragment="row (item, iterStat)"
+    th:id="${'searchresult-' + iterStat.index}"
+>
   <a
       class="h5 m-0"
       target="_blank"
@@ -22,5 +30,5 @@
     <a target="_blank" rel="noopener noreferrer" th:href="${'//' + item.displayLink}" th:text="${item.displayLink}"></a>
   </span>
 
-  <th:block th:replace="fragments/result_preview :: ${@previewProvider.getPreviewType(item)} (item=${item})"></th:block>
+  <th:block th:replace="fragments/result_preview :: ${@previewProvider.getPreviewType(item)} (item=${item}, iterStat=${iterStat})"></th:block>
 </div>

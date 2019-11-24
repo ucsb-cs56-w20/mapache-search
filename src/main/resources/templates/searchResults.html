@@ -17,8 +17,8 @@
     <th:block th:replace="fragments/pagination" th:with="baseUrl=@{/searchResults}"></th:block>
 
     <h2>Items</h2>
-    <th:block th:each="item : ${searchResult.items}">
-      <th:block th:replace="fragments/result_row :: row (item=${item})"></th:block>
+    <th:block th:each="item,iterStat : ${searchResult.items}">
+      <th:block th:replace="fragments/result_row :: row (item=${item}, iterStat=${iterStat})"></th:block>
     </th:block>
 
     <th:block th:replace="fragments/pagination" th:with="baseUrl=@{/searchResults}"></th:block>

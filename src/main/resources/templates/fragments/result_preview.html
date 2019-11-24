@@ -1,7 +1,46 @@
-<div th:fragment="stackexchange (item)" th:with="question=${stackExchangeQuestions.get(item).getQuestion()}">
+<th:block th:fragment="styles">
+  <style>
+    .searchresult-preview .collapse:not(.show) {
+      display: block;
+      height: 4.5em;
+      overflow: hidden;
+    }
+
+    .searchresult-preview .collapsing {
+      height: 4.5em;
+    }
+
+    .stackexchange-collapser {
+      background-color: #fff;
+      margin-left: 50%;
+      margin-bottom: -1.5rem;
+      transform: translate(-50%, -50%);
+      transition: 500ms ease-out;
+    }
+
+    .searchresult-preview .collapsing + .stackexchange-collapser,
+    .searchresult-preview .collapse.show + .stackexchange-collapser {
+      display: none;
+    }
+  </style>
+</th:block>
+
+<div
+    class="searchresult-preview"
+    th:fragment="stackexchange (item, iterStat)"
+    th:with="question=${stackExchangeQuestions.get(item).getQuestion()}"
+>
   <th:block th:if="*{question == null}" th:replace=":: default"></th:block>
   <th:block th:unless="*{question == null}" th:object="${question}">
-    <div th:utext="*{body}"></div>
+    <div class="collapse">
+      <div class="stackexchange-body" th:utext="*{body}"></div>
+    </div>
+    <button
+        class="stackexchange-collapser btn btn-outline-primary"
+        data-toggle="collapse"
+        th:data-target="${'#searchresult-' + iterStat.index + ' .collapse'}"
+    >Show Full Question</button>
+
   </th:block>
 </div>
 
