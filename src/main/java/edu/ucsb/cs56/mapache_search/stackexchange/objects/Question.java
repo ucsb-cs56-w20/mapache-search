@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class Question {
+    @JsonProperty("question_id")
+    private int id;
     private ShallowUser owner;
     private List<String> tags;
     private List<Answer> answers;
@@ -19,6 +21,14 @@ public class Question {
     private String link;
     private String title;
     private String body;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public ShallowUser getOwner() {
         return owner;
