@@ -1,8 +1,6 @@
 package edu.ucsb.cs56.mapache_search.stackexchange.objects;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.ucsb.cs56.mapache_search.utils.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,15 +21,6 @@ public class Questions {
         return this;
     }
     public static Questions fromJSON(String json) throws IOException {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-            return  objectMapper.readValue(json, Questions.class);
-        } catch (JsonProcessingException jpe) {
-            logger.error("JsonProcessingException", jpe);
-            return null;
-        }
-
+        return JSONUtils.deserialize(Questions.class, json);
     }
 }
