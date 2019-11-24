@@ -1,4 +1,15 @@
-<div class="card p-4 my-2 d-flex flex-column" th:fragment="row (item)">
+<style th:fragment="styles">
+  /* adapted from https://getbootstrap.com/docs/4.3/utilities/embed/ */
+  .searchresult-row img {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    padding: 0;
+    overflow: hidden;
+  }
+</style>
+
+<div class="searchresult-row card p-4 my-2 d-flex flex-column" th:fragment="row (item)">
   <a
       class="h5 m-0"
       target="_blank"
