@@ -36,6 +36,9 @@
     th:with="question=${stackExchangeQuestions.get(item).getQuestion()}"
 >
   <th:block th:if="${question == null}">
+    <div class="alert alert-warning">
+      Unfortunately, this question has been deleted...
+    </div>
     <th:block th:replace=":: default"></th:block>
   </th:block>
   <th:block th:unless="${question == null}" th:object="${question}">
