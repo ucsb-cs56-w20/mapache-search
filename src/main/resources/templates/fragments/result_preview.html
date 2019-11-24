@@ -2,18 +2,19 @@
   <style>
     .searchresult-preview .collapse:not(.show) {
       display: block;
-      height: 4.5em;
+      height: 3em;
       overflow: hidden;
     }
 
     .searchresult-preview .collapsing {
-      height: 4.5em;
+      height: 3em;
     }
 
     .stackexchange-collapser {
       background-color: #fff;
       margin-left: 50%;
       margin-bottom: -1.5rem;
+      margin-top: -1rem;
       transform: translate(-50%, -50%);
       transition: 500ms ease-out;
     }
@@ -21,6 +22,10 @@
     .searchresult-preview .collapsing + .stackexchange-collapser,
     .searchresult-preview .collapse.show + .stackexchange-collapser {
       display: none;
+    }
+
+    .stackexchange-body {
+      padding: 0.5rem 0.5rem 0;
     }
   </style>
 </th:block>
@@ -30,16 +35,31 @@
     th:fragment="stackexchange (item, iterStat)"
     th:with="question=${stackExchangeQuestions.get(item).getQuestion()}"
 >
-  <th:block th:if="*{question == null}" th:replace=":: default"></th:block>
-  <th:block th:unless="*{question == null}" th:object="${question}">
-    <div class="collapse">
+  <th:block th:if="${question == null}">
+    <th:block th:replace=":: default"></th:block>
+  </th:block>
+  <th:block th:unless="${question == null}" th:object="${question}">
+    <h5>Question</h5>
+    <div class="card bg-light collapse stackexchange-question">
       <div class="stackexchange-body" th:utext="*{body}"></div>
     </div>
     <button
         class="stackexchange-collapser btn btn-outline-primary"
         data-toggle="collapse"
-        th:data-target="${'#searchresult-' + iterStat.index + ' .collapse'}"
+        th:data-target="${'#searchresult-' + iterStat.index + ' .stackexchange-question'}"
     >Show Full Question</button>
+
+    <h5>Top Answer</h5>
+    <th:block th:unless="*{answers.size() == 0}" th:object="${question.answers.get(0)}">
+      <div class="card bg-light collapse stackexchange-answer">
+        <div class="stackexchange-body" th:utext="*{body}"></div>
+      </div>
+      <button
+          class="stackexchange-collapser btn btn-outline-primary"
+          data-toggle="collapse"
+          th:data-target="${'#searchresult-' + iterStat.index + ' .stackexchange-answer'}"
+      >Show Full Answer</button>
+    </th:block>
 
   </th:block>
 </div>
