@@ -57,6 +57,12 @@ public class SearchController {
         return "index";
     }
 
+    @GetMapping("/UpDownSearch")
+    public String upDownSearch(Model model) {
+        model.addAttribute("searchObject", new SearchObject());
+        return "upDownIndex";
+    }
+
     @GetMapping("/searchResults")
     public String search(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
         model.addAttribute("query", query);
@@ -84,6 +90,19 @@ public class SearchController {
         model.addAttribute("voteResult", voteResults);
         
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
+    }
+
+    @GetMapping("/searchUpDownResults")
+    public String searchUpDown(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
+        model.addAttribute("query", query);
+
+        String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
+        String json = searchService.getJSON(query, apiKey);
+
+        SearchResult sr = SearchResult.fromJSON(json);
+        model.addAttribute("searchResult", sr);
+        
+        return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
 }
