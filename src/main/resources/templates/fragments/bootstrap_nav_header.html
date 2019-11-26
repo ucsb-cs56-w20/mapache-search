@@ -76,12 +76,10 @@
                       <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu  pull-left">
-                      <li role="separator" class="divider"></li>
-                      <li class="dropdown-item">
-                        <form method="GET" th:action="@{user/settings}" class="form-inline" th:if="${isLoggedIn}">
-                          <button class="btn btn-primary" type="submit">Settings</button>
-                      </form>
+                      <li class="nav-item dropdown">
+                            <a class="dropdown-item" href = /user/settings>Settings</a>
                       </li>
+                      <li role="separator" class="divider"></li>
                       <li class="dropdown-item">
                           <form method="POST" action="/logout" class="form-inline" th:if="${isLoggedIn}">
                               <!--<button class="navbar-btn" type="submit">Logout</button>-->
