@@ -11,6 +11,7 @@ import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.Item;
+import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import java.io.IOException;
 
 import java.net.URI;
@@ -34,6 +35,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
