@@ -1,0 +1,14 @@
+<div class="card p-4 my-2 d-flex flex-column" th:fragment="row (item)">
+  <a
+      class="h5 m-0"
+      target="_blank"
+      rel="noopener noreferrer"
+      th:href="${item.link}"
+      th:utext="${item.htmlTitle}"
+  ></a>
+  <span class="mb-1">
+    from
+    <a target="_blank" rel="noopener noreferrer" th:href="${'//' + item.displayLink}" th:text="${item.displayLink}"></a>
+  </span>
+  <span th:utext="${item.htmlSnippet.replace('<br>', '')}"></span>
+</div>
