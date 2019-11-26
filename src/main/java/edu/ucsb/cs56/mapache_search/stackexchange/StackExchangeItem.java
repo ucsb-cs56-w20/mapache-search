@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
 
 public class StackExchangeItem {
     private static Logger logger = LoggerFactory.getLogger(StackExchangeItem.class);

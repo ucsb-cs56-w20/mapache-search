@@ -83,7 +83,6 @@ public class StackExchangeQueryServiceImpl implements StackExchangeQueryService 
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
-        // this
         Map<String, String> uriVariables =
             Map.of(
                 "pagesize", "2147483646",
