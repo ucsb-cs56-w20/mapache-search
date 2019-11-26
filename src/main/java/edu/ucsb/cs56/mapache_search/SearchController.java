@@ -63,6 +63,16 @@ public class SearchController {
         return "upDownIndex";
     }
 
+    public class ResultVoteWrapper {
+        Item googleResult;
+        SearchResultEntity dbResult;
+
+        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult) {
+            this.googleResult = googleResult;
+            this.dbResult = dbResult;
+        }
+    }
+
     @GetMapping("/searchResults")
     public String search(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
         model.addAttribute("query", query);
@@ -73,7 +83,7 @@ public class SearchController {
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
 
-        List<SearchResultEntity> voteResults = new ArrayList<>();
+        List<ResultVoteWrapper> voteResults = new ArrayList<>();
         int count = 0;
         for(Item item : sr.getItems()) {
             if (searchRepository.findByUrl(item.getLink()).isEmpty()) {
@@ -81,7 +91,9 @@ public class SearchController {
                 result.setUrl(item.getLink());
                 result.setVoteCount(new Long(0));
                 searchRepository.save(result);
-                voteResults.add(searchRepository.findByUrl(item.getLink()).get(0));
+
+                // searchRepository.findByUrl(item.getLink()).get(0);
+                voteResults.add(new ResultVoteWrapper(item, result));
             }
             
             if (++count == 10)
