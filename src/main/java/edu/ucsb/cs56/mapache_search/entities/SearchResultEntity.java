@@ -13,7 +13,7 @@ public class SearchResultEntity {
 
     private String url;
 
-    private long voteCount;
+    private long votecount;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -21,6 +21,6 @@ public class SearchResultEntity {
     public String getUrl() { return url; }
     public void setUrl(String url) { this.url = url; }
 
-    public Long getVoteCount() { return voteCount; }
-    public void setVoteCount(Long voteCount) { this.voteCount = voteCount; }
+    public Long getVotecount() { return votecount; }
+    public void setVotecount(Long votecount) { this.votecount = votecount; }
 }
