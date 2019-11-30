@@ -11,38 +11,11 @@
     <div th:replace="fragments/bootstrap_nav_header.html"></div>
     <h1>Search Results</h1>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Kind</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td th:text="${searchResult.kind}"></td>
-        </tr>
-      </tbody>
-    </table>
-
     <h2>Items</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>site</th>
-          <th>url</th>
-          <th>title</th>
-          <th>rating</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="i: ${searchResult.items}">
-          <td th:text="${i.displayLink}"></td>
-          <td ><a th:utext="${i.htmlFormattedUrl}" th:href="${i.link}"></a></td>
-          <td th:utext="${i.htmlTitle}"></td>
-          <td th:text="${i.rating}"></td>
-        </tr>
-      </tbody>
-    </table>
+
+    <th:block th:each="result : ${voteResult}">
+      <th:block th:replace="fragments/up_down_result_row :: row (item=${result.getGoogleResult()}, query=${query})"></th:block>
+    </th:block>
 
     <div th:replace="fragments/bootstrap_footer.html"></div>
   </div>

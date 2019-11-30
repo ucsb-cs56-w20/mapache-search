@@ -1,0 +1,10 @@
+.vb {
+    font-size: 1.2rem;
+    color: black;
+}
+.vb.vb-up:hover {
+    color: rgb(55, 183, 226);
+}
+.vb.vb-down:hover {
+    color: orange;
+}
