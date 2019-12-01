@@ -155,17 +155,17 @@ public class SearchController {
             if (matchingResults.isEmpty()) {
                 result = new SearchResultEntity();
                 result.setUrl(item.getLink());
-                result.setVoteCount((long) 0);
+                result.setVotecount((long) 0);
                 searchRepository.save(result);
             } 
             else {
                 result = matchingResults.get(0);
                 if(result.getId() == id && direction.equals("up")){
-                    result.setVoteCount(result.getVoteCount() + 1l);
+                    result.setVotecount(result.getVotecount() + 1l);
                     searchRepository.save(result);
                 }
                 if(result.getId() == id && direction.equals("down")){
-                    result.setVoteCount(result.getVoteCount() - 1l);
+                    result.setVotecount(result.getVotecount() - 1l);
                     searchRepository.save(result);
                 }
             }
