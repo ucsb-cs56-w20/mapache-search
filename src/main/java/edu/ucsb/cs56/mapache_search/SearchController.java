@@ -120,7 +120,7 @@ public class SearchController {
             if (matchingResults.isEmpty()) {
                 result = new SearchResultEntity();
                 result.setUrl(item.getLink());
-                result.setVoteCount((long) 0);
+                result.setVotecount((long) 0);
                 searchRepository.save(result);
             } else {
                 result = matchingResults.get(0);
