@@ -3,7 +3,7 @@
         <a th:href="${'../updateVote?direction=up&id='+result.getDBResult().getId()+'&query='+query}" class="vb vb-up">
             <i class="far fa-thumbs-up"></i>
         </a>
-        <span class="h3" th:utext="${result.getDBResult().getVoteCount()}"></span>
+        <span class="h3" th:utext="${result.getDBResult().getVotecount()}"></span>
         <a th:href="${'../updateVote?direction=down&id='+result.getDBResult().getId()+'&query='+query}" class="vb vb-down">
             <i class="far fa-thumbs-down"></i>
         </a>
