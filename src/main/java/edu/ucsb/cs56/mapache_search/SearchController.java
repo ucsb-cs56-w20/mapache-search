@@ -138,17 +138,48 @@ public class SearchController {
     }
 
     @GetMapping("/updateVote")
-    public String updateVote(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "query", required = true) String query, int id, Model model, OAuth2AuthenticationToken token) throws IOException {
-        List<SearchResultEntity> update = searchRepository.findById(id);
-        if(direction == "up"){
-            update.get(0).setVoteCount(update.get(0).getVoteCount()+1);
-            searchRepository.save(update.get(0));
+    public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "query", required = true) String query, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
+        model.addAttribute("query", query);
+
+        String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
+        String json = searchService.getJSON(query, apiKey);
+
+        SearchResult sr = SearchResult.fromJSON(json);
+        model.addAttribute("searchResult", sr);
+
+        List<ResultVoteWrapper> voteResults = new ArrayList<>();
+        int count = 0;
+        for(Item item : sr.getItems()) {
+            List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
+            SearchResultEntity result;
+            if (matchingResults.isEmpty()) {
+                result = new SearchResultEntity();
+                result.setUrl(item.getLink());
+                result.setVoteCount((long) 0);
+                searchRepository.save(result);
+            } 
+            else {
+                result = matchingResults.get(0);
+                if(result.getId() == id && direction.equals("up")){
+                    result.setVoteCount(result.getVoteCount() + 1l);
+                    searchRepository.save(result);
+                }
+                if(result.getId() == id && direction.equals("down")){
+                    result.setVoteCount(result.getVoteCount() - 1l);
+                    searchRepository.save(result);
+                }
+            }
+            voteResults.add(new ResultVoteWrapper(item, result));
+
+            
+            if (++count == 10)
+                break;
         }
-        else if(direction == "down"){
-            update.get(0).setVoteCount(update.get(0).getVoteCount()-1);
-            searchRepository.save(update.get(0));
-        }
-        return searchUpDown(query, model, token);
+        System.out.println(voteResults.size());
+        model.addAttribute("voteResult", voteResults);
+        
+        return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
+
 
 }
