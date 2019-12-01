@@ -137,4 +137,18 @@ public class SearchController {
         return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
+    @GetMapping("/updateVote")
+    public String updateVote(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "query", required = true) String query, int id, Model model, OAuth2AuthenticationToken token) throws IOException {
+        List<SearchResultEntity> update = searchRepository.findById(id);
+        if(direction == "up"){
+            update.get(0).setVoteCount(update.get(0).getVoteCount()+1);
+            searchRepository.save(update.get(0));
+        }
+        else if(direction == "down"){
+            update.get(0).setVoteCount(update.get(0).getVoteCount()-1);
+            searchRepository.save(update.get(0));
+        }
+        return searchUpDown(query, model, token);
+    }
+
 }
