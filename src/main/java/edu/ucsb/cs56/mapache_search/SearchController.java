@@ -1,7 +1,11 @@
 package edu.ucsb.cs56.mapache_search;
 
-import java.sql.Statement;
-import java.util.ArrayList;
+import edu.ucsb.cs56.mapache_search.entities.AppUser;
+import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
+import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import edu.ucsb.cs56.mapache_search.search.Item;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,10 +14,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -23,9 +28,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.ucsb.cs56.mapache_search.entities.AppUser;
-import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
-import edu.ucsb.cs56.mapache_search.search.SearchResult;
 
 @Controller
 public class SearchController {
@@ -39,12 +41,26 @@ public class SearchController {
     private UserRepository userRepository;
 
     @Autowired
+    private SearchResultRepository searchRepository;
+
+    @Autowired
     private AuthControllerAdvice controllerAdvice;
+
+    @Autowired
+    public SearchController(SearchResultRepository searchRepository) {
+        this.searchRepository = searchRepository;   
+    }
 
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         return "index";
+    }
+
+    @GetMapping("/UpDownSearch")
+    public String upDownSearch(Model model) {
+        model.addAttribute("searchObject", new SearchObject());
+        return "upDownIndex";
     }
 
     @GetMapping("/searchResults")
@@ -58,6 +74,67 @@ public class SearchController {
         model.addAttribute("searchResult", sr);
         
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
+    }
+
+    public class ResultVoteWrapper {
+        private Item googleResult;
+        private SearchResultEntity dbResult;
+
+        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult) {
+            this.googleResult = googleResult;
+            this.dbResult = dbResult;
+        }
+
+        public SearchResultEntity getDBResult() {
+            return dbResult;
+        }
+
+        public void setDBResult(SearchResultEntity dbResult) {
+            this.dbResult = dbResult;
+        }
+
+        public Item getGoogleResult() {
+            return googleResult;
+        }
+
+        public void setGoogleResult(Item googleResult) {
+            this.googleResult = googleResult;
+        }
+    }
+
+    @GetMapping("/searchUpDownResults")
+    public String searchUpDown(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
+        model.addAttribute("query", query);
+
+        String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
+        String json = searchService.getJSON(query, apiKey);
+
+        SearchResult sr = SearchResult.fromJSON(json);
+        model.addAttribute("searchResult", sr);
+
+        List<ResultVoteWrapper> voteResults = new ArrayList<>();
+        int count = 0;
+        for(Item item : sr.getItems()) {
+            List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
+            SearchResultEntity result;
+            if (matchingResults.isEmpty()) {
+                result = new SearchResultEntity();
+                result.setUrl(item.getLink());
+                result.setVotecount((long) 0);
+                searchRepository.save(result);
+            } else {
+                result = matchingResults.get(0);
+            }
+            voteResults.add(new ResultVoteWrapper(item, result));
+
+            
+            if (++count == 10)
+                break;
+        }
+        System.out.println(voteResults.size());
+        model.addAttribute("voteResult", voteResults);
+        
+        return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
 }
