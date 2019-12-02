@@ -44,13 +44,23 @@ public class SearchResult {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    
-            SearchResult sr = objectMapper.readValue(json, SearchResult.class);
-            return sr;
+            if(json == "{\"error\": \"401: Unauthorized\"}"){
+                SearchResult sr = SearchResult.handleApiError();
+                return sr;
+            } else {
+                SearchResult sr = objectMapper.readValue(json, SearchResult.class);
+                return sr;
+            }
         } catch (JsonProcessingException jpe) {
             logger.error("JsonProcessingException:" + jpe);
             return null;
         }
-        
+    }
+
+    private static SearchResult handleApiError() {
+        SearchResult e = new SearchResult();
+        e.kind = "There is an error occurred! Make sure you have obtained/updated your API key (in user settings)!";
+        e.items = null;
+        return e;
     }
 }
