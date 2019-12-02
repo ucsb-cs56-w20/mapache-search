@@ -3,6 +3,7 @@ package edu.ucsb.cs56.mapache_search;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @SpringBootApplication
@@ -16,7 +17,7 @@ public class Application extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
         .authorizeRequests()
-            .antMatchers("/","/login**","/webjars/**","/error**")
+            .antMatchers("/","/login**","/webjars/**","/error**", "/css/**")
             .permitAll()
         .anyRequest()
             .authenticated()
