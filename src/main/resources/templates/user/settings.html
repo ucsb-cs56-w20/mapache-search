@@ -45,7 +45,8 @@
       <form action="#" th:action="@{/user/settings/update/}" th:object="${user_template}" method="post">
             <div class="form-group col-md-5">
                 <label for="apiKey" class="col-form-label">ENTER NEW API KEY: </label>
-                <input type="text" th:field="*{apikey}" class="form-control" id="apikey" placeholder="Put stuff here">
+                <input type="text" th:field="*{apikey}" class="form-control" id="apikey" placeholder="Put stuff here"
+                autofocus>
                 <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}" class="text-danger"></span>
             </div>
             <div>
