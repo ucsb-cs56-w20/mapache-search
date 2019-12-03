@@ -112,7 +112,7 @@ public class SearchController {
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
 
-        if(!(sr.getKind()=="error")){
+        if(sr.getKind() != "error"){
             List<ResultVoteWrapper> voteResults = new ArrayList<>();
             int count = 0;
             for(Item item : sr.getItems()) {
@@ -128,7 +128,6 @@ public class SearchController {
                 }
                 voteResults.add(new ResultVoteWrapper(item, result));
 
-                
                 if (++count == 10)
                     break;
             }

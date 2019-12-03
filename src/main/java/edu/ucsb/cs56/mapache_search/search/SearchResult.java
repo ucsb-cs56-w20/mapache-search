@@ -1,6 +1,7 @@
 package edu.ucsb.cs56.mapache_search.search;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -58,34 +59,8 @@ public class SearchResult {
     }
 
     private static SearchResult handleApiError() {
-
         SearchResult e = new SearchResult();
-        String me = "There is an error occurred! Make sure you have obtained/updated your API key (in user settings)!";
         e.kind = "error";
-
-        Item i = new Item();
-        
-        // private String kind;
-        i.setKind("kind");
-        // private String title;
-        i.setTitle("title");
-        // private String htmlTitle;
-        i.setHtmlTitle("Click me to get to user settings!");
-        // private String link;
-        i.setLink("/user/settings");
-        // private String displayLink;
-        i.setDisplayLink("/user/settings");
-        // private String htmlFormattedUrl;
-        i.setHtmlFormattedUrl("htmlFormattedUrl");
-        // private int rating;
-        i.setRating(0);
-        // private String snippet;
-        i.setSnippet("snippet");
-        // private String htmlSnippet;
-        i.setHtmlSnippet(me);
-
-        e.items.add(i);
-                
         return e;
     }
 }
