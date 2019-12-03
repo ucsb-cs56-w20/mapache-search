@@ -30,9 +30,10 @@
             el.removeClass("vb-clicked");
           }
         }
-        var queryURL = "../updateVote?direction=" + direction + "&id=" + $(this).parent().attr("id") + "&query=NA";
+        var query = $(this).parent().attr("url");
+        var endpointURL = "../updateVote?direction=" + direction + "&id=" + $(this).parent().attr("id") + "&url=" + encodeURI(query);
         // hit the API endpoint to change the vote in the backend
-        jQuery.get(queryURL, {}, function(data, status) {
+        jQuery.get(endpointURL, {}, function(data, status) {
           console.log(`${data}`);
           // what we may want to do is update the vote count based on what we get back from the endpoint
         });

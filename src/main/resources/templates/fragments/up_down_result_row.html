@@ -1,5 +1,5 @@
 <div class="card p-4 my-2 d-flex flex-row" th:fragment="row (item, query)">
-    <div class="d-flex flex-column mr-3 align-items-center vote-info" th:id="${result.getDBResult().getId()}">
+    <div class="d-flex flex-column mr-3 align-items-center vote-info" th:id="${result.getDBResult().getId()}" th:attr="url=${result.getDBResult().getUrl()}">
         <span class="vb vb-up">
             <i class="far fa-thumbs-up"></i>
         </span>
