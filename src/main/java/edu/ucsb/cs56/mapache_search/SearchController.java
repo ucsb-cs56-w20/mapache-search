@@ -149,7 +149,7 @@ public class SearchController {
     }
 
     @GetMapping("/updateVote")
-    public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "query", required = true) String query, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
+    public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
         List<SearchResultEntity> matchingResults = searchRepository.findById(id);
         if (!matchingResults.isEmpty()) {
 
@@ -161,18 +161,18 @@ public class SearchController {
             if(byUserAndResult.size() > 0){
                 voteRepository.delete(byUserAndResult.get(0));
             }
-            UserVote vote = new UserVote();
-            vote.setUser(user);
-            vote.setResult(result);
-            if (direction.equals("up")){
-                vote.setUpvote(true);
-            }
-            if(direction.equals("down")){
-                vote.setUpvote(false);
-            }
-            voteRepository.save(vote);
-            // byUserAndResult.add(vote); 
-            searchRepository.save(result);
+            if(!(direction.equals("none"))){
+                UserVote vote = new UserVote();
+                vote.setUser(user);
+                vote.setResult(result);
+                if (direction.equals("up")){
+                    vote.setUpvote(true);
+                }
+                if(direction.equals("down")){
+                    vote.setUpvote(false);
+                }
+                voteRepository.save(vote);
+            }           
         }
 
         return "forward:/searchUpDownResults"; // brings you back to results view
