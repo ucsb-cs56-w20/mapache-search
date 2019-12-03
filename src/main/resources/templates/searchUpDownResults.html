@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <title>Search Results</title>
+  <div th:replace="fragments/bootstrap_head.html"></div>
+</head>
+
+<body>
+  <div class="container">
+    <div th:replace="fragments/bootstrap_nav_header.html"></div>
+    <h1>Search Results</h1>
+
+    <h2>Items</h2>
+
+    <th:block th:each="result : ${voteResult}">
+      <th:block th:replace="fragments/up_down_result_row :: row (item=${result.getGoogleResult()}, query=${query})"></th:block>
+    </th:block>
+
+    <div th:replace="fragments/bootstrap_footer.html"></div>
+  </div>
+  <div th:replace="fragments/bootstrap_scripts.html"></div>
+</body>
+
+</html>

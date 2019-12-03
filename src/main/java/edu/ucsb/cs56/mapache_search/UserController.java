@@ -48,11 +48,16 @@ public class UserController {
     @PostMapping("user/settings/update")
     public String updateKey(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        u.setApikey(user.getApikey());
+        u.setApikey(sanitizeApikey(user.getApikey()));
         userRepository.save(u);
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
         return "user/settings";
+    }
+
+    /* Removes whitespace from apikey */
+    private String sanitizeApikey(String apikey) {
+        return apikey.replaceAll("\\s", "");
     }
 
 }

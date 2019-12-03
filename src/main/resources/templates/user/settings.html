@@ -1,71 +1,37 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <link rel="stylesheet" href="../../css/styles.css">
-    <style>
-    p.bigfont {
-    color: red;
-    font-size: 200%;
-    }
-  </style>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Settings</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="../css/shards.min.css" />
-        <div th:replace="fragments/bootstrap_head.html"></div>
-  </head>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-  <tbody>
-    <div class="container">
-        <div th:replace="fragments/bootstrap_nav_header.html"></div>
-        <p th:text="'Hello, ' + ${user.username} + '!'"></p>
-    </div>
+<head>
+  <title>Settings</title>
+</head>
 
-    <h1>Instructions for getting API Key</h1>
-    <a href="https://developers.google.com/custom-search/v1/overview">
-      Click Here to get API Key
-    </a>
-
-    <div class="container my-5">
-      <p class="bigfont" th:text="'Here is your current API Key:' + ${user.apikey}" th:if="${user.apikey != null}"></p>
-      <p class="bigfont" th:text="'PLEASE UPDATE YOUR API KEY; CURRENTLY NULL!'" th:if="${user.apikey == null}"></p>
-      <form action="#" th:action="@{/user/settings/update/}" th:object="${user_template}" method="post">
-            <div class="form-group col-md-5">
-                <label for="apiKey" class="col-form-label">ENTER NEW API KEY: </label>
-                <input type="text" th:field="*{apikey}" class="form-control" id="apikey" placeholder="Put stuff here">
-                <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}" class="text-danger"></span>
+<body>
+  <div class="container">
+    <div th:replace="/../fragments/bootstrap_head.html"></div>
+    <div th:replace="/../fragments/bootstrap_nav_header.html"></div>
+                <div class="container">
+                    <p th:text="'Hello, ' + ${user.username} + '!'"></p>
+                </div>
+                <div class="container">
+                  <h3>Instructions for getting API Key</h3>
+                  <a href="https://developers.google.com/custom-search/v1/overview">
+                    Click Here to get API Key
+                  </a>
+                </div>         
+                <div class="container my-5">
+                  <form action="#" th:action="@{/user/settings/update/}" th:object="${user_template}" method="post">
+                        <div class="form-group row">
+                            <label for="apikey" class="col-form-label col-sm-2">Google API Key: </label>
+                            <input type="text" th:name="apikey" class="form-control col-sm-10" id="apikey" placeholder="Enter API Key" th:value="${(user.apikey == null) ? '' : user.apikey}">
+                        </div>
+                        <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}" class="text-danger"></span>
+                        <div>
+                            <input type="submit" class="btn btn-primary" value="Update API Key">
+                        </div>
+                    </form>
+                </div>    
+            <div th:replace="/../fragments/bootstrap_scripts.html"></div>           
             </div>
-            <div>
-                <input type="submit" class="btn btn-primary" value="Update API Key">
-            </div>
-        </div>    
-    </form>
-    
-    </div>
+</body>
 
-    <!--
-      <div class="form-group col-md-6">
-      <form action="#" th:action="@{/user/settings/update/{username}(username=${user.username})}" th:object="${user}" method="post">
-        <div class="form-group col-md-6">
-        <label for="apiKey" class="col-form-label">API Key</label>
-        <input type="text" th:field="*{apiKey}" class="form-control" id="username" placeholder="EMPTY">
-        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></span>
-      </div>  
-      </form>
-    </div>
-  -->
-</tbody>
 </html>
