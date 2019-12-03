@@ -1,9 +1,18 @@
+.vote-info {
+    width: 35px;
+}
 .vb {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: black;
+}
+.vb.vb-up.vb-clicked,.vb.vb-up.vb-clicked:hover {
+    color: blue;
 }
 .vb.vb-up:hover {
     color: rgb(55, 183, 226);
+}
+.vb.vb-down.vb-clicked,.vb.vb-down.vb-clicked:hover {
+    color: red;
 }
 .vb.vb-down:hover {
     color: orange;
