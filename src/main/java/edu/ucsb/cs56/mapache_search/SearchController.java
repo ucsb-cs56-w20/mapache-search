@@ -112,28 +112,29 @@ public class SearchController {
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
 
-        List<ResultVoteWrapper> voteResults = new ArrayList<>();
-        int count = 0;
-        for(Item item : sr.getItems()) {
-            List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
-            SearchResultEntity result;
-            if (matchingResults.isEmpty()) {
-                result = new SearchResultEntity();
-                result.setUrl(item.getLink());
-                result.setVotecount((long) 0);
-                searchRepository.save(result);
-            } else {
-                result = matchingResults.get(0);
-            }
-            voteResults.add(new ResultVoteWrapper(item, result));
+        if(!(sr.getKind()=="error")){
+            List<ResultVoteWrapper> voteResults = new ArrayList<>();
+            int count = 0;
+            for(Item item : sr.getItems()) {
+                List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
+                SearchResultEntity result;
+                if (matchingResults.isEmpty()) {
+                    result = new SearchResultEntity();
+                    result.setUrl(item.getLink());
+                    result.setVotecount((long) 0);
+                    searchRepository.save(result);
+                } else {
+                    result = matchingResults.get(0);
+                }
+                voteResults.add(new ResultVoteWrapper(item, result));
 
-            
-            if (++count == 10)
-                break;
+                
+                if (++count == 10)
+                    break;
+            }
+            System.out.println(voteResults.size());
+            model.addAttribute("voteResult", voteResults);
         }
-        System.out.println(voteResults.size());
-        model.addAttribute("voteResult", voteResults);
-        
         return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
