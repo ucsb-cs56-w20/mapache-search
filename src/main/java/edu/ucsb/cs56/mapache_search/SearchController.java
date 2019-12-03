@@ -130,7 +130,7 @@ public class SearchController {
                 } else {
                     result = matchingResults.get(0);
                 }
-                voteResults.add(new ResultVoteWrapper(item, result));
+                voteResults.add(new ResultVoteWrapper(item, result, count));
 
                 if (++count == 10)
                     break;
