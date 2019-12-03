@@ -120,7 +120,7 @@ public class SearchController {
             if (++count == 10)
                 break;
         }
-        System.out.println(voteResults.size());
+
         model.addAttribute("voteResult", voteResults);
         
         return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
@@ -140,7 +140,7 @@ public class SearchController {
                 searchRepository.save(result);
             }
         
-        return "redirect:/searchUpDownResults?query=" + query; // brings you back to results view
+        return "forward:/searchUpDownResults"; // brings you back to results view
     }
 
 
