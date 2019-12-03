@@ -30,7 +30,7 @@
             el.removeClass("vb-clicked");
           }
         }
-        var query = $(this).parent().attr("url");
+        var query = $(this).parent().data("url");
         // hit the API endpoint to change the vote in the backend
         $.ajax({
           url: "../updateVote",
