@@ -16,6 +16,7 @@ public class AppUser { //Can't use User since User is a defined word in DB
     private String username;
     private String apikey;
     private String uid;
+    private String searchHistory [];  
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -28,5 +29,10 @@ public class AppUser { //Can't use User since User is a defined word in DB
    
     public String getUid() { return uid; }
     public void setUid (String uid) { this.uid = uid; }
+
+    public String [] getSearchHistory() { return this.searchHistory; }
+    public void setSearchHistory(String [] searchHistory) { 
+        this.searchHistory = searchHistory;   
+    }
     
 }

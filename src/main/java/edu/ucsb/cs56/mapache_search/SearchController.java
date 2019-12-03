@@ -88,6 +88,12 @@ public class SearchController {
                 break;
         }
         model.addAttribute("voteResult", voteResults);
+
+        //add query to previous search table
+        String [] searchHistory = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearchHistory();
+        logger.info(searchHistory.toString());
+        
+
         
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
