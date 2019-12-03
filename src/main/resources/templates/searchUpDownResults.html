@@ -48,14 +48,27 @@
 <body onload="onLoad();">
   <div class="container">
     <div th:replace="fragments/bootstrap_nav_header.html"></div>
-    <h1>Search Results</h1>
 
-    <h2>Items</h2>
+    <div th:if=" ${searchResult.getKind()} == 'error'">
 
-    <th:block th:each="result : ${voteResult}">
-      <th:block th:replace="fragments/up_down_result_row :: row (item=${result.getGoogleResult()}, query=${query})"></th:block>
-    </th:block>
+      <h2>It seems that your API key does not work properly!</h2>
+      <p>
+        Please check your API key in  <a href="/user/settings">User Settings</a>.     
+    </p>
 
+    </div>
+
+    <div th:if=" ${searchResult.getKind()} != 'error'">
+
+      <h1>Search Results</h1>
+
+      <h2>Items</h2>
+
+      <div 
+      <th:block th:each="result : ${voteResult}">
+        <th:block th:replace="fragments/up_down_result_row :: row (item=${result.getGoogleResult()}, query=${query})"></th:block>
+      </th:block>
+    </div>
     <div th:replace="fragments/bootstrap_footer.html"></div>
   </div>
   <div th:replace="fragments/bootstrap_scripts.html"></div>
