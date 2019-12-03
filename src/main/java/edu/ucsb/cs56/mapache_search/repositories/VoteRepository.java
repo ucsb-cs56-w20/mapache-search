@@ -14,4 +14,5 @@ public interface VoteRepository extends CrudRepository<UserVote, Long> {
     List<UserVote> findById(long id);
 
     List<UserVote> findByUserAndResult(AppUser user, SearchResultEntity result);
+    List<UserVote> findByResult(SearchResultEntity result);
 }

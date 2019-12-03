@@ -5,6 +5,9 @@ import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.UserVote;
+import edu.ucsb.cs56.mapache_search.entities.AppUser;
+
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import edu.ucsb.cs56.mapache_search.search.Item;
 import java.io.IOException;
@@ -118,6 +121,8 @@ public class SearchController {
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
         String json = searchService.getJSON(query, apiKey);
 
+
+
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
 
@@ -135,12 +140,25 @@ public class SearchController {
                 } else {
                     result = matchingResults.get(0);
                 }
+
+                List<UserVote> byResult = voteRepository.findByResult(result);
+                long voteCount = 0;
+                for(UserVote vote : byResult){
+                    if(vote.getUpvote() == true){
+                        voteCount += 1;
+                    }else{
+                        voteCount -= 1;
+                    }
+                }
+                result.setVotecount(voteCount);
+
                 voteResults.add(new ResultVoteWrapper(item, result, count));
+                
 
                 if (++count == 10)
                     break;
             }
-            System.out.println(voteResults.size());
+
             Collections.sort(voteResults, Collections.reverseOrder());
             model.addAttribute("voteResult", voteResults);
         }
@@ -153,20 +171,28 @@ public class SearchController {
         List<SearchResultEntity> matchingResults = searchRepository.findById(id);
         if (!matchingResults.isEmpty()) {
 
-            // voteRepository
-
-
-
             SearchResultEntity result = matchingResults.get(0);
+            AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+
+            List<UserVote> byUserAndResult = voteRepository.findByUserAndResult(user, result);
+            
+            if(byUserAndResult.size() > 0){
+                voteRepository.delete(byUserAndResult.get(0));
+            }
+            UserVote vote = new UserVote();
+            vote.setUser(user);
+            vote.setResult(result);
             if (direction.equals("up")){
-                result.setVotecount(result.getVotecount() + 1l);
+                vote.setUpvote(true);
             }
             if(direction.equals("down")){
-                result.setVotecount(result.getVotecount() - 1l);
+                vote.setUpvote(false);
             }
+            voteRepository.save(vote);
+            // byUserAndResult.add(vote); 
             searchRepository.save(result);
         }
-        
+
         return "forward:/searchUpDownResults"; // brings you back to results view
     }
 

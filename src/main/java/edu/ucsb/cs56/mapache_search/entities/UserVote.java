@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class UserVote {
@@ -12,7 +14,14 @@ public class UserVote {
     private long id;
 
     private boolean upvote;
+    // @EmbeddedId
+    @ManyToOne
+    // @JoinColumn(name = "id")
     private AppUser user;
+
+    // @EmbeddedId
+    @ManyToOne
+    // @JoinColumn(name = "id")
     private SearchResultEntity result;
 
     public Long getId() { return id; }
