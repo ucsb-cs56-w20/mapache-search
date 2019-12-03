@@ -78,11 +78,15 @@ public class SearchController {
         private Item googleResult;
         private SearchResultEntity dbResult;
         private int position;
+        private boolean didUpvote;
+        private boolean didDownvote;
 
-        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position) {
+        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position, boolean upvoted, boolean downvoted) {
             this.googleResult = googleResult;
             this.dbResult = dbResult;
             this.position = position;
+            this.didUpvote = upvoted;
+            this.didDownvote = downvoted;
         }
 
         public SearchResultEntity getDBResult() {
@@ -95,6 +99,14 @@ public class SearchController {
 
         public int getPosition() {
             return position;
+        }
+
+        public boolean hasUpvoted() {
+            return didUpvote;
+        }
+
+        public boolean hasDownvoted() {
+            return didDownvote;
         }
 
         public int compareTo(ResultVoteWrapper oWrapper) {
@@ -118,6 +130,8 @@ public class SearchController {
     public String searchUpDown(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
         model.addAttribute("query", query);
 
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
         String json = searchService.getJSON(query, apiKey);
 
@@ -140,19 +154,25 @@ public class SearchController {
                 } else {
                     result = matchingResults.get(0);
                 }
-
+                boolean upvoted = false, downvoted = false;
                 List<UserVote> byResult = voteRepository.findByResult(result);
                 long voteCount = 0;
                 for(UserVote vote : byResult){
                     if(vote.getUpvote() == true){
                         voteCount += 1;
+                        if (vote.getUser().equals(user)) {
+                            upvoted = true;
+                        }
                     }else{
                         voteCount -= 1;
+                        if (vote.getUser().equals(user)) {
+                            downvoted = true;
+                        }
                     }
                 }
                 result.setVotecount(voteCount);
 
-                voteResults.add(new ResultVoteWrapper(item, result, count));
+                voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted));
                 
 
                 if (++count == 10)
