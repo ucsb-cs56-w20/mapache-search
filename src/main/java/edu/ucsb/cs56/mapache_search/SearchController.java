@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,29 +77,43 @@ public class SearchController {
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
-    public class ResultVoteWrapper {
+    public class ResultVoteWrapper implements Comparable<ResultVoteWrapper> {
         private Item googleResult;
         private SearchResultEntity dbResult;
+        private int position;
 
-        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult) {
+        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position) {
             this.googleResult = googleResult;
             this.dbResult = dbResult;
+            this.position = position;
         }
 
         public SearchResultEntity getDBResult() {
             return dbResult;
         }
 
-        public void setDBResult(SearchResultEntity dbResult) {
-            this.dbResult = dbResult;
-        }
-
         public Item getGoogleResult() {
             return googleResult;
         }
 
-        public void setGoogleResult(Item googleResult) {
-            this.googleResult = googleResult;
+        public int getPosition() {
+            return position;
+        }
+
+        public int compareTo(ResultVoteWrapper oWrapper) {
+            if (getDBResult().getVotecount() > oWrapper.getDBResult().getVotecount()) {
+                return 1;
+            }
+            else if (getDBResult().getVotecount() < oWrapper.getDBResult().getVotecount()) {
+                return -1;
+            } else {
+                if (getPosition() < oWrapper.getPosition()) {
+                    return 1;
+                } else if (getPosition() > oWrapper.getPosition()) {
+                    return -1;
+                }
+                return 0;
+            }
         }
     }
 
@@ -120,18 +135,18 @@ public class SearchController {
             if (matchingResults.isEmpty()) {
                 result = new SearchResultEntity();
                 result.setUrl(item.getLink());
-                result.setVotecount((long) 0);
+                result.setVotecount(0l);
                 searchRepository.save(result);
             } else {
                 result = matchingResults.get(0);
             }
-            voteResults.add(new ResultVoteWrapper(item, result));
+            voteResults.add(new ResultVoteWrapper(item, result, count));
 
             
             if (++count == 10)
                 break;
         }
-        System.out.println(voteResults.size());
+        Collections.sort(voteResults, Collections.reverseOrder());
         model.addAttribute("voteResult", voteResults);
         
         return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
