@@ -1,20 +1,11 @@
 package edu.ucsb.cs56.mapache_search;
 
-import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import edu.ucsb.cs56.mapache_search.search.Item;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.Principal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -25,8 +16,6 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -127,29 +116,49 @@ public class SearchController {
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
 
-        List<ResultVoteWrapper> voteResults = new ArrayList<>();
-        int count = 0;
-        for(Item item : sr.getItems()) {
-            List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
-            SearchResultEntity result;
-            if (matchingResults.isEmpty()) {
-                result = new SearchResultEntity();
-                result.setUrl(item.getLink());
-                result.setVotecount(0l);
-                searchRepository.save(result);
-            } else {
-                result = matchingResults.get(0);
-            }
-            voteResults.add(new ResultVoteWrapper(item, result, count));
+        if(sr.getKind() != "error"){
+            List<ResultVoteWrapper> voteResults = new ArrayList<>();
+            int count = 0;
+            for(Item item : sr.getItems()) {
+                List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
+                SearchResultEntity result;
+                if (matchingResults.isEmpty()) {
+                    result = new SearchResultEntity();
+                    result.setUrl(item.getLink());
+                    result.setVotecount((long) 0);
+                    searchRepository.save(result);
+                } else {
+                    result = matchingResults.get(0);
+                }
+                voteResults.add(new ResultVoteWrapper(item, result));
 
-            
-            if (++count == 10)
-                break;
+                if (++count == 10)
+                    break;
+            }
+            System.out.println(voteResults.size());
+            Collections.sort(voteResults, Collections.reverseOrder());
+            model.addAttribute("voteResult", voteResults);
         }
-        Collections.sort(voteResults, Collections.reverseOrder());
-        model.addAttribute("voteResult", voteResults);
         
         return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
+
+    @GetMapping("/updateVote")
+    public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "query", required = true) String query, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
+            List<SearchResultEntity> matchingResults = searchRepository.findById(id);
+            if (!matchingResults.isEmpty()) {
+                SearchResultEntity result = matchingResults.get(0);
+                if (direction.equals("up")){
+                    result.setVotecount(result.getVotecount() + 1l);
+                }
+                if(direction.equals("down")){
+                    result.setVotecount(result.getVotecount() - 1l);
+                }
+                searchRepository.save(result);
+            }
+        
+        return "forward:/searchUpDownResults"; // brings you back to results view
+    }
+
 
 }

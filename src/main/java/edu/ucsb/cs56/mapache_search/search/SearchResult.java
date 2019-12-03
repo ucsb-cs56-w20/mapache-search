@@ -1,6 +1,7 @@
 package edu.ucsb.cs56.mapache_search.search;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -44,13 +45,22 @@ public class SearchResult {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    
-            SearchResult sr = objectMapper.readValue(json, SearchResult.class);
-            return sr;
+            if(json == "{\"error\": \"401: Unauthorized\"}"){
+                SearchResult sr = SearchResult.handleApiError();
+                return sr;
+            } else {
+                SearchResult sr = objectMapper.readValue(json, SearchResult.class);
+                return sr;
+            }
         } catch (JsonProcessingException jpe) {
             logger.error("JsonProcessingException:" + jpe);
             return null;
         }
-        
+    }
+
+    private static SearchResult handleApiError() {
+        SearchResult e = new SearchResult();
+        e.kind = "error";
+        return e;
     }
 }
