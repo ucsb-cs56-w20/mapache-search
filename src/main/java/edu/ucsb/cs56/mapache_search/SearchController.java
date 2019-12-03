@@ -1,8 +1,10 @@
 package edu.ucsb.cs56.mapache_search;
 
+import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
-import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import edu.ucsb.cs56.mapache_search.search.Item;
 import java.io.IOException;
@@ -31,6 +33,9 @@ public class SearchController {
 
     @Autowired
     private SearchResultRepository searchRepository;
+
+    @Autowired
+    private VoteRepository voteRepository;
 
     @Autowired
     private AuthControllerAdvice controllerAdvice;
@@ -128,17 +133,22 @@ public class SearchController {
 
     @GetMapping("/updateVote")
     public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "query", required = true) String query, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
-            List<SearchResultEntity> matchingResults = searchRepository.findById(id);
-            if (!matchingResults.isEmpty()) {
-                SearchResultEntity result = matchingResults.get(0);
-                if (direction.equals("up")){
-                    result.setVotecount(result.getVotecount() + 1l);
-                }
-                if(direction.equals("down")){
-                    result.setVotecount(result.getVotecount() - 1l);
-                }
-                searchRepository.save(result);
+        List<SearchResultEntity> matchingResults = searchRepository.findById(id);
+        if (!matchingResults.isEmpty()) {
+
+            // voteRepository
+
+
+
+            SearchResultEntity result = matchingResults.get(0);
+            if (direction.equals("up")){
+                result.setVotecount(result.getVotecount() + 1l);
             }
+            if(direction.equals("down")){
+                result.setVotecount(result.getVotecount() - 1l);
+            }
+            searchRepository.save(result);
+        }
         
         return "forward:/searchUpDownResults"; // brings you back to results view
     }
