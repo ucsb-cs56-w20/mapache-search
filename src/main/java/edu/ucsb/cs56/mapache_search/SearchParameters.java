@@ -9,10 +9,6 @@ public class SearchParameters {
         this.page = page;
     }
 
-    public Builder editor() {
-        return new Builder(this);
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -53,9 +49,4 @@ public class SearchParameters {
     public int getPage() {
         return page;
     }
-
-    public String toURLQuery() {
-        return String.format("?query=%s&page=%d", query, page);
-    }
-
 }

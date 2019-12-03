@@ -7,14 +7,14 @@
       <a class="page-link" tabindex="-1">Previous</a>
     </li>
     <li th:unless="${currentPage == 1}" class="page-item">
-      <a class="page-link" th:href="${searchParams.editor().setPage(currentPage - 1).build().toURLQuery()}">Previous</a>
+      <a class="page-link" th:href="@{${baseUrl}(query=${searchParams.query}, page=${currentPage - 1})}">Previous</a>
     </li>
 
     <th:block th:each="i: ${#numbers.sequence(1, pageCount)}">
       <li class="page-item" th:classappend="${i == currentPage} ? active">
         <a
             class="page-link"
-            th:href="${searchParams.editor().setPage(i).build().toURLQuery()}"
+            th:href="@{${baseUrl}(query=${searchParams.query}, page=${i})}"
             th:text="${i}">
         </a>
       </li>
@@ -24,7 +24,7 @@
       <a class="page-link" tabindex="-1">Next</a>
     </li>
     <li th:unless="${currentPage == pageCount}" class="page-item">
-      <a class="page-link" th:href="${searchParams.editor().setPage(currentPage + 1).build().toURLQuery()}">Next</a>
+      <a class="page-link" th:href="@{${baseUrl}(query=${searchParams.query}, page=${currentPage - 1})}">Next</a>
     </li>
   </ul>
 </nav>
