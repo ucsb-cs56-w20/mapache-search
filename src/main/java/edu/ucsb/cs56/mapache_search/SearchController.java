@@ -72,24 +72,34 @@ public class SearchController {
 
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
-
-        List<SearchResultEntity> voteResults = new ArrayList<>();
-        int count = 0;
-        for(Item item : sr.getItems()) {
-            if (searchRepository.findByUrl(item.getLink()).isEmpty()) {
-                SearchResultEntity result = new SearchResultEntity();
-                result.setUrl(item.getLink());
-                result.setVoteCount(new Long(0));
-                searchRepository.save(result);
-                voteResults.add(searchRepository.findByUrl(item.getLink()).get(0));
-            }
-            
-            if (++count == 10)
-                break;
-        }
-        model.addAttribute("voteResult", voteResults);
         
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
+    }
+
+    public class ResultVoteWrapper {
+        private Item googleResult;
+        private SearchResultEntity dbResult;
+
+        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult) {
+            this.googleResult = googleResult;
+            this.dbResult = dbResult;
+        }
+
+        public SearchResultEntity getDBResult() {
+            return dbResult;
+        }
+
+        public void setDBResult(SearchResultEntity dbResult) {
+            this.dbResult = dbResult;
+        }
+
+        public Item getGoogleResult() {
+            return googleResult;
+        }
+
+        public void setGoogleResult(Item googleResult) {
+            this.googleResult = googleResult;
+        }
     }
 
     @GetMapping("/searchUpDownResults")
@@ -101,6 +111,28 @@ public class SearchController {
 
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
+
+        List<ResultVoteWrapper> voteResults = new ArrayList<>();
+        int count = 0;
+        for(Item item : sr.getItems()) {
+            List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
+            SearchResultEntity result;
+            if (matchingResults.isEmpty()) {
+                result = new SearchResultEntity();
+                result.setUrl(item.getLink());
+                result.setVotecount((long) 0);
+                searchRepository.save(result);
+            } else {
+                result = matchingResults.get(0);
+            }
+            voteResults.add(new ResultVoteWrapper(item, result));
+
+            
+            if (++count == 10)
+                break;
+        }
+        System.out.println(voteResults.size());
+        model.addAttribute("voteResult", voteResults);
         
         return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
     }

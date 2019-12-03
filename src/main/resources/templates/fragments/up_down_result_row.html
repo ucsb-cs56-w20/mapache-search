@@ -1,0 +1,26 @@
+<div class="card p-4 my-2 d-flex flex-row" th:fragment="row (item, query)">
+    <div class="d-flex flex-column mr-3 align-items-center">
+        <a th:href="${'../updateVote?direction=up&id='+result.getDBResult().getId()+'&query='+query}" class="vb vb-up">
+            <i class="far fa-thumbs-up"></i>
+        </a>
+        <span class="h3" th:utext="${result.getDBResult().getVotecount()}"></span>
+        <a th:href="${'../updateVote?direction=up&id='+result.getDBResult().getId()+'&query='+query}" class="vb vb-down">
+            <i class="far fa-thumbs-down"></i>
+        </a>
+    </div>
+    <div class="d-flex flex-column">
+        <a
+            class="h5 m-0"
+            target="_blank"
+            rel="noopener noreferrer"
+            th:href="${result.getGoogleResult().link}"
+            th:utext="${result.getGoogleResult().htmlTitle}"
+        ></a>
+        <span class="mb-1">
+        from
+        <a target="_blank" rel="noopener noreferrer" th:href="${'//' + result.getGoogleResult().displayLink}" th:text="${result.getGoogleResult().displayLink}"></a>
+        </span>
+        <span th:utext="${result.getGoogleResult().htmlSnippet.replace('<br>', '')}"></span>
+    </div>
+  </div>
+  
