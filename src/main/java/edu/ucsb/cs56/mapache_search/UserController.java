@@ -45,15 +45,13 @@ public class UserController {
 
     // cron = 0 0 12 * * ? does task at midnight
     // every ten seconds "*/10 * * * * *"
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "0 0 12 * * ?")
     public void resetCounter() {
         Iterable<AppUser> users = userRepository.findAll();
         for(AppUser u : users){
             logger.info(Long.toString(u.getSearches()));
-            u.setSearches(0l);
-            logger.info(Long.toString(u.getSearches()));
+            userRepository.findByUid(u.getUid()).get(0).setSearches(0l);
         }
-        logger.info("searches reset");
             
     } 
 
