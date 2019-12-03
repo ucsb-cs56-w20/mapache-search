@@ -2,9 +2,9 @@
     <div class="d-flex flex-column mr-3 align-items-center vote-info" th:id="${result.getDBResult().getId()}">
         <span class="vb vb-up">
             <i class="far fa-thumbs-up"></i>
-        </a>
-        <span class="h3" th:utext="${result.getDBResult().getVotecount()}"></span>
-        <a th:href="${'../updateVote?direction=down&id='+result.getDBResult().getId()+'&query='+query}" class="vb vb-down">
+        </span>
+        <span class="h3 vote-count" th:utext="${result.getDBResult().getVotecount()}"></span>
+        <span class="vb vb-down">
             <i class="far fa-thumbs-down"></i>
         </span>
     </div>
