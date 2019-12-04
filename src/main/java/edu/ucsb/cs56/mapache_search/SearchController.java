@@ -1,8 +1,13 @@
 package edu.ucsb.cs56.mapache_search;
 
+import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
-import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.entities.UserVote;
+import edu.ucsb.cs56.mapache_search.entities.AppUser;
+
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import edu.ucsb.cs56.mapache_search.search.Item;
 import java.io.IOException;
@@ -17,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
@@ -32,6 +38,9 @@ public class SearchController {
 
     @Autowired
     private SearchResultRepository searchRepository;
+
+    @Autowired
+    private VoteRepository voteRepository;
 
     @Autowired
     private AuthControllerAdvice controllerAdvice;
@@ -72,11 +81,15 @@ public class SearchController {
         private Item googleResult;
         private SearchResultEntity dbResult;
         private int position;
+        private boolean didUpvote;
+        private boolean didDownvote;
 
-        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position) {
+        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position, boolean upvoted, boolean downvoted) {
             this.googleResult = googleResult;
             this.dbResult = dbResult;
             this.position = position;
+            this.didUpvote = upvoted;
+            this.didDownvote = downvoted;
         }
 
         public SearchResultEntity getDBResult() {
@@ -89,6 +102,14 @@ public class SearchController {
 
         public int getPosition() {
             return position;
+        }
+
+        public boolean hasUpvoted() {
+            return didUpvote;
+        }
+
+        public boolean hasDownvoted() {
+            return didDownvote;
         }
 
         public int compareTo(ResultVoteWrapper oWrapper) {
@@ -112,8 +133,12 @@ public class SearchController {
     public String searchUpDown(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
         model.addAttribute("query", query);
 
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
         String json = searchService.getJSON(query, apiKey);
+
+
 
         SearchResult sr = SearchResult.fromJSON(json);
         model.addAttribute("searchResult", sr);
@@ -132,12 +157,24 @@ public class SearchController {
                 } else {
                     result = matchingResults.get(0);
                 }
-                voteResults.add(new ResultVoteWrapper(item, result, count));
+                boolean upvoted = false, downvoted = false;
+
+                List<UserVote> myVotes = voteRepository.findByUserAndResult(user, result);
+                if (!myVotes.isEmpty()) {
+                    UserVote myVote = myVotes.get(0);
+                    if (myVote.getUpvote()) {
+                        upvoted = true;
+                    } else {
+                        downvoted = true;
+                    }
+                }
+                voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted));
+                
 
                 if (++count == 10)
                     break;
             }
-            System.out.println(voteResults.size());
+
             Collections.sort(voteResults, Collections.reverseOrder());
             model.addAttribute("voteResult", voteResults);
         }
@@ -146,20 +183,39 @@ public class SearchController {
     }
 
     @GetMapping("/updateVote")
-    public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "query", required = true) String query, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
-            List<SearchResultEntity> matchingResults = searchRepository.findById(id);
-            if (!matchingResults.isEmpty()) {
-                SearchResultEntity result = matchingResults.get(0);
+    @ResponseBody
+    public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
+        long voteCount = 0;
+
+        List<SearchResultEntity> matchingResults = searchRepository.findById(id);        
+        if (!matchingResults.isEmpty()) {
+
+            SearchResultEntity result = matchingResults.get(0);
+            AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+
+            List<UserVote> byUserAndResult = voteRepository.findByUserAndResult(user, result);
+            
+            if(byUserAndResult.size() > 0){
+                voteRepository.delete(byUserAndResult.get(0));
+            }
+            if(!(direction.equals("none"))){
+                UserVote vote = new UserVote();
+                vote.setUser(user);
+                vote.setResult(result);
                 if (direction.equals("up")){
-                    result.setVotecount(result.getVotecount() + 1l);
+                    vote.setUpvote(true);
                 }
                 if(direction.equals("down")){
-                    result.setVotecount(result.getVotecount() - 1l);
+                    vote.setUpvote(false);
                 }
-                searchRepository.save(result);
+                voteRepository.save(vote);
             }
-        
-        return "forward:/searchUpDownResults"; // brings you back to results view
+            voteCount = voteRepository.findByResultAndUpvote(result, true).size() - voteRepository.findByResultAndUpvote(result, false).size(); // the score is the number of upvotes minus the number of downvotes
+            result.setVotecount(voteCount);
+            searchRepository.save(result);
+        }
+
+        return String.valueOf(voteCount); // returns the new vote total
     }
 
 
