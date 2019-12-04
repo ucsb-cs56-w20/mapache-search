@@ -208,14 +208,7 @@ public class SearchController {
                 }
                 voteRepository.save(vote);
             }
-            List<UserVote> byResult = voteRepository.findByResult(result);
-            for(UserVote vote : byResult){
-                if(vote.getUpvote() == true){
-                    voteCount += 1;
-                }else{
-                    voteCount -= 1;
-                }
-            }
+            voteCount = voteRepository.findByResultAndUpvote(result, true).size() - voteRepository.findByResultAndUpvote(result, false).size(); // the score is the number of upvotes minus the number of downvotes
             result.setVotecount(voteCount);
             searchRepository.save(result);
         }
