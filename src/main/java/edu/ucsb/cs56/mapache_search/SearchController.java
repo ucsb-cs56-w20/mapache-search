@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
@@ -155,23 +156,16 @@ public class SearchController {
                     result = matchingResults.get(0);
                 }
                 boolean upvoted = false, downvoted = false;
-                List<UserVote> byResult = voteRepository.findByResult(result);
-                long voteCount = 0;
-                for(UserVote vote : byResult){
-                    if(vote.getUpvote() == true){
-                        voteCount += 1;
-                        if (vote.getUser().equals(user)) {
-                            upvoted = true;
-                        }
-                    }else{
-                        voteCount -= 1;
-                        if (vote.getUser().equals(user)) {
-                            downvoted = true;
-                        }
+
+                List<UserVote> myVotes = voteRepository.findByUserAndResult(user, result);
+                if (!myVotes.isEmpty()) {
+                    UserVote myVote = myVotes.get(0);
+                    if (myVote.getUpvote()) {
+                        upvoted = true;
+                    } else {
+                        downvoted = true;
                     }
                 }
-                result.setVotecount(voteCount);
-
                 voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted));
                 
 
@@ -187,8 +181,11 @@ public class SearchController {
     }
 
     @GetMapping("/updateVote")
+    @ResponseBody
     public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
-        List<SearchResultEntity> matchingResults = searchRepository.findById(id);
+        long voteCount = 0;
+
+        List<SearchResultEntity> matchingResults = searchRepository.findById(id);        
         if (!matchingResults.isEmpty()) {
 
             SearchResultEntity result = matchingResults.get(0);
@@ -210,10 +207,20 @@ public class SearchController {
                     vote.setUpvote(false);
                 }
                 voteRepository.save(vote);
-            }           
+            }
+            List<UserVote> byResult = voteRepository.findByResult(result);
+            for(UserVote vote : byResult){
+                if(vote.getUpvote() == true){
+                    voteCount += 1;
+                }else{
+                    voteCount -= 1;
+                }
+            }
+            result.setVotecount(voteCount);
+            searchRepository.save(result);
         }
 
-        return "forward:/searchUpDownResults"; // brings you back to results view
+        return String.valueOf(voteCount); // returns the new vote total
     }
 
 
