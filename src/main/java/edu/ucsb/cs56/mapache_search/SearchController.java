@@ -73,6 +73,10 @@ public class SearchController {
         model.addAttribute("searchResult", sr);
         model.addAttribute("searchObject", new SearchObject());
         model.addAttribute("previousSearch", query);
+
+        if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
+            return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
+        }
         
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
