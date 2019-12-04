@@ -11,36 +11,14 @@
     <div th:replace="fragments/bootstrap_nav_header.html"></div>
     <h1>Search Results</h1>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Kind</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td th:text="${searchResult.kind}"></td>
-        </tr>
-      </tbody>
-    </table>
-
+      <h2>Enter a programming/coding query:</h2>
+      <div th:replace="fragments/basic_search_form.html"></div>
+    
     <h2>Items</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>site</th>
-          <th>url</th>
-          <th>title</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr th:each="i: ${searchResult.items}">
-          <td th:text="${i.displayLink}"></td>
-          <td ><a th:utext="${i.htmlFormattedUrl}" th:href="${i.link}"></a></td>
-          <td th:utext="${i.htmlTitle}"></td>
-        </tr>
-      </tbody>
-    </table>
+
+    <th:block th:each="item : ${searchResult.items}">
+      <th:block th:replace="fragments/result_row :: row (item=${item})"></th:block>
+    </th:block>
 
     <div th:replace="fragments/bootstrap_footer.html"></div>
   </div>
