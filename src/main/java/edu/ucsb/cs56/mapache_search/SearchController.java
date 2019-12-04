@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -173,6 +174,7 @@ public class SearchController {
             }
         }
     }
+
 
     @GetMapping("/searchUpDownResults")
     public String searchUpDown(SearchParameters params, Model model, OAuth2AuthenticationToken token) throws IOException {
