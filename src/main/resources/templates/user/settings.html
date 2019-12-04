@@ -20,8 +20,9 @@
                 </div>         
                 <div class="container my-5">
                   <form action="#" th:action="@{/user/settings/update/}" th:object="${user_template}" method="post">
+                        <p>Your current Google API key is: <a th:utext="${user.apikey}"></a></p>
                         <div class="form-group row">
-                            <label for="apikey" class="col-form-label col-sm-2">Google API Key: </label>
+                            <label for="apikey" class="col-form-label col-sm-2">Enter a new API Key: </label>
                             <input type="text" th:name="apikey" class="form-control col-sm-10" id="apikey" placeholder="Enter API Key" th:value="${(user.apikey == null) ? '' : user.apikey}">
                         </div>
                         <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}" class="text-danger"></span>
