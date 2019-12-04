@@ -40,6 +40,9 @@ public class SearchResult {
     public int getPageCount() {
         long totalResults = Long.parseLong(searchInformation.getTotalResults());
 
+        // api caps search results at 100 and page size at 10, so there can only ever be a maximum of 10 pages
+        // totalResults still shows all matching documents, even if the api only allows us to see the first 100
+        // https://developers.google.com/custom-search/v1/cse/list#start
         return (int) Math.min(Math.ceil(totalResults / 10.0), 10);
     }
 
