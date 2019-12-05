@@ -38,7 +38,7 @@ public class AuthControllerAdvice {
             AppUser u = new AppUser();
             u.setUid(uid);
             u.setUsername(token2login(token));
-            u.setApikey("stub");
+            u.setApikey("");
             userRepository.save(u);
             //username, apikey, uid
         }
