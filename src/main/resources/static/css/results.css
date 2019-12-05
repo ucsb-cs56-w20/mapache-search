@@ -17,3 +17,16 @@
 .vb.vb-down:hover {
     color: orange;
 }
+p.bigfont {
+    color: red;
+    font-size: 150%;
+  }
+ 
+ #footer {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;
+  text-align: center;
+  }
