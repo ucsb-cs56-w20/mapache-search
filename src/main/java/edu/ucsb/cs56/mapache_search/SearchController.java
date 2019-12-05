@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SearchController {
 
     private Logger logger = LoggerFactory.getLogger(SearchController.class);
-    private int searchCounter = 1; 
 
     @Autowired
     private SearchService searchService;
@@ -68,6 +67,21 @@ public class SearchController {
         model.addAttribute("query", query);
 
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
+        Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
+        Long maxSearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
+        //Long max
+
+        //up the search count, if maxed, dont search, if more than 24hrs reset.
+        if(searches <= maxSearches){
+            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(searches);
+        }else{
+            List<SearchResultEntity> voteResults = new ArrayList<>();
+            model.addAttribute("searchResult", "Max daily searches reached");
+            model.addAttribute("voteResult", voteResults);
+            model.addAttribute("api_uses", searches - 1l);
+            return "searchResults";
+        }
+
         String json = searchService.getJSON(query, apiKey);
 
         SearchResult sr = SearchResult.fromJSON(json);
@@ -79,7 +93,8 @@ public class SearchController {
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
 
-        model.addAttribute("voteResult", voteResults);  
+        model.addAttribute("voteResult", voteResults);
+        model.addAttribute("api_uses", searches);
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 

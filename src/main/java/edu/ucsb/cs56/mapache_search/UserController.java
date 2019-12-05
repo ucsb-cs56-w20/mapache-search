@@ -24,7 +24,6 @@ public class UserController {
 
     private UserRepository userRepository;
     private Logger logger = LoggerFactory.getLogger(UserController.class);
-    private int maxUses = 15; 
 
     @Autowired
     private AuthControllerAdvice controllerAdvice;
@@ -44,24 +43,27 @@ public class UserController {
 
     @GetMapping("user/settings")
     public String settingsForm(Model model, OAuth2AuthenticationToken token) {
-
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
+        Long maxsearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
-        model.addAttribute("api_uses", 0);
-        model.addAttribute("max_uses", maxUses);
+        model.addAttribute("api_uses", searches);
+        model.addAttribute("max_uses", maxsearches);
         return "user/settings";
     }
 
     @PostMapping("user/settings/update")
     public String updateKey(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
+        Long maxsearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
         u.setApikey(sanitizeApikey(user.getApikey()));
         userRepository.save(u);
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
-        model.addAttribute("api_uses", 0);
-        model.addAttribute("max_uses", maxUses);
+        model.addAttribute("api_uses", searches);
+        model.addAttribute("max_uses", maxsearches);
         return "user/settings";
     }
 
