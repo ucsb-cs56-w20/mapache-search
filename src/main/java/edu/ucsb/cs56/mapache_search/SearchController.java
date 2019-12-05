@@ -85,20 +85,22 @@ public class SearchController {
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
         Long maxSearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
-        Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as an int 
+        Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long 
 
-
-        //up the search count, if maxed, dont search, if more than 24hrs reset.
-        if(currentTime > time){
-            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(0l);
-        }
-
+        //check if user have reached max searches for the day
         if(searches <= maxSearches){
             userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(searches);
         }
         else{
             return "searchResults"; //currently causes error
         }
+
+        //up the search count, if maxed, dont search, if more than 24hrs reset.
+        if(currentTime > time){
+            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(0l);
+            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setTime(currentTime);
+        }
+
         String json = searchService.getJSON(query, apiKey);
 
         SearchResult sr = SearchResult.fromJSON(json);
