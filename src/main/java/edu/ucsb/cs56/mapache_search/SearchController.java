@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SearchController {
 
     private Logger logger = LoggerFactory.getLogger(SearchController.class);
+    private int searchCounter = 1; 
 
     @Autowired
     private SearchService searchService;
@@ -77,7 +78,8 @@ public class SearchController {
         if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
-        
+
+        model.addAttribute("voteResult", voteResults);  
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 

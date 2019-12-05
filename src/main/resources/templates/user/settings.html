@@ -16,7 +16,12 @@
                   <a href="https://developers.google.com/custom-search/v1/overview" target="_blank" rel="noopener noreferrer">
                     Click Here to get API Key
                   </a>
-                </div>         
+                </div> 
+                <div class="container" style= "margin-top: 30px">
+                  <h5>Number of API calls made today</h5>
+                  <p style= "color:red" th:text="${api_uses} + '/' + ${max_uses} "> </p> 
+                </div> 
+                
                 <div class="container my-5">
                   <form action="#" th:action="@{/user/settings/update/}" th:object="${user_template}" method="post">
                         <p>Your current Google API key is: <a th:utext="${user.apikey}"></a></p>

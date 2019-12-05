@@ -3,6 +3,10 @@ package edu.ucsb.cs56.mapache_search;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,8 @@ import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 public class UserController {
 
     private UserRepository userRepository;
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
+    private int maxUses = 15; 
 
     @Autowired
     private AuthControllerAdvice controllerAdvice;
@@ -42,6 +48,8 @@ public class UserController {
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
+        model.addAttribute("api_uses", 0);
+        model.addAttribute("max_uses", maxUses);
         return "user/settings";
     }
 
@@ -52,6 +60,8 @@ public class UserController {
         userRepository.save(u);
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
+        model.addAttribute("api_uses", 0);
+        model.addAttribute("max_uses", maxUses);
         return "user/settings";
     }
 
