@@ -9,6 +9,7 @@ import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.Item;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +63,10 @@ public class SearchController {
         return "upDownIndex";
     }
 
+
+    
+    
+
     @GetMapping("/searchResults")
     public String search(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
         model.addAttribute("query", query);
@@ -69,18 +74,16 @@ public class SearchController {
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
         Long maxSearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
-        //Long max
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(searches <= maxSearches){
             userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(searches);
-        }else{
-            List<SearchResultEntity> voteResults = new ArrayList<>();
-            model.addAttribute("searchResult", "Max daily searches reached");
-            model.addAttribute("voteResult", voteResults);
-            model.addAttribute("api_uses", searches - 1l);
-            return "searchResults";
         }
+        else{
+            return "searchResults"; //currently causes error
+        }
+        
+        
 
         String json = searchService.getJSON(query, apiKey);
 

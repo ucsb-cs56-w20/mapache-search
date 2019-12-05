@@ -3,11 +3,12 @@ package edu.ucsb.cs56.mapache_search;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 
 
 @Controller
+@EnableScheduling
 public class UserController {
 
     private UserRepository userRepository;
@@ -40,6 +42,22 @@ public class UserController {
         model.addAttribute("users", users);
         return "user/index";
     }
+
+    // cron = 0 0 12 * * ? does task at midnight
+    // every ten seconds "*/10 * * * * *"
+    @Scheduled(cron = "*/10 * * * * *")
+    public void resetCounter() {
+        Iterable<AppUser> users = userRepository.findAll();
+        for(AppUser u : users){
+            logger.info(Long.toString(u.getSearches()));
+            u.setSearches(0l);
+            logger.info(Long.toString(u.getSearches()));
+        }
+        logger.info("searches reset");
+            
+    } 
+
+    
 
     @GetMapping("user/settings")
     public String settingsForm(Model model, OAuth2AuthenticationToken token) {

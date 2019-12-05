@@ -39,7 +39,7 @@ public class AuthControllerAdvice {
             u.setUid(uid);
             u.setUsername(token2login(token));
             u.setApikey("");
-            u.setMaxsearches(3l);
+            u.setMaxsearches(20l);
             userRepository.save(u);
             //username, apikey, uid
         }
