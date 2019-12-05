@@ -13,7 +13,7 @@ public class AppUser { //Can't use User since User is a defined word in DB
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long searches; 
-    private long maxsearches; 
+    private final long maxsearches = 100l;  //100 queries per day for free: https://developers.google.com/custom-search/v1/overview
     private long time; 
 
     private String username;
@@ -27,7 +27,6 @@ public class AppUser { //Can't use User since User is a defined word in DB
     public void setId(Long id) { this.id = id; }
 
     public Long getMaxsearches() { return maxsearches; }
-    public void setMaxsearches(Long maxsearches) { this.maxsearches = maxsearches; }
     
     public Long getSearches() { return searches; }
     public void setSearches(Long searches) { this.searches = searches; }

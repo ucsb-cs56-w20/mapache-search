@@ -97,7 +97,7 @@ public class SearchController {
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){
-            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(0l);
+            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(1l);
             userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setTime(currentTime);
         }
 
