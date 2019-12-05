@@ -1,10 +1,10 @@
 <div class="card p-4 my-2 d-flex flex-row" th:fragment="row (item, query)">
     <div class="d-flex flex-column mr-3 align-items-center vote-info" th:id="${result.getDBResult().getId()}" th:attr="data-url=${result.getDBResult().getUrl()}">
-        <span class="vb vb-up">
+        <span class="vb vb-up" th:classappend="${result.hasUpvoted()} ? vb-clicked : vb">
             <i class="far fa-thumbs-up"></i>
         </span>
         <span class="h3 vote-count" th:utext="${result.getDBResult().getVotecount()}"></span>
-        <span class="vb vb-down">
+        <span class="vb vb-down" th:classappend="${result.hasDownvoted()} ? vb-clicked : vb">
             <i class="far fa-thumbs-down"></i>
         </span>
     </div>
