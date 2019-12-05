@@ -4,19 +4,71 @@
 <head>
   <title>Search Results</title>
   <div th:replace="fragments/bootstrap_head.html"></div>
+  <script>
+  function onLoad() {
+    $(document).ready( function() {
+      $(".vb").click(function() {
+        var direction = ""; // parameter which tells the API whether this was upvote or downvote
+        var offset = 0; // how much the vote count should change by
+        var otherElement = "";
+        if ($(this).hasClass("vb-up")) {
+          direction = "up";
+          offset = 1;
+          otherElement = ".vb-down";
+        } else {
+          direction = "down";
+          offset = -1;
+          otherElement = ".vb-up";
+        }
+        if ($(this).hasClass("vb-clicked")) {
+          direction = "none"; // undo the vote that's already been made
+          offset *= -1; // reverse directions; we want to undo what we did before
+        } else {
+          var el = $(this).parent().children(otherElement);
+          if (el.hasClass("vb-clicked")) {
+            offset *= 2; // double the amount of change; we are now going from -1 to +1 or +1 to -1, which is a diff of 2
+            el.removeClass("vb-clicked");
+          }
+        }
+        var queryURL = "../updateVote?direction=" + direction + "&id=" + $(this).parent().attr("id") + "&query=NA";
+        // hit the API endpoint to change the vote in the backend
+        jQuery.get(queryURL, {}, function(data, status) {
+          console.log(`${data}`);
+          // what we may want to do is update the vote count based on what we get back from the endpoint
+        });
+        var voteCount = $(this).parent().children(".vote-count");
+        voteCount.text(parseInt(voteCount.text()) + offset);
+        $(this).toggleClass("vb-clicked"); // remember whether this button was clicked or not
+      });
+    });
+  }
+  </script>
 </head>
 
-<body>
+<body onload="onLoad();">
   <div class="container">
     <div th:replace="fragments/bootstrap_nav_header.html"></div>
-    <h1>Search Results</h1>
 
-    <h2>Items</h2>
+    <div th:if=" ${searchResult.getKind()} == 'error'">
 
-    <th:block th:each="result : ${voteResult}">
-      <th:block th:replace="fragments/up_down_result_row :: row (item=${result.getGoogleResult()}, query=${query})"></th:block>
-    </th:block>
+      <h2>It seems that your API key does not work properly!</h2>
+      <p>
+        Please check your API key in  <a href="/user/settings">User Settings</a>.     
+    </p>
 
+    </div>
+
+    <div th:if=" ${searchResult.getKind()} != 'error'">
+
+      <h1>Search Results</h1>
+
+      <h2>Items</h2>
+
+      <div 
+      <th:block th:each="result : ${voteResult}">
+        <th:block th:replace="fragments/up_down_result_row :: row (item=${result.getGoogleResult()}, query=${query})"></th:block>
+      </th:block>
+    </div>
     <div th:replace="fragments/bootstrap_footer.html"></div>
   </div>
   <div th:replace="fragments/bootstrap_scripts.html"></div>
