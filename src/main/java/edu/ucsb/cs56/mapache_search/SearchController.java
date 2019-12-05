@@ -12,6 +12,16 @@ import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.Item;
 import java.io.IOException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.Principal;
+import java.sql.Connection;
+import java.util.Date;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -74,17 +84,21 @@ public class SearchController {
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
         Long maxSearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
+        Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
+        Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as an int 
+
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
+        if(currentTime > time){
+            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(0l);
+        }
+
         if(searches <= maxSearches){
             userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(searches);
         }
         else{
             return "searchResults"; //currently causes error
         }
-        
-        
-
         String json = searchService.getJSON(query, apiKey);
 
         SearchResult sr = SearchResult.fromJSON(json);
@@ -98,6 +112,9 @@ public class SearchController {
 
         model.addAttribute("voteResult", voteResults);
         model.addAttribute("api_uses", searches);
+        logger.info("currentTime=" + Long.toString(currentTime)); 
+        logger.info("searches=" + Long.toString(searches)); 
+
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 

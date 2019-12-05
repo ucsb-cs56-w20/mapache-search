@@ -14,10 +14,14 @@ public class AppUser { //Can't use User since User is a defined word in DB
     private long id;
     private long searches; 
     private long maxsearches; 
+    private long time; 
 
     private String username;
     private String apikey;
     private String uid;
+
+    public long getTime() { return time; }
+    public void setTime(long time) { this.time = time; }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
