@@ -1,5 +1,6 @@
 {
     "spring.security.oauth2.client.registration.github.client-id":"FILL-IT-IN",
     "spring.security.oauth2.client.registration.github.client-secret":"FILL-IT-IN",
-    "app_github_org":"ucsb-cs56-f19"
+    "app_github_org":"ucsb-cs56-f19",
+    "stackapps_key": "copy-from-stackapps"
 }
