@@ -9,8 +9,19 @@ import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.Item;
 import java.io.IOException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.Principal;
+import java.sql.Connection;
+import java.util.Date;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -62,11 +73,29 @@ public class SearchController {
         return "upDownIndex";
     }
 
+
+    
+    
+
     @GetMapping("/searchResults")
     public String search(@RequestParam(name = "query", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
         model.addAttribute("query", query);
 
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
+        Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
+        Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
+        Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long 
+
+        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        u.setSearches(searches);
+        userRepository.save(u);
+        
+        //up the search count, if maxed, dont search, if more than 24hrs reset.
+        if(currentTime > time){
+            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(1l);
+            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setTime(currentTime);
+        }
+
         String json = searchService.getJSON(query, apiKey);
 
         SearchResult sr = SearchResult.fromJSON(json);
@@ -77,7 +106,15 @@ public class SearchController {
         if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
-        
+
+        //model.addAttribute("voteResult", voteResults);
+        model.addAttribute("api_uses", searches);
+        model.addAttribute("max_api_uses", AppUser.MAX_API_USES);
+
+        logger.info("currentTime=" + Long.toString(currentTime)); 
+        logger.info("searches=" + Long.toString(searches)); 
+        logger.info("max_api_uses=" + Long.toString(AppUser.MAX_API_USES)); 
+
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 

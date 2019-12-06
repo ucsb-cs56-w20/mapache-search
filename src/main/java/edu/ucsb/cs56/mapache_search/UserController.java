@@ -3,7 +3,11 @@ package edu.ucsb.cs56.mapache_search;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +23,7 @@ import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 public class UserController {
 
     private UserRepository userRepository;
+    private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private AuthControllerAdvice controllerAdvice;
@@ -35,23 +40,32 @@ public class UserController {
         model.addAttribute("users", users);
         return "user/index";
     }
-
+    
     @GetMapping("user/settings")
     public String settingsForm(Model model, OAuth2AuthenticationToken token) {
-
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
+        Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
+        model.addAttribute("api_uses", searches);
+        model.addAttribute("time", time);
+        model.addAttribute("max_uses", AppUser.MAX_API_USES);
         return "user/settings";
     }
 
     @PostMapping("user/settings/update")
     public String updateKey(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
+        Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         u.setApikey(sanitizeApikey(user.getApikey()));
         userRepository.save(u);
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
+        model.addAttribute("api_uses", searches);
+        model.addAttribute("time", time);
+        model.addAttribute("max_uses", AppUser.MAX_API_USES);
         return "user/settings";
     }
 
