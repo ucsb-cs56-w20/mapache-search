@@ -65,6 +65,7 @@ public class SearchController {
 
     @Autowired
     public SearchController(SearchResultRepository searchRepository) {
+        
         this.searchRepository = searchRepository;
     }
 
@@ -114,16 +115,20 @@ public class SearchController {
         if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
+
         //add query to previous search table
         String [] searchHistory = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearchHistory();
         String[] newHistory; 
         if (searchHistory == null){
             newHistory = new String[1]; 
             newHistory[0] = params.getQuery();
+        }else if(params.getQuery().equals(searchHistory[0])){
+            newHistory = searchHistory; 
         }else{
-            newHistory = new String[searchHistory.length+1]; 
+            int length = searchHistory.length+1 > 15 ? 15 : searchHistory.length+1;
+            newHistory = new String[length]; 
             newHistory[0] = params.getQuery();
-            for(int i = 0; i <searchHistory.length; i++){
+            for(int i = 0; i <length-1; i++){
                 newHistory[i+1] = searchHistory[i];
             }
         }

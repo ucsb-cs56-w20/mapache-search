@@ -11,7 +11,11 @@
             <div class="input-group-append">
             <button class="btn btn-outline-primary" type="submit" id="js-course-search-submit"><i class="fas
             fa-search">Search</i></button>
-          </div>
+            </div>
+        </div>
+        <div>
+                <h6 style= "display: inline">Previous Searches:</h6>
+                <p style= "display: inline" th:each="item : ${previousSearches}" th:text="${item + ','}"> </p>
         </div>
 
         <table class="table">
