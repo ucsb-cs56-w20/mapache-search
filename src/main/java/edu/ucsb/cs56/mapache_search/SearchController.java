@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Collections;
 import org.slf4j.Logger;
@@ -98,8 +99,9 @@ public class SearchController {
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){
-            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(1l);
-            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setTime(currentTime);
+            u.setSearches(1l);
+            u.setTime(currentTime);
+            userRepository.save(u);
         }
 
         String json = searchService.getJSON(params, apiKey);
@@ -112,16 +114,25 @@ public class SearchController {
         if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
-<<<<<<< HEAD
-        model.addAttribute("voteResult", voteResults);
-
         //add query to previous search table
         String [] searchHistory = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearchHistory();
-        logger.info(searchHistory.toString());
+        String[] newHistory; 
+        if (searchHistory == null){
+            newHistory = new String[1]; 
+            newHistory[0] = params.getQuery();
+        }else{
+            newHistory = new String[searchHistory.length+1]; 
+            newHistory[0] = params.getQuery();
+            for(int i = 0; i <searchHistory.length; i++){
+                newHistory[i+1] = searchHistory[i];
+            }
+        }
+        u.setSearchHistory(newHistory);
+        model.addAttribute("previousSearches", newHistory);
+        userRepository.save(u);
+            
         
-
-        
-=======
+    
 
         //model.addAttribute("voteResult", voteResults);
         model.addAttribute("api_uses", searches);
@@ -130,7 +141,8 @@ public class SearchController {
         logger.info("currentTime=" + Long.toString(currentTime));
         logger.info("searches=" + Long.toString(searches));
         logger.info("max_api_uses=" + Long.toString(AppUser.MAX_API_USES));
->>>>>>> 9e26934fd331c3f6be6111815ee19d1dcac35e25
+        logger.info(Arrays.toString(searchHistory));
+        logger.info(Arrays.toString(newHistory));
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
