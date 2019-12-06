@@ -30,14 +30,22 @@
             el.removeClass("vb-clicked");
           }
         }
-        var queryURL = "../updateVote?direction=" + direction + "&id=" + $(this).parent().attr("id") + "&query=NA";
+        var query = $(this).parent().data("url");
         // hit the API endpoint to change the vote in the backend
-        jQuery.get(queryURL, {}, function(data, status) {
-          console.log(`${data}`);
-          // what we may want to do is update the vote count based on what we get back from the endpoint
-        });
+        $.ajax({
+          url: "../updateVote",
+          method: "GET",
+          data: {
+            direction: direction,
+            id: $(this).parent().attr("id"),
+            url: encodeURI(query)
+          }
+        })
+          .done(function( html ) {
+            console.log(html);
+          });
         var voteCount = $(this).parent().children(".vote-count");
-        voteCount.text(parseInt(voteCount.text()) + offset);
+        voteCount.text(parseInt(voteCount.text()) + offset); // update the displayed vote count
         $(this).toggleClass("vb-clicked"); // remember whether this button was clicked or not
       });
     });
