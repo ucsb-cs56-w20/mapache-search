@@ -45,13 +45,12 @@ public class UserController {
     public String settingsForm(Model model, OAuth2AuthenticationToken token) {
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
-        Long maxsearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
         model.addAttribute("api_uses", searches);
         model.addAttribute("time", time);
-        model.addAttribute("max_uses", maxsearches);
+        model.addAttribute("max_uses", AppUser.MAX_API_USES);
         return "user/settings";
     }
 
@@ -59,7 +58,6 @@ public class UserController {
     public String updateKey(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
-        Long maxsearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         u.setApikey(sanitizeApikey(user.getApikey()));
         userRepository.save(u);
@@ -67,7 +65,7 @@ public class UserController {
         model.addAttribute("user_template", new AppUser());
         model.addAttribute("api_uses", searches);
         model.addAttribute("time", time);
-        model.addAttribute("max_uses", maxsearches);
+        model.addAttribute("max_uses", AppUser.MAX_API_USES);
         return "user/settings";
     }
 

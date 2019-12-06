@@ -9,11 +9,13 @@ import javax.persistence.Id;
 @Entity //Need this or error: Not a managed type
 public class AppUser { //Can't use User since User is a defined word in DB
 
+    public static final long MAX_API_USES = 100l;
+    //100 queries per day for free: https://developers.google.com/custom-search/v1/overview
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long searches; 
-    private final long maxsearches = 100l;  //100 queries per day for free: https://developers.google.com/custom-search/v1/overview
     private long time; 
 
     private String username;
@@ -25,8 +27,6 @@ public class AppUser { //Can't use User since User is a defined word in DB
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    public Long getMaxsearches() { return maxsearches; }
     
     public Long getSearches() { return searches; }
     public void setSearches(Long searches) { this.searches = searches; }

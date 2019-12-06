@@ -83,18 +83,13 @@ public class SearchController {
 
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
-        Long maxSearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getMaxsearches();
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long 
 
-        //check if user have reached max searches for the day
-        if(searches <= maxSearches){
-            userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(searches);
-        }
-        else{
-            return "searchResults"; //currently causes error
-        }
-
+        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        u.setSearches(searches);
+        userRepository.save(u);
+        
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){
             userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(1l);
@@ -112,10 +107,13 @@ public class SearchController {
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
 
-        model.addAttribute("voteResult", voteResults);
+        //model.addAttribute("voteResult", voteResults);
         model.addAttribute("api_uses", searches);
+        model.addAttribute("max_api_uses", AppUser.MAX_API_USES);
+
         logger.info("currentTime=" + Long.toString(currentTime)); 
         logger.info("searches=" + Long.toString(searches)); 
+        logger.info("max_api_uses=" + Long.toString(AppUser.MAX_API_USES)); 
 
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
