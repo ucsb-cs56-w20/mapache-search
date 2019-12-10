@@ -46,12 +46,10 @@ public class UserController {
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
-        String [] previousSearches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearchHistory();
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
         model.addAttribute("api_uses", searches);
         model.addAttribute("time", time);
-        model.addAttribute("previousSearches", previousSearches);
         model.addAttribute("max_uses", AppUser.MAX_API_USES);
         return "user/settings";
     }

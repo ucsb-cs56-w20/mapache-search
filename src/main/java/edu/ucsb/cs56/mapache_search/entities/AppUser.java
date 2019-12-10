@@ -21,7 +21,7 @@ public class AppUser { //Can't use User since User is a defined word in DB
     private String username;
     private String apikey;
     private String uid;
-    private String searchHistory [];  
+    private String searchHistory [];
 
     public long getTime() { return time; }
     public void setTime(long time) { this.time = time; }
