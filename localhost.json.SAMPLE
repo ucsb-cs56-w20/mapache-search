@@ -2,8 +2,5 @@
     "spring.security.oauth2.client.registration.github.client-id":"copy-from-github",
     "spring.security.oauth2.client.registration.github.client-secret":"copy-from-github",
     "app_github_org":"ucsb-cs56-f19",
-    "spring.datasource.url":"jdbc:postgresql://localhost:5432/postgres",
-    "spring.datasource.username" : "postgres",
-    "spring.datasource.password" : "password",
     "stackapps_key": "copy-from-stackapps"
 }
