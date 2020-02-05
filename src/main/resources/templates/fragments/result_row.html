@@ -12,23 +12,29 @@
 
   <th:block th:replace="fragments/result_preview :: styles"></th:block>
 </th:block>
-
-<div
-    class="searchresult-row card p-4 my-2 d-flex flex-column"
-    th:fragment="row (item, iterStat)"
-    th:id="${'searchresult-' + iterStat.index}"
->
-  <a
-      class="h5 m-0"
-      target="_blank"
-      rel="noopener noreferrer"
-      th:href="${item.link}"
-      th:utext="${item.htmlTitle}"
-  ></a>
-  <span class="mb-1">
-    from
-    <a target="_blank" rel="noopener noreferrer" th:href="${'//' + item.displayLink}" th:text="${item.displayLink}"></a>
-  </span>
-
-  <th:block th:replace="fragments/result_preview :: ${@previewProvider.getPreviewType(item)} (item=${item}, iterStat=${iterStat})"></th:block>
+<div class="card searchresult-row p-4 my-2 d-flex flex-row" th:fragment="row (item, query, iterStat)" th:id="${'searchresult-' + iterStat.index}">
+  <div class="d-flex flex-column mr-3 align-items-center vote-info" th:id="${result.getDBResult().getId()}" th:attr="data-url=${result.getDBResult().getUrl()}">
+      <span class="vb vb-up" th:classappend="${result.hasUpvoted()} ? vb-clicked : vb">
+          <i class="far fa-thumbs-up"></i>
+      </span>
+      <span class="h3 vote-count" th:utext="${result.getDBResult().getVotecount()}"></span>
+      <span class="vb vb-down" th:classappend="${result.hasDownvoted()} ? vb-clicked : vb">
+          <i class="far fa-thumbs-down"></i>
+      </span>
+  </div>
+  <div class="d-flex flex-column">
+      <a
+          class="h5 m-0"
+          target="_blank"
+          rel="noopener noreferrer"
+          th:href="${result.getGoogleResult().link}"
+          th:utext="${result.getGoogleResult().htmlTitle}"
+      ></a>
+      <span class="mb-1">
+      from
+      <a target="_blank" rel="noopener noreferrer" th:href="${'//' + result.getGoogleResult().displayLink}" th:text="${result.getGoogleResult().displayLink}"></a>
+      </span>
+      <span th:utext="${result.getGoogleResult().htmlSnippet.replace('<br>', '')}"></span>
+      <th:block th:replace="fragments/result_preview :: ${@previewProvider.getPreviewType(item)} (item=${item}, iterStat=${iterStat})"></th:block>
+  </div>
 </div>

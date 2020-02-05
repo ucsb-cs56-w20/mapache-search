@@ -20,6 +20,7 @@ import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 
 @RunWith(SpringRunner.class)
@@ -58,6 +59,13 @@ public class HomePageTest {
         mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("text/html;charset=UTF-8"));
+    }
+
+    @Test
+    public void getHomePage_SearchInputExists() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML))
+            .andExpect(status().isOk())
+            .andExpect(xpath("/html/body/div/form/div/div/input").exists());
     }
 
 }

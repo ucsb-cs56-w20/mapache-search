@@ -133,10 +133,6 @@ public class SearchController {
         return "upDownIndex";
     }
 
-
-
-
-
     @GetMapping("/searchResults")
     public String search(SearchParameters params, Model model, OAuth2AuthenticationToken token) throws IOException {
         model.addAttribute("searchParams", params);
@@ -159,6 +155,42 @@ public class SearchController {
         String json = searchService.getJSON(params, apiKey);
 
         SearchResult sr = SearchResult.fromJSON(json);
+
+        if(sr.getKind() != "error") {
+            List<ResultVoteWrapper> voteResults = new ArrayList<>();
+            int count = 0;
+            for(Item item : sr.getItems()) {
+                List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
+                SearchResultEntity result;
+                if (matchingResults.isEmpty()) {
+                    result = new SearchResultEntity();
+                    result.setUrl(item.getLink());
+                    result.setVotecount((long) 0);
+                    searchRepository.save(result);
+                } else {
+                    result = matchingResults.get(0);
+                }
+                boolean upvoted = false, downvoted = false;
+
+                List<UserVote> myVotes = voteRepository.findByUserAndResult(u, result);
+                if (!myVotes.isEmpty()) {
+                    UserVote myVote = myVotes.get(0);
+                    if (myVote.getUpvote()) {
+                        upvoted = true;
+                    } else {
+                        downvoted = true;
+                    }
+                }
+                voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted));
+
+
+                if (++count == 10)
+                    break;
+            }
+
+            Collections.sort(voteResults, Collections.reverseOrder());
+            model.addAttribute("voteResult", voteResults);
+        }
         model.addAttribute("searchResult", sr);
         model.addAttribute("searchObject", new SearchObject());
         model.addAttribute("previousSearch", params.getQuery());
@@ -167,7 +199,6 @@ public class SearchController {
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
 
-        //model.addAttribute("voteResult", voteResults);
         model.addAttribute("api_uses", searches);
         model.addAttribute("max_api_uses", AppUser.MAX_API_USES);
 
@@ -232,62 +263,9 @@ public class SearchController {
         }
     }
 
-
-    @GetMapping("/searchUpDownResults")
-    public String searchUpDown(SearchParameters params, Model model, OAuth2AuthenticationToken token) throws IOException {
-        model.addAttribute("searchParams", params);
-
-        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-
-        String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
-        String json = searchService.getJSON(params, apiKey);
-
-
-
-        SearchResult sr = SearchResult.fromJSON(json);
-        model.addAttribute("searchResult", sr);
-
-        if(sr.getKind() != "error"){
-            List<ResultVoteWrapper> voteResults = new ArrayList<>();
-            int count = 0;
-            for(Item item : sr.getItems()) {
-                List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
-                SearchResultEntity result;
-                if (matchingResults.isEmpty()) {
-                    result = new SearchResultEntity();
-                    result.setUrl(item.getLink());
-                    result.setVotecount((long) 0);
-                    searchRepository.save(result);
-                } else {
-                    result = matchingResults.get(0);
-                }
-                boolean upvoted = false, downvoted = false;
-
-                List<UserVote> myVotes = voteRepository.findByUserAndResult(user, result);
-                if (!myVotes.isEmpty()) {
-                    UserVote myVote = myVotes.get(0);
-                    if (myVote.getUpvote()) {
-                        upvoted = true;
-                    } else {
-                        downvoted = true;
-                    }
-                }
-                voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted));
-
-                if (++count == 10)
-                    break;
-            }
-
-            Collections.sort(voteResults, Collections.reverseOrder());
-            model.addAttribute("voteResult", voteResults);
-        }
-
-        return "searchUpDownResults"; // corresponds to src/main/resources/templates/searchResults.html
-    }
-
     @GetMapping("/updateVote")
     @ResponseBody
-    public String searchUpDown(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
+    public String updateVote(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
         long voteCount = 0;
 
         List<SearchResultEntity> matchingResults = searchRepository.findById(id);
