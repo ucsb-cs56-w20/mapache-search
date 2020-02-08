@@ -1,5 +1,9 @@
 <th:block th:fragment="styles">
   <style>
+    .searchresult-info {
+      min-width: 0;
+    }
+
     /* adapted from https://getbootstrap.com/docs/4.3/utilities/embed/ */
     .searchresult-row img {
       position: relative;
@@ -22,7 +26,7 @@
           <i class="far fa-thumbs-down"></i>
       </span>
   </div>
-  <div class="d-flex flex-column">
+  <div class="searchresult-info d-flex flex-column">
       <a
           class="h5 m-0"
           target="_blank"
