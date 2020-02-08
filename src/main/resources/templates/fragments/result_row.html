@@ -34,7 +34,6 @@
       from
       <a target="_blank" rel="noopener noreferrer" th:href="${'//' + result.getGoogleResult().displayLink}" th:text="${result.getGoogleResult().displayLink}"></a>
       </span>
-      <span th:utext="${result.getGoogleResult().htmlSnippet.replace('<br>', '')}"></span>
       <th:block th:replace="fragments/result_preview :: ${@previewProvider.getPreviewType(item)} (item=${item}, iterStat=${iterStat})"></th:block>
   </div>
 </div>
