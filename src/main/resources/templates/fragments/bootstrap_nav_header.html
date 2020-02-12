@@ -67,7 +67,7 @@
               </div>
             -->
             <ul class="nav navbar-nav navbar-right">
-              <li th:if="${isLoggedIn}">
+              <li th:if="${isLoggedIn} and ${isGoogleOrGithub} == 0">
                   <a th:text="${login}" th:href="'https://github.com/' + ${login}"></a>
               </li>
               <li th:if="${isLoggedIn}" th:text="'(' + ${role} + ')'">(Role)</li>
@@ -92,12 +92,18 @@
                       </li>
                   </ul>
               </li>
-              <li th:unless="${isLoggedIn}">
+              <li th:unless="${isLoggedIn} and ${isGoogleOrGithub} == 0">
                   <form method="GET" action="/oauth2/authorization/github" class="form-inline my-2 my-lg-0"
                       th:unless="${isLoggedIn}">
                       <!--<button class="navbar-btn" type="submit">GitHub Login</button>-->
                       <button class="btn btn-primary" type="submit">GitHub Login</button>
                   </form>
+              </li>
+              <li th:unless="${isLoggedIn} and ${isGoogleOrGithub} == 1">
+                <form method="GET" action="/oauth2/authorization/google" class="form-inline my-2 my-lg-0"
+                th:unless="${isLoggedIn}">
+                <button class="btn btn-primary" type="submit">Google Login</button>
+            </form>
               </li>
           </ul>
           </div>

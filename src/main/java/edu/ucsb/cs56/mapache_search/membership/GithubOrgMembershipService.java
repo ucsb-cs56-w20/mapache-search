@@ -11,6 +11,9 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jcabi.github.Github;
 import com.jcabi.github.Organization;
 import com.jcabi.github.RtGithub;
@@ -26,6 +29,12 @@ import com.jcabi.http.response.JsonResponse;
 public class GithubOrgMembershipService implements MembershipService {
 
     private Logger logger = LoggerFactory.getLogger(GithubOrgMembershipService.class);
+
+    @Value("${app.admin.emails:}")
+    final private List<String> adminEmails=new ArrayList<String>();
+
+    @Value("${app.member.hosted-domain}")
+    final private String memberHostedDomain="";
 
     private String githubOrg;
 
@@ -61,6 +70,7 @@ public class GithubOrgMembershipService implements MembershipService {
         if (oauthToken == null) {
             return false;
         }
+
         OAuth2User oAuth2User = oauthToken.getPrincipal();
         String user = (String) oAuth2User.getAttributes().get("login");
 
@@ -90,6 +100,8 @@ public class GithubOrgMembershipService implements MembershipService {
             return false;
         }
 
+        //github oauth email returns null
+        if (oAuth2User.getAttributes().get("email") == null) {
         try {
 
             // I forget why we have Github wrapped like this
@@ -126,7 +138,29 @@ public class GithubOrgMembershipService implements MembershipService {
             logger.error("Exception happened while trying to determine membership in github org");
             logger.error("Exception",e);
         }
+        //this is google oauth
+        if (oAuth2User.getAttributes().get("email") != null) {
+            String email = (String) oAuth2User.getAttributes().get("email");
+            if (roleToTest.equals("admin") && isAdminEmail(email)) {
+                return true;
+            }
+            
+            String hostedDomain = (String) oAuth2User.getAttributes().get("hd");
+
+            logger.info("email=[" + email + "]");
+            logger.info("hostedDomain=" + hostedDomain);
+
+            if (roleToTest.equals("member") && memberHostedDomain.equals(hostedDomain)) {
+                return true;
+            }
+        }
+    }
         return false;
+    }
+
+    private boolean isAdminEmail(String email) {
+        //return (!adminRepository.findByEmail(email).isEmpty() || (adminEmails.contains(email)); 
+        return (adminEmails.contains(email));
     }
 
 }

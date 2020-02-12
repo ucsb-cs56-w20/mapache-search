@@ -27,17 +27,39 @@ public class AuthControllerAdvice {
         return token != null;
     }
 
-    @ModelAttribute("oauth")
+    //returns -1 for not logged in, returns 0 for github, 1 for google
+    @ModelAttribute("isGoogleOrGithub")
+    public Integer isGoogleOrGitHub(OAuth2AuthenticationToken token) {
+        if (token == null)
+            return -1;
+        if (token.getPrincipal().getAttributes().get("email") == null)
+            return 0;
+        return 1;
+    }
+
+    @ModelAttribute("auth")
     public String getToken(OAuth2AuthenticationToken token) {
+        if (token == null)
+            return "";
         return token.toString();
+        //return token.getPrincipal().getAttributes().get("given_name").toString();
     }
 
     @ModelAttribute("id")
     public String getUid(OAuth2AuthenticationToken token) {
         if (token == null)
             return "";
+        
+        OAuth2User oAuth2User = token.getPrincipal();
+        String uid = "";
 
-        String uid = token.getPrincipal().getAttributes().get("id").toString();
+        //github
+        if (oAuth2User.getAttributes().get("email") == null) {
+            uid = oAuth2User.getAttributes().get("id").toString();
+        }
+        else { //google
+            uid = oAuth2User.getAttributes().get("sub").toString();
+        }
 
         List<AppUser> users = userRepository.findByUid(uid);
 
@@ -51,6 +73,7 @@ public class AuthControllerAdvice {
             // username, apikey, uid
         } else {
             if (token2login(token) != users.get(0).getUsername()) {
+                //if they changed name or username
                 AppUser u = users.get(0);
                 u.setUsername(token2login(token));
                 userRepository.save(u);
@@ -83,7 +106,9 @@ public class AuthControllerAdvice {
     }
 
     private String token2login(OAuth2AuthenticationToken token) {
-        return token.getPrincipal().getAttributes().get("login").toString();
+        if (token.getPrincipal().getAttributes().get("email") == null) //github
+            return token.getPrincipal().getAttributes().get("login").toString();
+        return token.getPrincipal().getAttributes().get("email").toString();
     }
 
 }
