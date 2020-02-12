@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search;
+package edu.ucsb.cs56.mapache_search.membership;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 

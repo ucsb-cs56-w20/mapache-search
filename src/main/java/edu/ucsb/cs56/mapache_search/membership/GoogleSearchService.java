@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search;
+package edu.ucsb.cs56.mapache_search.membership;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import edu.ucsb.cs56.mapache_search.search.SearchParameters;
+import edu.ucsb.cs56.mapache_search.search.SearchService;
 
 import java.util.List;
 import java.util.Map;

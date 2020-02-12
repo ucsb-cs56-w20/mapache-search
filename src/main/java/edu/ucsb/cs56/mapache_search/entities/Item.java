@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search.search;
+package edu.ucsb.cs56.mapache_search.entities;
 
 /**
  * Item object, represents the item level in SearchResult

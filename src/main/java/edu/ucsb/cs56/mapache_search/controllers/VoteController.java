@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search;
+package edu.ucsb.cs56.mapache_search.controllers;
 
 import java.util.ArrayList;
 import java.util.List;

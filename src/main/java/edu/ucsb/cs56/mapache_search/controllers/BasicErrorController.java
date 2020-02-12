@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search;
+package edu.ucsb.cs56.mapache_search.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
