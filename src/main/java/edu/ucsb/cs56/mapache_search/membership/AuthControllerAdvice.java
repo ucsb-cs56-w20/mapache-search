@@ -27,6 +27,11 @@ public class AuthControllerAdvice {
         return token != null;
     }
 
+    @ModelAttribute("oauth")
+    public String getToken(OAuth2AuthenticationToken token) {
+        return token.toString();
+    }
+
     @ModelAttribute("id")
     public String getUid(OAuth2AuthenticationToken token) {
         if (token == null)
