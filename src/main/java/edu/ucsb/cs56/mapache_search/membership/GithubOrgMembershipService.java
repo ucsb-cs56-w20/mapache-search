@@ -31,7 +31,6 @@ public class GithubOrgMembershipService implements MembershipService {
     private Logger logger = LoggerFactory.getLogger(GithubOrgMembershipService.class);
 
     //If you put in final, then you can't assign with @Value properly
-    @Value("${app.admin.emails}")
     private List<String> adminEmails;
 
     @Value("${app.member.hosted-domain}")
@@ -43,10 +42,15 @@ public class GithubOrgMembershipService implements MembershipService {
     @Autowired
     private OAuth2AuthorizedClientService clientService;
 
-    public GithubOrgMembershipService() {
+    public GithubOrgMembershipService(@Value("#{'${app.admin.emails}'.split(',')}") List<String> adminEmails) {
         logger.info("GoogleHostedDomain=" + memberHostedDomain);
-        //logger.info("adminEmails=" + adminEmails.toString()); //logging this keeps giving me errors
+        this.adminEmails = adminEmails;
+        for (int i = 0; i < adminEmails.size(); i++) {
+            adminEmails.set(i, adminEmails.get(i).replaceAll("\\s+", ""));
+        }
+        logger.info("adminEmails=" + adminEmails.toString()); //logging this keeps giving me errors
         logger.info("githubOrg=" + githubOrg);
+        
     }
 
     /**
@@ -148,7 +152,8 @@ public class GithubOrgMembershipService implements MembershipService {
             String hostedDomain = (String) oAuth2User.getAttributes().get("hd");
             logger.info("token email=[" + email + "]");
             logger.info(email + "'s hostedDomain=" + hostedDomain);
-
+            logger.info("All admin Emails=[" + adminEmails.toString() + "]");
+            
             if (roleToTest.equals("admin") && isAdminEmail(email)) {
                 logger.info(email + " is an [Google]Admin"); 
                 return true;
