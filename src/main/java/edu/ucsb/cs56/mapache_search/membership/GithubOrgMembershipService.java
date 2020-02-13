@@ -30,19 +30,22 @@ public class GithubOrgMembershipService implements MembershipService {
 
     private Logger logger = LoggerFactory.getLogger(GithubOrgMembershipService.class);
 
-    @Value("${app.admin.emails:}")
-    final private List<String> adminEmails=new ArrayList<String>();
+    //If you put in final, then you can't assign with @Value properly
+    @Value("${app.admin.emails}")
+    private List<String> adminEmails;
 
     @Value("${app.member.hosted-domain}")
-    final private String memberHostedDomain="";
+    private String memberHostedDomain;
 
+    @Value("${app_github_org}")
     private String githubOrg;
 
     @Autowired
     private OAuth2AuthorizedClientService clientService;
 
-    public GithubOrgMembershipService(@Value("${app_github_org}") String githubOrg) {
-        this.githubOrg = githubOrg;
+    public GithubOrgMembershipService() {
+        logger.info("GoogleHostedDomain=" + memberHostedDomain);
+        //logger.info("adminEmails=" + adminEmails.toString()); //logging this keeps giving me errors
         logger.info("githubOrg=" + githubOrg);
     }
 
@@ -76,90 +79,92 @@ public class GithubOrgMembershipService implements MembershipService {
 
         Github github = null;
 
-        if (clientService==null) {
+        if (clientService == null) {
             logger.error(String.format("unable to obtain autowired clientService"));
             return false;
         }
         OAuth2AuthorizedClient client = clientService
                 .loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), oauthToken.getName());
 
-        if (client==null) {
-            logger.info(String.format("clientService was not null but client returned was null for user %s",user));
+        if (client == null) {
+            logger.info(String.format("clientService was not null but client returned was null for user %s", user));
             return false;
         }
 
         OAuth2AccessToken token = client.getAccessToken();
 
-        if (token==null) {
-            logger.info(String.format("client for %s was not null but getAccessToken returned null",user));
+        if (token == null) {
+            logger.info(String.format("client for %s was not null but getAccessToken returned null", user));
             return false;
         }
         String accessToken = token.getTokenValue();
-        if (accessToken==null) {
-            logger.info(String.format("token was not null but getTokenValue returned null for user %s",user));
+        if (accessToken == null) {
+            logger.info(String.format("token was not null but getTokenValue returned null for user %s", user));
             return false;
         }
 
-        //github oauth email returns null
+        // github oauth email returns null
         if (oAuth2User.getAttributes().get("email") == null) {
-        try {
+            try {
 
-            // I forget why we have Github wrapped like this
-            // TODO: find the tutorial that explains it
-            // I think it has something to do with respecting rate limits
-            github = new RtGithub(new RtGithub(accessToken).entry()
-                    .through(RetryCarefulWire.class, 50));
+                // I forget why we have Github wrapped like this
+                // TODO: find the tutorial that explains it
+                // I think it has something to do with respecting rate limits
+                github = new RtGithub(new RtGithub(accessToken).entry().through(RetryCarefulWire.class, 50));
 
-            // logger.info("github=" + github);
-            // User ghuser = github.users().get(user);
-            // logger.info("ghuser=" + ghuser);
-            // JsonResponse jruser = github.entry().uri().path("/user").back().method(Request.GET).fetch()
-            //         .as(JsonResponse.class);
-            // logger.info("jruser =" + jruser);
-            // Organization org = github.organizations().get(githubOrg);
-            // logger.info("org =" + org);
+                // logger.info("github=" + github);
+                // User ghuser = github.users().get(user);
+                // logger.info("ghuser=" + ghuser);
+                // JsonResponse jruser =
+                // github.entry().uri().path("/user").back().method(Request.GET).fetch()
+                // .as(JsonResponse.class);
+                // logger.info("jruser =" + jruser);
+                // Organization org = github.organizations().get(githubOrg);
+                // logger.info("org =" + org);
 
-            String path = String.format("/user/memberships/orgs/%s",githubOrg);
+                String path = String.format("/user/memberships/orgs/%s", githubOrg);
 
-            JsonResponse jr = github.entry().uri().path(path).back()
-                    .method(Request.GET).fetch().as(JsonResponse.class);
+                JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
+                        .as(JsonResponse.class);
 
-            logger.info("jr =" + jr);
+                logger.info("jr =" + jr);
 
-            String actualRole = jr.json().readObject().getString("role");
-            String state = jr.json().readObject().getString("state");
+                String actualRole = jr.json().readObject().getString("role");
+                String state = jr.json().readObject().getString("state");
 
-            logger.info("actualRole =" + actualRole);
-            logger.info("roleToTest =" + roleToTest);
-            logger.info("state =" + state);
+                logger.info("actualRole =" + actualRole);
+                logger.info("roleToTest =" + roleToTest);
+                logger.info("state =" + state);
 
-            return actualRole.equals(roleToTest);
-        } catch (Exception e) {
-            logger.error("Exception happened while trying to determine membership in github org");
-            logger.error("Exception",e);
+                return actualRole.equals(roleToTest);
+            } catch (Exception e) {
+                logger.error("Exception happened while trying to determine membership in github org");
+                logger.error("Exception", e);
+            }
+            // this is google oauth
         }
-        //this is google oauth
         if (oAuth2User.getAttributes().get("email") != null) {
             String email = (String) oAuth2User.getAttributes().get("email");
+            String hostedDomain = (String) oAuth2User.getAttributes().get("hd");
+            logger.info("token email=[" + email + "]");
+            logger.info(email + "'s hostedDomain=" + hostedDomain);
+
             if (roleToTest.equals("admin") && isAdminEmail(email)) {
+                logger.info(email + " is an [Google]Admin"); 
                 return true;
             }
-            
-            String hostedDomain = (String) oAuth2User.getAttributes().get("hd");
-
-            logger.info("email=[" + email + "]");
-            logger.info("hostedDomain=" + hostedDomain);
 
             if (roleToTest.equals("member") && memberHostedDomain.equals(hostedDomain)) {
+                logger.info(email + " is a [Google]Member"); 
                 return true;
             }
         }
-    }
         return false;
     }
 
     private boolean isAdminEmail(String email) {
-        //return (!adminRepository.findByEmail(email).isEmpty() || (adminEmails.contains(email)); 
+        // return (!adminRepository.findByEmail(email).isEmpty() ||
+        // (adminEmails.contains(email));
         return (adminEmails.contains(email));
     }
 
