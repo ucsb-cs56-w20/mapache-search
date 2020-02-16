@@ -22,7 +22,9 @@ public class PreviewProviderServiceImpl implements PreviewProviderService {
                 URL url = new URL(item.getLink());
 
                 // only preview questions, not other stack overflow pages
-                if (url.getPath().split("/")[1].equalsIgnoreCase("questions")) {
+                // only preview questions, not other stack overflow pages
+                String[] parts = url.getPath().split("/");
+                if (parts.length > 1 && parts[1].equalsIgnoreCase("questions")) {
                     return "stackexchange";
                 }
             } catch (MalformedURLException ignored) {
