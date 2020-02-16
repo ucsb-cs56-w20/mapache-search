@@ -92,7 +92,7 @@ public class AuthControllerAdvice {
     }
 
     @ModelAttribute("username")
-    public String getUsername(OAuth2AuthenticationToken token) {
+    public String getTheUsername(OAuth2AuthenticationToken token) {
         if (token == null)
             return "";
         return token2username(token);

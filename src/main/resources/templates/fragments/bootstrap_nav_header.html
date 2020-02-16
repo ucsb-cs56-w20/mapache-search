@@ -56,12 +56,15 @@
           </ul>
           <div>
             <ul class="nav navbar-nav navbar-right">
-              <li th:if="${isLoggedIn} and ${isGithub} == true">
+              <li th:if="${isLoggedIn} and ${isGithub}">
                   <a th:text="${username}" th:href="'https://github.com/' + ${username}"></a>
               </li>
+              <li th:if="${isLoggedIn} and ${isGoogle}">
+                <a th:text="${username}"></a>
+            </li>
               <li th:if="${isLoggedIn}" th:text="'(' + ${role} + ')'">(Role)</li>
               <li th:if="${isLoggedIn}" class="dropdown user-nav">
-                  <a href="#" th:if="${isGithub} = true" class="dropdown-toggle float-left" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  <a href="#" class="dropdown-toggle float-left" data-toggle="dropdown" role="button" aria-haspopup="true"
                       aria-expanded="false">
                       <img th:src="'https://avatars2.githubusercontent.com/u/' + ${id} + '?v=3&amp;s=40'" height="20"
                           width="20" th:alt="${username}" />
@@ -80,13 +83,13 @@
                       </li>
                   </ul>
               </li>
-              <li th:unless="${isLoggedIn} and ${isGithub} == true || ${isGoogle} == true">
+              <li th:unless="${isLoggedIn} and ${isGithub or isGoogle}">
                   <form method="GET" action="/oauth2/authorization/github" class="form-inline my-2 my-lg-0"
                       th:unless="${isLoggedIn}">
                       <button class="btn btn-primary" type="submit">GitHub Login</button>
-                  </form>
+                  </form> 
               </li>
-              <li th:unless="${isLoggedIn} and ${isGithub} == true || ${isGoogle} == true">
+              <li th:unless="${isLoggedIn} and ${isGithub or isGoogle}">
                 <form method="GET" action="/oauth2/authorization/google" class="form-inline my-2 my-lg-0"
                 th:unless="${isLoggedIn}">
                 <button class="btn btn-primary" type="submit">Google Login</button>
