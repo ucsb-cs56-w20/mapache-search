@@ -3,6 +3,8 @@ package edu.ucsb.cs56.mapache_search;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edu.ucsb.cs56.mapache_search.preview.PreviewProviderService;
+import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,12 @@ public class HomePageTest {
 
     @MockBean
     private VoteRepository voteRepository;
+
+    @MockBean
+    private PreviewProviderService pps;
+
+    @MockBean
+    private StackExchangeQueryService seqs;
 
     @Test
     public void getHomePage_ContentType() throws Exception {

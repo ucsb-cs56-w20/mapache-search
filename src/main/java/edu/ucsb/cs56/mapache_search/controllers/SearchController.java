@@ -1,6 +1,14 @@
 package edu.ucsb.cs56.mapache_search.controllers;
 
+import edu.ucsb.cs56.mapache_search.preview.PreviewProviderService;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import edu.ucsb.cs56.mapache_search.entities.Item;
+import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeItem;
+import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
+import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
+import edu.ucsb.cs56.mapache_search.entities.AppUser;
+import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
@@ -8,7 +16,6 @@ import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
-import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.search.SearchObject;
 import edu.ucsb.cs56.mapache_search.search.SearchParameters;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
@@ -39,6 +46,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +76,12 @@ public class SearchController {
     private AuthControllerAdvice controllerAdvice;
 
     @Autowired
+    private StackExchangeQueryService queryService;
+
+    @Autowired
+    private PreviewProviderService previewService;
+
+    @Autowired
     public SearchController(SearchResultRepository searchRepository) {
         this.searchRepository = searchRepository;
     }
@@ -73,6 +90,48 @@ public class SearchController {
     public String home(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         return "index";
+    }
+
+    private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
+        // index items by site, then by question id
+        Map<String, Map<Integer, List<StackExchangeItem>>> itemsBySite = sr.getItems().stream()
+            .filter(i -> previewService.getPreviewType(i).equals("stackexchange"))
+            .map(StackExchangeItem::new)
+            .collect(
+                Collectors.groupingBy(
+                    i -> i.getItem().getDisplayLink(),
+                    Collectors.groupingBy(
+                        StackExchangeItem::getQuestionId,
+                        Collectors.toList()
+                    )
+                )
+            );
+
+        // find questions and populate each StackExchangeItem
+        itemsBySite.forEach((site, items) -> {
+            Questions questions = queryService.findQuestions(site, new ArrayList<>(items.keySet()));
+
+            questions.getItems()
+                .forEach(question ->
+                    items.get(question.getId())
+                        .forEach(item -> item.setQuestion(question)));
+        });
+
+        // flatten map, index by original item
+        return itemsBySite.values().stream()
+            .map(Map::values)
+            .flatMap(Collection::stream)
+            .flatMap(List::stream)
+            .collect(Collectors.toMap(
+                StackExchangeItem::getItem,
+                Function.identity()
+            ));
+    }
+
+    @GetMapping("/UpDownSearch")
+    public String upDownSearch(Model model) {
+        model.addAttribute("searchObject", new SearchObject());
+        return "upDownIndex";
     }
 
     @GetMapping("/searchResults")
@@ -147,6 +206,9 @@ public class SearchController {
         logger.info("currentTime=" + Long.toString(currentTime));
         logger.info("searches=" + Long.toString(searches));
         logger.info("max_api_uses=" + Long.toString(AppUser.MAX_API_USES));
+
+        Map<Item, StackExchangeItem> stackExchangeQuestions = fetchFromStackExchange(sr);
+        model.addAttribute("stackExchangeQuestions", stackExchangeQuestions);
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
@@ -237,6 +299,4 @@ public class SearchController {
 
         return String.valueOf(voteCount); // returns the new vote total
     }
-
-
 }

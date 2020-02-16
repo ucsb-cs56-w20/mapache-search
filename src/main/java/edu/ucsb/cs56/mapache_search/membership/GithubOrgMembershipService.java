@@ -48,7 +48,7 @@ public class GithubOrgMembershipService implements MembershipService {
         for (int i = 0; i < adminEmails.size(); i++) {
             adminEmails.set(i, adminEmails.get(i).replaceAll("\\s+", ""));
         }
-        logger.info("adminEmails=" + adminEmails.toString()); //logging this keeps giving me errors
+        logger.info("adminEmails=" + adminEmails.toString());
         logger.info("githubOrg=" + githubOrg);
         
     }

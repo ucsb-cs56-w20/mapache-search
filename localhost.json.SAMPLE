@@ -5,5 +5,6 @@
     "spring.security.oauth2.client.registration.google.client-secret":"FILL-IT-IN",
     "app_github_org":"ucsb-cs56-w20",
     "app.admin.emails": "FILL-IT-IN,FILL-IT-IN,FILL-IT-IN....",
-    "app.member.hosted-domain": "ucsb.edu"
+    "app.member.hosted-domain": "ucsb.edu",
+    "stackapps_key": "copy-from-stackapps"
 }

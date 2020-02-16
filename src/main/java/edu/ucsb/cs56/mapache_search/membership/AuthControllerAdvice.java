@@ -27,14 +27,22 @@ public class AuthControllerAdvice {
         return token != null;
     }
 
-    //returns -1 for not logged in, returns 0 for github, 1 for google
-    @ModelAttribute("isGoogleOrGithub")
-    public Integer isGoogleOrGitHub(OAuth2AuthenticationToken token) {
+    @ModelAttribute("isGithub")
+    public boolean isGitHub(OAuth2AuthenticationToken token) {
         if (token == null)
-            return -1;
+            return false;
         if (token.getPrincipal().getAttributes().get("email") == null)
-            return 0;
-        return 1;
+            return true;
+        return false;
+    }
+
+    @ModelAttribute("isGoogle")
+    public boolean isGoogle(OAuth2AuthenticationToken token) {
+        if (token == null)
+            return false;
+        if (token.getPrincipal().getAttributes().get("email") != null)
+            return true;
+        return false;
     }
 
     @ModelAttribute("auth")
@@ -66,16 +74,16 @@ public class AuthControllerAdvice {
         if (users.size() == 0) {
             AppUser u = new AppUser();
             u.setUid(uid);
-            u.setUsername(token2login(token));
+            u.setUsername(token2username(token));
             u.setApikey("");
             u.setSearches(0l);
             userRepository.save(u);
             // username, apikey, uid
         } else {
-            if (token2login(token) != users.get(0).getUsername()) {
+            if (token2username(token) != users.get(0).getUsername()) {
                 //if they changed name or username
                 AppUser u = users.get(0);
-                u.setUsername(token2login(token));
+                u.setUsername(token2username(token));
                 userRepository.save(u);
             }
         }
@@ -83,11 +91,11 @@ public class AuthControllerAdvice {
         return uid;
     }
 
-    @ModelAttribute("login")
-    public String getLogin(OAuth2AuthenticationToken token) {
+    @ModelAttribute("username")
+    public String getUsername(OAuth2AuthenticationToken token) {
         if (token == null)
             return "";
-        return token2login(token);
+        return token2username(token);
     }
 
     @ModelAttribute("isMember")
@@ -105,7 +113,7 @@ public class AuthControllerAdvice {
         return membershipService.role(token);
     }
 
-    private String token2login(OAuth2AuthenticationToken token) {
+    private String token2username(OAuth2AuthenticationToken token) {
         if (token.getPrincipal().getAttributes().get("email") == null) //github
             return token.getPrincipal().getAttributes().get("login").toString();
         return token.getPrincipal().getAttributes().get("email").toString();

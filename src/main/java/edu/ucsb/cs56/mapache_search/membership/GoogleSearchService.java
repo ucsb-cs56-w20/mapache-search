@@ -20,7 +20,7 @@ import java.util.Map;
 public class GoogleSearchService implements SearchService {
 
     private Logger logger = LoggerFactory.getLogger(GoogleSearchService.class);
-    private String searchId = "001539284272632380888:kn5n6ubsr7x";
+    private String searchId = "010569528305100051550:goipm5xkwui";
 
     //We can't have OAuth2AuthenticationToken token as argument, otherwise it'll give us instantiate bean error
     public GoogleSearchService() {

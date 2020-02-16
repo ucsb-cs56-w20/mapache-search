@@ -4,6 +4,7 @@
 <head>
   <title>Search Results</title>
   <div th:replace="fragments/bootstrap_head.html"></div>
+  <th:block th:replace="fragments/result_row :: styles"></th:block>
   <script>
     function onLoad() {
       $(document).ready( function() {
@@ -73,8 +74,8 @@
 
       <h2>Items</h2>
       
-      <th:block th:each="result : ${voteResult}">
-        <th:block th:replace="fragments/result_row :: row (item=${result.getGoogleResult()}, query=${query})"></th:block>
+      <th:block th:each="result,iterStat : ${voteResult}">
+        <th:block th:replace="fragments/result_row :: row (item=${result.getGoogleResult()}, query=${query}, iterStat=${iterStat})"></th:block>
       </th:block>
 
       <th:block th:replace="fragments/pagination" th:with="baseUrl=@{/searchResults}"></th:block>
