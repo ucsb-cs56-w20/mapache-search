@@ -11,6 +11,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.ucsb.cs56.mapache_search.entities.Item;
+
 /**
  * SearchResult object, represents the top level JSON object returned by the
  * Google Custom Search JSON API <a href=

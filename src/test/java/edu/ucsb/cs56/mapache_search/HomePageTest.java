@@ -3,6 +3,8 @@ package edu.ucsb.cs56.mapache_search;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edu.ucsb.cs56.mapache_search.controllers.SearchController;
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.preview.PreviewProviderService;
 import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
 import org.junit.Test;
@@ -16,9 +18,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import edu.ucsb.cs56.mapache_search.controllers.SearchController;
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+import edu.ucsb.cs56.mapache_search.search.SearchService;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 

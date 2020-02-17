@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search;
+package edu.ucsb.cs56.mapache_search.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class GoogleSearchService implements SearchService {
 
     private Logger logger = LoggerFactory.getLogger(GoogleSearchService.class);
-    private String searchId = "010569528305100051550:goipm5xkwui";
+    private String searchId = "001539284272632380888:kn5n6ubsr7x";
 
     //We can't have OAuth2AuthenticationToken token as argument, otherwise it'll give us instantiate bean error
     public GoogleSearchService() {

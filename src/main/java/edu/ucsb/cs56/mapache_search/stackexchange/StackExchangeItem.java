@@ -1,6 +1,6 @@
 package edu.ucsb.cs56.mapache_search.stackexchange;
 
-import edu.ucsb.cs56.mapache_search.search.Item;
+import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.stackexchange.objects.Question;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

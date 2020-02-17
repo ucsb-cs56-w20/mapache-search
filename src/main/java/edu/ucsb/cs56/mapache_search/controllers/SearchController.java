@@ -1,24 +1,29 @@
-package edu.ucsb.cs56.mapache_search;
+package edu.ucsb.cs56.mapache_search.controllers;
 
 import edu.ucsb.cs56.mapache_search.preview.PreviewProviderService;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
-import edu.ucsb.cs56.mapache_search.search.Item;
+import edu.ucsb.cs56.mapache_search.search.SearchObject;
+import edu.ucsb.cs56.mapache_search.search.SearchParameters;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import edu.ucsb.cs56.mapache_search.search.SearchService;
 import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeItem;
 import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
 import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
+import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
-
+import edu.ucsb.cs56.mapache_search.search.SearchObject;
+import edu.ucsb.cs56.mapache_search.search.SearchParameters;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import edu.ucsb.cs56.mapache_search.search.SearchService;
 import net.minidev.json.JSONObject;
-import edu.ucsb.cs56.mapache_search.search.Item;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import java.io.IOException;
 
