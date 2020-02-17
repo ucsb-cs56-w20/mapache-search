@@ -1,6 +1,6 @@
 package edu.ucsb.cs56.mapache_search.preview;
 
-import edu.ucsb.cs56.mapache_search.search.Item;
+import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,8 @@ public class PreviewProviderServiceImpl implements PreviewProviderService {
                 URL url = new URL(item.getLink());
 
                 // only preview questions, not other stack overflow pages
-                if (url.getPath().split("/")[1].equalsIgnoreCase("questions")) {
+                String[] parts = url.getPath().split("/");
+                if (parts.length > 1 && parts[1].equalsIgnoreCase("questions")) {
                     return "stackexchange";
                 }
             } catch (MalformedURLException ignored) {

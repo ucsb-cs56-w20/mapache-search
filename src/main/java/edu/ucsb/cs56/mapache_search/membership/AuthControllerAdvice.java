@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search;
+package edu.ucsb.cs56.mapache_search.membership;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -27,27 +27,63 @@ public class AuthControllerAdvice {
         return token != null;
     }
 
+    @ModelAttribute("isGithub")
+    public boolean isGitHub(OAuth2AuthenticationToken token) {
+        if (token == null)
+            return false;
+        if (token.getPrincipal().getAttributes().get("email") == null)
+            return true;
+        return false;
+    }
+
+    @ModelAttribute("isGoogle")
+    public boolean isGoogle(OAuth2AuthenticationToken token) {
+        if (token == null)
+            return false;
+        if (token.getPrincipal().getAttributes().get("email") != null)
+            return true;
+        return false;
+    }
+
+    @ModelAttribute("auth")
+    public String getToken(OAuth2AuthenticationToken token) {
+        if (token == null)
+            return "";
+        return token.toString();
+        //return token.getPrincipal().getAttributes().get("given_name").toString();
+    }
+
     @ModelAttribute("id")
     public String getUid(OAuth2AuthenticationToken token) {
         if (token == null)
             return "";
+        
+        OAuth2User oAuth2User = token.getPrincipal();
+        String uid = "";
 
-        String uid = token.getPrincipal().getAttributes().get("id").toString();
+        //github
+        if (oAuth2User.getAttributes().get("email") == null) {
+            uid = oAuth2User.getAttributes().get("id").toString();
+        }
+        else { //google
+            uid = oAuth2User.getAttributes().get("sub").toString();
+        }
 
         List<AppUser> users = userRepository.findByUid(uid);
 
         if (users.size() == 0) {
             AppUser u = new AppUser();
             u.setUid(uid);
-            u.setUsername(token2login(token));
+            u.setUsername(token2username(token));
             u.setApikey("");
             u.setSearches(0l);
             userRepository.save(u);
             // username, apikey, uid
         } else {
-            if (token2login(token) != users.get(0).getUsername()) {
+            if (token2username(token) != users.get(0).getUsername()) {
+                //if they changed name or username
                 AppUser u = users.get(0);
-                u.setUsername(token2login(token));
+                u.setUsername(token2username(token));
                 userRepository.save(u);
             }
         }
@@ -55,11 +91,11 @@ public class AuthControllerAdvice {
         return uid;
     }
 
-    @ModelAttribute("login")
-    public String getLogin(OAuth2AuthenticationToken token) {
+    @ModelAttribute("username")
+    public String getTheUsername(OAuth2AuthenticationToken token) {
         if (token == null)
             return "";
-        return token2login(token);
+        return token2username(token);
     }
 
     @ModelAttribute("isMember")
@@ -77,8 +113,10 @@ public class AuthControllerAdvice {
         return membershipService.role(token);
     }
 
-    private String token2login(OAuth2AuthenticationToken token) {
-        return token.getPrincipal().getAttributes().get("login").toString();
+    private String token2username(OAuth2AuthenticationToken token) {
+        if (token.getPrincipal().getAttributes().get("email") == null) //github
+            return token.getPrincipal().getAttributes().get("login").toString();
+        return token.getPrincipal().getAttributes().get("email").toString();
     }
 
 }

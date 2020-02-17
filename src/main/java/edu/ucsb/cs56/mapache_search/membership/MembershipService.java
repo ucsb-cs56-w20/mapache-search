@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.mapache_search;
+package edu.ucsb.cs56.mapache_search.membership;
 
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 
