@@ -1,42 +1,54 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<head>
-  <title>Settings</title>
-</head>
-<body>
-  <div class="container">
-    <div th:replace="/../fragments/bootstrap_head.html"></div>
-    <div th:replace="/../fragments/bootstrap_nav_header.html"></div>
-                <div class="container">
-                    <p th:text="'Hello, ' + ${user.username} + '!'"></p>
+  <head>
+    <title>Settings</title>
+  </head>
+  <body>
+    <div class="container">
+      <div th:replace="/../fragments/bootstrap_head.html"></div>
+      <div th:replace="/../fragments/bootstrap_nav_header.html"></div>
+      <div class="container">
+        <p th:text="'Hello, ' + ${user.username} + '!'"></p>
+      </div>
+      <div class="container">
+        <h3>Instructions for getting API Key</h3>
+        <a href="https://developers.google.com/custom-search/v1/overview"
+          target="_blank" rel="noopener noreferrer">
+          Click Here to get API Key
+        </a>
+      </div>
+      <!-- for debugging
+                 <div class="container" th:if="${isLoggedIn} and ${isAdmin}">
+                  <h3>Oauth.toString()</h3>
+                  <a th:text="${auth}"></a>
                 </div>
-                <div class="container">
-                  <h3>Instructions for getting API Key</h3>
-                  <a href="https://developers.google.com/custom-search/v1/overview" target="_blank" rel="noopener noreferrer">
-                    Click Here to get API Key
-                  </a>
-                </div> 
-                <div class="container" style= "margin-top: 30px">
-                  <h5>Number of API calls made today</h5>
-                  <p style= "color:red" th:text="${api_uses} + '/' + ${max_uses} "> </p> 
-                </div> 
-                
-                <div class="container my-5">
-                  <form action="#" th:action="@{/user/settings/update/}" th:object="${user_template}" method="post">
-                        <p>Your current Google API key is: <a th:utext="${user.apikey}"></a></p>
-                        <div class="form-group row">
-                            <label for="apikey" class="col-form-label col-sm-2">Enter a new API Key: </label>
-                            <input type="text" th:name="apikey" class="form-control col-sm-10" id="apikey" placeholder="Enter API Key" th:value="${(user.apikey == null) ? '' : user.apikey}" autofocus>
-                        </div>
-                        <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}" class="text-danger"></span>
-                        <div>
-                            <input type="submit" class="btn btn-primary" value="Update API Key">
-                        </div>
-                    </form>
-                </div>    
-            <div th:replace="/../fragments/bootstrap_scripts.html"></div>           
-            </div>
-</body>
+              -->
+      <div class="container" style="margin-top: 30px">
+        <h5>Number of API calls made today</h5>
+        <p style="color:red" th:text="${api_uses} + '/' + ${max_uses}"> </p>
+      </div>
+
+      <div class="container my-5">
+        <form action="#" th:action="@{/user/settings/update/}"
+          th:object="${user_template}" method="post">
+          <p>Your current Google API key is: <a th:utext="${user.apikey}"></a></p>
+          <div class="form-group row">
+            <label for="apikey" class="col-form-label col-sm-2">Enter a new API
+              Key: </label>
+            <input type="text" th:name="apikey" class="form-control col-sm-10"
+              id="apikey" placeholder="Enter API Key" th:value="${(user.apikey
+              == null) ? '' : user.apikey}" autofocus>
+          </div>
+          <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}"
+            class="text-danger"></span>
+          <div>
+            <input type="submit" class="btn btn-primary" value="Update API Key">
+          </div>
+        </form>
+      </div>
+      <div th:replace="/../fragments/bootstrap_scripts.html"></div>
+    </div>
+  </body>
 
 </html>

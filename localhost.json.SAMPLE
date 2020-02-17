@@ -1,6 +1,10 @@
 {
-    "spring.security.oauth2.client.registration.github.client-id":"copy-from-github",
-    "spring.security.oauth2.client.registration.github.client-secret":"copy-from-github",
-    "app_github_org":"ucsb-cs56-f19",
+    "spring.security.oauth2.client.registration.github.client-id":"FILL-IT-IN",
+    "spring.security.oauth2.client.registration.github.client-secret":"FILL-IT-IN",
+    "spring.security.oauth2.client.registration.google.client-id":"FILL-IT-IN",
+    "spring.security.oauth2.client.registration.google.client-secret":"FILL-IT-IN",
+    "app_github_org":"ucsb-cs56-w20",
+    "app.admin.emails": "FILL-IT-IN,FILL-IT-IN,FILL-IT-IN....",
+    "app.member.hosted-domain": "ucsb.edu",
     "stackapps_key": "copy-from-stackapps"
 }

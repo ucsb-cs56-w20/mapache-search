@@ -19,8 +19,10 @@ import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
-
+import edu.ucsb.cs56.mapache_search.search.SearchObject;
+import edu.ucsb.cs56.mapache_search.search.SearchParameters;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import edu.ucsb.cs56.mapache_search.search.SearchService;
 import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import java.io.IOException;
