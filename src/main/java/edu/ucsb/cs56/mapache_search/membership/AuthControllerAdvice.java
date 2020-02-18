@@ -31,7 +31,8 @@ public class AuthControllerAdvice {
     public boolean isGitHub(OAuth2AuthenticationToken token) {
         if (token == null)
             return false;
-        if (token.getPrincipal().getAttributes().get("email") == null)
+        // This is super hacky
+        if (token.getPrincipal().getAttributes().get("sub") == null)
             return true;
         return false;
     }
@@ -40,6 +41,7 @@ public class AuthControllerAdvice {
     public boolean isGoogle(OAuth2AuthenticationToken token) {
         if (token == null)
             return false;
+        // This is also super hacky
         if (token.getPrincipal().getAttributes().get("email") != null)
             return true;
         return false;
@@ -61,11 +63,16 @@ public class AuthControllerAdvice {
         OAuth2User oAuth2User = token.getPrincipal();
         String uid = "";
 
-        //github
-        if (oAuth2User.getAttributes().get("email") == null) {
+        /*
+        This code seems problematic because:
+            A GitHub UID is not a Google UID
+            They are not guaranteed to be collision-free
+            We shouldn't treat them as the same thing
+        */
+        if (isGitHub(token)) {
             uid = oAuth2User.getAttributes().get("id").toString();
         }
-        else { //google
+        else if (isGoogle(token)) {
             uid = oAuth2User.getAttributes().get("sub").toString();
         }
 
@@ -113,8 +120,15 @@ public class AuthControllerAdvice {
         return membershipService.role(token);
     }
 
+    @ModelAttribute("picture")
+    public String getPicture(OAuth2AuthenticationToken token){
+        if (token == null) return "";
+        if (isGitHub(token)) return "https://avatars2.githubusercontent.com/u/" + getUid(token) + "?v=3&amp;s=40";
+        return token.getPrincipal().getAttributes().get("picture").toString();
+    }
+
     private String token2username(OAuth2AuthenticationToken token) {
-        if (token.getPrincipal().getAttributes().get("email") == null) //github
+        if (isGitHub(token))
             return token.getPrincipal().getAttributes().get("login").toString();
         return token.getPrincipal().getAttributes().get("email").toString();
     }
