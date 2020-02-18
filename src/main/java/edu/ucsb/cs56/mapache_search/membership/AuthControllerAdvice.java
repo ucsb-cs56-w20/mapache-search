@@ -61,11 +61,10 @@ public class AuthControllerAdvice {
         OAuth2User oAuth2User = token.getPrincipal();
         String uid = "";
 
-        //github
-        if (oAuth2User.getAttributes().get("email") == null) {
+        if (isGitHub(token)) {
             uid = oAuth2User.getAttributes().get("id").toString();
         }
-        else { //google
+        else if (isGoogle(token)) { 
             uid = oAuth2User.getAttributes().get("sub").toString();
         }
 
@@ -114,7 +113,7 @@ public class AuthControllerAdvice {
     }
 
     private String token2username(OAuth2AuthenticationToken token) {
-        if (token.getPrincipal().getAttributes().get("email") == null) //github
+        if (isGitHub(token))
             return token.getPrincipal().getAttributes().get("login").toString();
         return token.getPrincipal().getAttributes().get("email").toString();
     }

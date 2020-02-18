@@ -67,10 +67,32 @@ public class HomePageTest {
     }
 
     @Test
+    public void getHomePage_hasCorrectTitle() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+                .andExpect(xpath("//title").exists())
+                .andExpect(xpath("//title").string("Mapache Search - It's Spanish for \"raccoon\""));
+    }
+
+    @Test
     public void getHomePage_SearchInputExists() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML))
             .andExpect(status().isOk())
             .andExpect(xpath("/html/body/div/form/div/div/input").exists());
+    }
+
+    @Test
+    public void getHomePage_BootstrapLoaded() throws Exception {
+        BootstrapTestHelper.bootstrapIsLoaded(mvc, "/");
+    }
+
+    @Test
+    public void getHomePage_hasNavBar() throws Exception {
+        NavigationTestHelper.hasNavBar(mvc, "/");
+    }
+
+    @Test
+    public void getHomePage_hasFooter() throws Exception {
+        NavigationTestHelper.hasFooter(mvc, "/");
     }
 
 }
