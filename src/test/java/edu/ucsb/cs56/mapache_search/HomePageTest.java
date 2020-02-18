@@ -69,7 +69,6 @@ public class HomePageTest {
     @Test
     public void getHomePage_hasCorrectTitle() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-                .andExpect(xpath("//title").exists())
                 .andExpect(xpath("//title").string("Mapache Search - It's Spanish for \"raccoon\""));
     }
 
