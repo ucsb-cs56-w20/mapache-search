@@ -79,4 +79,9 @@ public class SearchResult {
         e.kind = "error";
         return e;
     }
+
+    @Override
+    public String toString() {
+        return "SearchResult [items=" + items + ", kind=" + kind + ", searchInformation=" + searchInformation + "]";
+    }
 }
