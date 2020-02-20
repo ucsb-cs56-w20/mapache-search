@@ -7,7 +7,7 @@ A project to:
 ### Before running:
 * Copy `localhost.json.SAMPLE` into a new file `localhost.json`
 * Fill in the stubs in `localhost.json`
-* At the terminal, type `source env.sh`
+* At the terminal (Linux/Mac), type `source env.sh`, or on Command Prompt (Windows) type `env.bat`
 
 | Type this | to get this result |
 |-----------|------------|
