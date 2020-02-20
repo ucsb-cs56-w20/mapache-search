@@ -7,7 +7,7 @@ A project to:
 ### Before running:
 * Copy `localhost.json.SAMPLE` into a new file `localhost.json`
 * Fill in the stubs in `localhost.json`
-* At the terminal, type `source env.sh`
+* At the terminal (Linux/Mac), type `source env.sh`, or on Command Prompt (Windows) type `env.bat`
 
 | Type this | to get this result |
 |-----------|------------|
@@ -32,6 +32,6 @@ Fill out [this form](https://stackapps.com/apps/oauth/register) and copy the `ke
 ### If you are getting the error `IllegalStateException: google.search.api.key is not defined.`
 
 * Ensure that `google.search.api.key` is defined in `localhost.json`
-* Run `source env.sh` in the terminal instance you are running the web app in
+* Run `source env.sh` (Linux/Mac) or `env.bat` (Windows) in the terminal/command prompt instance you are running the web app in
 
 * NOTE: After deploying to heroku, you must go to heroku postgresql on its website and reset it. Then re-deploy and it should work.
