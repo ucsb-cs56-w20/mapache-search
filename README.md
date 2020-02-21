@@ -21,6 +21,14 @@ What's really weird is I have both "All Users" and "Settings" in my drop-down wh
 I can't resolve this so I'll be taking it out for now
 
 
+### Setting up keys & localhost.json:
+
+* Setting up the Google Search API Key:
+
+Nagivate to `https://developers.google.com/custom-search/v1/overview` and click the blue button `Get a Key`. Follow the steps to produce your key and insert it into `localhost.json`.
+
+* Set up your Github application and insert the client ID and secret into `localhost.json`.
+
 ### Getting `stackapps_key`
 
 In order to get Stack Exchange link previews, you will need a StackApps key.
