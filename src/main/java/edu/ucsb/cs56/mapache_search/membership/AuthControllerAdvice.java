@@ -37,16 +37,6 @@ public class AuthControllerAdvice {
         return false;
     }
 
-    @ModelAttribute("isGoogle")
-    public boolean isGoogle(OAuth2AuthenticationToken token) {
-        if (token == null)
-            return false;
-        // This is also super hacky
-        if (token.getPrincipal().getAttributes().get("email") != null)
-            return true;
-        return false;
-    }
-
     @ModelAttribute("auth")
     public String getToken(OAuth2AuthenticationToken token) {
         if (token == null)
@@ -71,9 +61,6 @@ public class AuthControllerAdvice {
         */
         if (isGitHub(token)) {
             uid = oAuth2User.getAttributes().get("id").toString();
-        }
-        else if (isGoogle(token)) {
-            uid = oAuth2User.getAttributes().get("sub").toString();
         }
 
         List<AppUser> users = userRepository.findByUid(uid);
