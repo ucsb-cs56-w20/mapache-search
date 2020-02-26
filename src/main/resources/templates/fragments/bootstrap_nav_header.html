@@ -53,6 +53,9 @@
                   <a class="dropdown-item" href="#">Something else here</a>
                 </div>
               </li>
+              <li class="nav navbar-nav" th:if="${isLoggedIn} and (${isMember} or ${isAdmin})">
+                <a class="nav-link" href="/github">GitHub</a>
+              </li>
           </ul>
           <div>
             <ul class="nav navbar-nav navbar-right">
