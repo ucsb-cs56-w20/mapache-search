@@ -154,15 +154,6 @@ public class GithubOrgMembershipService implements MembershipService {
             logger.info(email + "'s hostedDomain=" + hostedDomain);
             logger.info("All admin Emails=[" + adminEmails.toString() + "]");
             
-            if (roleToTest.equals("admin") && isAdminEmail(email)) {
-                logger.info(email + " is an [Google]Admin"); 
-                return true;
-            }
-
-            if (roleToTest.equals("member") && memberHostedDomain.equals(hostedDomain)) {
-                logger.info(email + " is a [Google]Member"); 
-                return true;
-            }
         }
         return false;
     }
