@@ -43,5 +43,5 @@ public class AppUser { //Can't use User since User is a defined word in DB
     public void setUid (String uid) { this.uid = uid; }
     
     public boolean getIsInstructor(){ return isInstructor; }
-    public void getIsInstructor(){ return isInstructor; }
+    public void setIsInstructor(){ return isInstructor; }
 }
