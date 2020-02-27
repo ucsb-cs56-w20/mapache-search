@@ -21,15 +21,15 @@ public class GithubController {
     @Autowired
     private AuthControllerAdvice controllerAdvice;
 
-    @GetMapping("/github")
+    @GetMapping("/github/")
     public String gitHub(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
         logger.info(controllerAdvice.toString());
         if(controllerAdvice.getIsAdmin(token) || controllerAdvice.getIsMember(token)){
-            return "github";
+            return "github/index";
         }
         else{
-                redirAttrs.addFlashAttribute("alertDanger", "You need to be logged in to access that page");
-                return "redirect:/";
+            redirAttrs.addFlashAttribute("alertDanger", "You need to be logged in to access that page");
+            return "redirect:/";
         }
     }
 }
