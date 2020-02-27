@@ -71,6 +71,7 @@ public class AuthControllerAdvice {
             u.setUsername(token2username(token));
             u.setApikey("");
             u.setSearches(0l);
+            u.setIsInstructor(membershipService.isAdmin(token));
             userRepository.save(u);
             // username, apikey, uid
         } else {
@@ -100,17 +101,6 @@ public class AuthControllerAdvice {
     @ModelAttribute("isAdmin")
     public boolean getIsAdmin(OAuth2AuthenticationToken token) {
         return membershipService.isAdmin(token);
-    }
-  
-    @ModelAttribute("isInstructor")
-    public boolean getIsInstructor(OAuth2AuthenticationToken token) {
-        if (getIsAdmin(token)) {
-          this.isInstructor = true;
-        }
-        else {
-          this.isInstructor = false;
-        }
-        return this.isInstructor;
     }
 
     @ModelAttribute("role")
