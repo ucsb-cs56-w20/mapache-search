@@ -49,6 +49,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.ui.ModelMap;
+import org.springframework.web.servlet.ModelAndView;
+
 @Controller
 public class SearchController {
 
@@ -85,6 +88,12 @@ public class SearchController {
         model.addAttribute("searchObject", new SearchObject());
         return "index";
     }
+
+    // @GetMapping("/redirectWithRedirectPrefix")
+    // public ModelAndView redirectWithUsingRedirectPrefix(ModelMap model) {
+    //     model.addAttribute("attribute", "redirectWithRedirectPrefix");
+    //     return new ModelAndView("redirect:/redirectedUrl", model);
+    // }
 
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
