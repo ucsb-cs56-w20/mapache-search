@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.membership.GithubOrgMembershipService;
@@ -21,13 +22,14 @@ public class GithubController {
     private AuthControllerAdvice controllerAdvice;
 
     @GetMapping("/github")
-    public String gitHub(Model model, OAuth2AuthenticationToken token) {
+    public String gitHub(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
         logger.info(controllerAdvice.toString());
         if(controllerAdvice.getIsAdmin(token) || controllerAdvice.getIsMember(token)){
             return "github";
         }
         else{
-            return "/login";
+                redirAttrs.addFlashAttribute("alertDanger", "You need to be logged in to access that page");
+                return "redirect:/";
         }
     }
 }
