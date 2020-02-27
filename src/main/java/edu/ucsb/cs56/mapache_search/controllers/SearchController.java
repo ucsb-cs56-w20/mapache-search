@@ -288,6 +288,7 @@ public class SearchController {
                 UserVote vote = new UserVote();
                 vote.setUser(user);
                 vote.setResult(result);
+                vote.setTimestamp(new Date());
                 if (direction.equals("up")){
                     vote.setUpvote(true);
                 }
