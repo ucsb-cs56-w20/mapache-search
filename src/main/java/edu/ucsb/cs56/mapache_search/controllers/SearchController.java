@@ -283,7 +283,7 @@ public class SearchController {
 
             if(byUserAndResult.size() > 0){
                 UserVote toRemove = byUserAndResult.get(0);
-                System.out.println("[VOTE DELETED] " + toRemove);
+                logger.debug("[VOTE DELETED] " + toRemove);
                 voteRepository.delete(toRemove);
             }
             if(!(direction.equals("none"))){
@@ -291,7 +291,7 @@ public class SearchController {
                 vote.setUser(user);
                 vote.setResult(result);
                 vote.setTimestamp(new Date());
-                System.out.println("[VOTE ADDED] " + vote);
+                logger.debug("[VOTE ADDED] " + vote);
                 if (direction.equals("up")){
                     vote.setUpvote(true);
                 }
