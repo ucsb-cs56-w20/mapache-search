@@ -282,13 +282,16 @@ public class SearchController {
             List<UserVote> byUserAndResult = voteRepository.findByUserAndResult(user, result);
 
             if(byUserAndResult.size() > 0){
-                voteRepository.delete(byUserAndResult.get(0));
+                UserVote toRemove = byUserAndResult.get(0);
+                logger.debug("[VOTE DELETED] " + toRemove);
+                voteRepository.delete(toRemove);
             }
             if(!(direction.equals("none"))){
                 UserVote vote = new UserVote();
                 vote.setUser(user);
                 vote.setResult(result);
                 vote.setTimestamp(new Date());
+                logger.debug("[VOTE ADDED] " + vote);
                 if (direction.equals("up")){
                     vote.setUpvote(true);
                 }

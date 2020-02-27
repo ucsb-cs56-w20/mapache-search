@@ -36,6 +36,12 @@ public class UserVote {
     public void setUser(AppUser user) { this.user = user; }
     
     public SearchResultEntity getResult() { return result; }
-    public void setResult(SearchResultEntity result) { this.result = result; }     
+    public void setResult(SearchResultEntity result) { this.result = result; }
+
+    @Override
+    public String toString() {
+        return "UserVote [id=" + id + ", result=" + result + ", timestamp=" + timestamp + ", upvote=" + upvote
+                + ", user=" + user + "]";
+    }
 
 }
