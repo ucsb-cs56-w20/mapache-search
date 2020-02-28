@@ -59,9 +59,6 @@
               <li th:if="${isLoggedIn} and ${isGithub}">
                   <a th:text="${username}" th:href="'https://github.com/' + ${username}"></a>
               </li>
-              <li th:if="${isLoggedIn} and ${isGoogle}">
-                <a th:text="${username}"></a>
-            </li>
               <li th:if="${isLoggedIn}" th:text="'(' + ${role} + ')'">(Role)</li>
               <li th:if="${isLoggedIn}" class="dropdown user-nav">
                   <a href="#" class="dropdown-toggle float-left" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -89,13 +86,72 @@
                       <button class="btn btn-primary" type="submit">GitHub Login</button>
                   </form> 
               </li>
-              <li th:unless="${isLoggedIn}">
-                <form method="GET" action="/oauth2/authorization/google" class="form-inline my-2 my-lg-0"
-                th:unless="${isLoggedIn}">
-                <button class="btn btn-primary" type="submit">Google Login</button>
-            </form>
-              </li>
           </ul>
           </div>
     </div>
 </nav>
+<div
+  class="alert alert-primary"
+  role="alert"
+  th:if="${alertPrimary}"
+  th:text="${alertPrimary}"
+>
+  This is a primary alert—check it out!
+</div>
+
+<div
+  class="alert alert-secondary"
+  role="alert"
+  th:if="${alertSecondary}"
+  th:text="${alertSecondary}"
+>
+  This is a secondary alert—check it out!
+</div>
+<div
+  class="alert alert-success"
+  role="alert"
+  th:if="${alertSuccess}"
+  th:text="${alertSuccess}"
+>
+  This is a success alert—check it out!
+</div>
+<div
+  class="alert alert-danger"
+  role="alert"
+  th:if="${alertDanger}"
+  th:text="${alertDanger}"
+>
+  This is a danger alert—check it out!
+</div>
+<div
+  class="alert alert-warning"
+  role="alert"
+  th:if="${alertWarning}"
+  th:text="${alertWarning}"
+>
+  This is a warning alert—check it out!
+</div>
+<div
+  class="alert alert-info"
+  role="alert"
+  th:if="${alertInfo}"
+  th:text="${alertInfo}"
+>
+  This is a info alert—check it out!
+</div>
+<div
+  class="alert alert-light"
+  role="alert"
+  th:if="${alertLight}"
+  th:text="${alertLight}"
+>
+  This is a light alert—check it out!
+</div>
+<div
+  class="alert alert-dark"
+  role="alert"
+  th:if="${alertDark}"
+  th:text="${alertDark}"
+>
+  This is a dark alert—check it out!
+</div>
