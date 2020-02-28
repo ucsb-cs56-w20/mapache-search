@@ -19,6 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+public class InstructorController {
 @PostMapping("/instructorDashboard/delete/{uid}")
     public String deleteViewer(@PathVariable("id") long uid, Model model,
             RedirectAttributes redirAttrs, AppUser user) {
@@ -61,3 +62,4 @@ import org.slf4j.LoggerFactory;
         }
         return "redirect:/instructorDashboard/addInstructor";
     }
+}
