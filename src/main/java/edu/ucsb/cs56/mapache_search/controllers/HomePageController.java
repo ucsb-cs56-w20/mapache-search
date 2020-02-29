@@ -103,6 +103,8 @@ public class HomePageController {
         }
         //Adding the upvote link to a model
         model.addAttribute("upVoteLinks", upVoteLinks);
+        int a = upVoteLinks.size();
+        model.addAttribute("upVoteLinksSize", a);
 
 
         return "index";
