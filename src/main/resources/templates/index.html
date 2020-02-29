@@ -11,9 +11,26 @@
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
 		<h2 class="text-center">Mapache Search</h2>
 		<div th:replace="fragments/basic_search_form.html"></div>
-		<div th:replace="fragments/bootstrap_footer.html"></div>
+		<div th:replace="fragments/bootstrap_scripts.html"></div>
+		
+		<!-- <div th:replace="fragments/bootstrap_footer.html"></div> -->
+		<!-- <div th:replace="fragments/bootstrap_scripts.html"></div> -->
     </div>
-	<div th:replace="fragments/bootstrap_scripts.html"></div>
+	<h3 class="text-center">Recently Upvoted Link </h3>
+	<table class = "table">
+		<tbody>
+			<div th:if=" ${upVoteLinks.size()} == 0">
+				<h4 class = "text-center"> No upvoted link</h4>
+			</div>
+			<div th:if=" ${upVoteLinks.size()} != 0">
+				<tr th:each="f: ${upVoteLinks}"> 
+					<td><a th:href="${f}" th:text="${f}"></a></td>
+				</tr>
+			</div>
+		</tbody>
+	</table>
+	<div th:replace="fragments/bootstrap_footer.html"></div>
+
 </body>
 
 </html>
