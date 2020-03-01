@@ -105,9 +105,9 @@ public class HomePageController {
             String link = (upVoteList.get(pos)).getResult().getUrl();
             upVoteLinks.add(link);
         }
+        //Addubg an attribute to the model indicating the size of the upVoteList
         int a = upVoteLinks.size();
         model.addAttribute("upVoteLinksSize",a);
-
         //Adding the upvote link to a model
         model.addAttribute("upVoteLinks", upVoteLinks);
         return "index";
