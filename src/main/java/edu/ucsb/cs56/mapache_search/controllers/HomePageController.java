@@ -98,15 +98,18 @@ public class HomePageController {
         //This for loop serves to get all the url linsk that have been upvoted
         for(int pos = 0; pos < upVoteList.size(); pos++)
         {
+            if (pos > 4)
+            {
+                break;
+            }
             String link = (upVoteList.get(pos)).getResult().getUrl();
             upVoteLinks.add(link);
         }
+        int a = upVoteLinks.size();
+        model.addAttribute("upVoteLinksSize",a);
+
         //Adding the upvote link to a model
         model.addAttribute("upVoteLinks", upVoteLinks);
-        int a = upVoteLinks.size();
-        model.addAttribute("upVoteLinksSize", a);
-
-
         return "index";
     }
 
