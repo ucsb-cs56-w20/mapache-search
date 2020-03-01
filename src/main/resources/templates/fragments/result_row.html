@@ -31,7 +31,7 @@
           class="h5 m-0"
           target="_blank"
           rel="noopener noreferrer"
-          th:href="${result.getGoogleResult().link}"
+          th:href="'/link?url=' + ${result.getGoogleResult().link}"
           th:utext="${result.getGoogleResult().htmlTitle}"
       ></a>
       <span class="mb-1">
