@@ -27,13 +27,15 @@
       </span>
   </div>
   <div class="searchresult-info d-flex flex-column">
-      <a
-          class="h5 m-0"
-          target="_blank"
-          rel="noopener noreferrer"
-          th:href="${result.getGoogleResult().link}"
-          th:utext="${result.getGoogleResult().htmlTitle}"
-      ></a>
+      <div class="flex-row">
+        <a
+            class="h5 m-0 flex-column"
+            target="_blank"
+            rel="noopener noreferrer"
+            th:href="${result.getGoogleResult().link}"
+            th:utext="${result.getGoogleResult().htmlTitle}"
+        ></a>
+      </div>
       <span class="mb-1">
       from
       <a target="_blank" rel="noopener noreferrer" th:href="${'//' + result.getGoogleResult().displayLink}" th:text="${result.getGoogleResult().displayLink}"></a>
