@@ -15,6 +15,35 @@
 
         <table class="table">
             <tr>
+                <th>Search Filters</th>
+                <td><input type="reset" value="Reset Filters"></td>
+            </tr>
+            <tr></tr>
+                <!-- <td th:text="${api_uses}"></td>
+                <td th:text="${max_api_uses}"></td> -->
+                <td>Website:</td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Last updated:</td>
+                <td>
+                    <select id="time">
+                        <option value="anytime">anytime</option>
+                        <option value="day">past 24 hours</option>
+                        <option value="week">past week</option>
+                        <option value="month">past month</option>
+                        <option value="year">past year</option>
+                      </select>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="checkbox">  Sort by highest upvotes</td>
+                <!-- <td>Sort by highest upvotes</td> -->
+            </tr>
+        </table>
+
+        <table class="table">
+            <tr>
                 <th>API Uses</th>
                 <th>Maximum</th>
             </tr>
