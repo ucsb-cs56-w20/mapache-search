@@ -12,7 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
-import java.util.Optional;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -36,8 +35,8 @@ public class InstructorController {
             return "redirect:/";
         }
 
-        Optional<AppUser> appUser = userRepository.findByUid(uid).get(0);
-        if (!appUser.isPresent()) {
+        AppUser appUser = userRepository.findByUid(uid).get(0);
+        if (appUser == null) {
             redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
         } else {
             userRepository.findByUid(uid).get(0).setIsInstructor(false);
@@ -54,15 +53,15 @@ public class InstructorController {
                     "You do not have permission to access that page");
             return "redirect:/";
         }
-        Optional<AppUser> appUser = userRepository.findByUid(user.getUid()).get(0);
-        if (!appUser.isPresent()) {
+        AppUser appUser = userRepository.findByUid(user.getUid()).get(0);
+        if (appUser == null) {
             redirAttrs.addFlashAttribute("alertDanger", "User with that uid does not exist.");
         } else {
-            String uid = appUser.get().getUid();
-            if (appUser.get().getIsInstructor()) {
-                redirAttrs.addFlashAttribute("alertDanger", "User " + uid + " has already been an Instructor.");    
+            String uid = appUser.getUid();
+            if (appUser.getIsInstructor()) {
+                redirAttrs.addFlashAttribute("alertDanger", "User " + uid + " is already an Instructor.");    
             } else {
-                appUser.get().setIsInstructor(true);
+                appUser.setIsInstructor(true);
                 redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");    
             }
         }
