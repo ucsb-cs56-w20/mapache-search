@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 
 <head>
 	<title>Mapache Search - It's Spanish for "raccoon"</title>
@@ -10,8 +10,10 @@
 	<div class="container">
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
 		<h2 class="text-center">Mapache Search</h2>
-		<div th:replace="fragments/basic_search_form.html"></div>
-		<div>
+		<div th:if="${isLoggedIn}">
+			<div th:replace="fragments/basic_search_form.html"></div>
+		</div>
+		<div th:if="${not isLoggedIn}">I'm a guest</div>
 			<h1>Mapache Description</h1>
 			<p>For Students: students can use the app to search for and share helpful resources with their class</p>
 			<p>For Instructors: instructors can monitor the types of searchers that students are performing, and point them in the right direction</p>
@@ -19,7 +21,7 @@
 		</div>
 		
 		<!-- <div th:replace="fragments/bootstrap_footer.html"></div> -->
-		<!-- <div th:replace="fragments/bootstrap_scripts.html"></div> -->
+		<div th:replace="fragments/bootstrap_scripts.html"></div>
     </div>
 	<h3 class="text-center">Recently Upvoted Link </h3>
 	<table class = "table">
