@@ -102,6 +102,11 @@ public class AuthControllerAdvice {
         return membershipService.isAdmin(token);
     }
 
+    @ModelAttribute("getRepos")
+    public List<String> getGetRepos() {
+       return membershipService.getRepos();
+    }
+
     @ModelAttribute("role")
     public String getRole(OAuth2AuthenticationToken token) {
         return membershipService.role(token);

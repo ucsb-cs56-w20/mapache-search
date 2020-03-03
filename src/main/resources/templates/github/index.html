@@ -11,26 +11,11 @@
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
 		<h2 class="text-center">GitHub Page</h2>
 
-		<table>
 
-			<thead>
-                <tr>
-                    <th>Repo</th>
-                
-                </tr>
-            </thead>
-
-		<tbody>
-			<tr th:each="String: ${getRepos}"> 
-				<li>
-				<td th:text="${String}"></td>
-				</li>
-			</tr>
-	</tbody>
-
-</table>
-
-
+		
+		<tr th:each="repo: ${getRepos}"> 
+			<td th:text="${repo}"></td>
+		</tr>
 
 
 

@@ -1,6 +1,8 @@
 package edu.ucsb.cs56.mapache_search.membership;
 
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface MembershipService {
 
@@ -23,6 +25,11 @@ public interface MembershipService {
     default public boolean isMemberOrAdmin(OAuth2AuthenticationToken oAuth2AuthenticationToken) {
         return isMember(oAuth2AuthenticationToken) || isAdmin(oAuth2AuthenticationToken);
     }
+
+    /** get list of properties 
+     * @return list of properties from application.properties 
+     * */
+    public List<String> getRepos();
 
     default public String role(OAuth2AuthenticationToken token) {
         if (token==null)
