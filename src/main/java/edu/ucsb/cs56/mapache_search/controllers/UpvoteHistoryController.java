@@ -21,7 +21,6 @@ import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
-// AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
 @Controller
 public class UpvoteHistoryController {
 
@@ -37,8 +36,8 @@ public class UpvoteHistoryController {
 
     @GetMapping("/user/upvotehistory")
     public String upvoteHist (Model model, OAuth2AuthenticationToken token){
-        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        List<UserVote> byUser = voteRepository.findByUser(user);
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);        
+        List<UserVote> byUser = voteRepository.findByUserAndUpvote(user, true);
 
         model.addAttribute("userVotes", byUser);
         return "user/upvotehistory";

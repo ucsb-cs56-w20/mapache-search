@@ -13,7 +13,7 @@ import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 public interface VoteRepository extends CrudRepository<UserVote, Long> {
     List<UserVote> findById(long id);
     List<UserVote> findByUpvoteOrderByTimestampDesc(boolean upvoted);
-    List<UserVote> findByUser(AppUser user);
+    List<UserVote> findByUserAndUpvote(AppUser user, boolean upvoted);
     List<UserVote> findByUserAndResult(AppUser user, SearchResultEntity result);
     List<UserVote> findByResult(SearchResultEntity result);
     List<UserVote> findByResultAndUpvote(SearchResultEntity result, boolean upvoted);
