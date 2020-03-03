@@ -33,6 +33,9 @@ public class GithubOrgMembershipService implements MembershipService {
     //If you put in final, then you can't assign with @Value properly
     private List<String> adminEmails;
 
+    @Value("#{'${app.project_repos}'.split(',')}")
+    private List<String> projectRepos;
+
     @Value("${app.member.hosted-domain}")
     private String memberHostedDomain;
 
@@ -163,5 +166,17 @@ public class GithubOrgMembershipService implements MembershipService {
         // (adminEmails.contains(email));
         return (adminEmails.contains(email));
     }
+
+    //get method for repos from application.properties
+    public List<String> getRepos(){
+
+        return projectRepos;
+    }
+
+    public String getProjectOrg(){
+
+        return githubOrg;
+    }
+
 
 }
