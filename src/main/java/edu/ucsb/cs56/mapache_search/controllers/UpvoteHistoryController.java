@@ -16,20 +16,30 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
+import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
-
+import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 @Controller
 public class UpvoteHistoryController {
 
     private Logger logger = LoggerFactory.getLogger(UserController.class);
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private VoteRepository voteRepository;
 
     @Autowired
     private AuthControllerAdvice controllerAdvice;
 
     @GetMapping("/user/upvotehistory")
-    public String upvoteHist (Model model){
+    public String upvoteHist (Model model, OAuth2AuthenticationToken token){
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);        
+        List<UserVote> byUser = voteRepository.findByUserAndUpvote(user, true);
+
+        model.addAttribute("userVotes", byUser);
         return "user/upvotehistory";
     }
 }
