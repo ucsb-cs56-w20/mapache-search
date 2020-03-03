@@ -2,26 +2,18 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-	<title>Mapache Search - It's Spanish for "raccoon"</title>
+	<title>Tags</title>
 	<div th:replace="fragments/bootstrap_head.html"></div>
 </head>
 
 <body class="text-center">
 	<div class="container">
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
-
-		<h2 class="text-center">ucsb-cs56 Legacy Code Projects</h2>
-		
-		<tr th:each="repo: ${getRepos}"> 
-			<ul style="list-style-type:none;">
-			<li>
-			<a th:href="@{'https://github.com/' + ${getProjectOrg} +'/' + ${repo}}"><td th:text="${repo}"></td></a>
-			</li>
-			</ul>
-		</tr>
-
+        <h2 class="text-center">Tags</h2>
+        
+        
 		<div th:replace="fragments/bootstrap_footer.html"></div>
-	</div>
+    </div>
 	<div th:replace="fragments/bootstrap_scripts.html"></div>
 </body>
 

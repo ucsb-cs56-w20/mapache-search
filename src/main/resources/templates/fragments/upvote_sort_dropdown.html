@@ -1,0 +1,22 @@
+<!-- fragments/bootstrap_nav_header.html-->
+<!-- See https://getbootstrap.com/docs/4.0/components/navbar/ for documentation on how to adjust HTML below -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <!-- Button to collapse/expand navbar when it doesn't fit on the screen-->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Sort by
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Date upvoted (newest)</a>
+                <a class="dropdown-item" href="#">Date upvoted (oldest)</a>
+              </div>
+            </li>
+          </ul>
+    </div>
+</nav>
