@@ -68,7 +68,7 @@
             class="d-block"
             target="_blank"
             rel="noopener noreferrer"
-            th:href="${item.link}"
+            th:href="'/link?url=' + ${item.link}"
             th:text="${'View (' + count + ') other answer' + (count == 1 ? '' : 's') + ' on ' + item.displayLink}">
         </a>
       </th:block>
