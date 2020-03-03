@@ -33,8 +33,9 @@ public class GithubOrgMembershipService implements MembershipService {
     //If you put in final, then you can't assign with @Value properly
     private List<String> adminEmails;
 
-    @Value("#{'${app.project_repos}'.split(',')}")
-    private List<String> projectRepos;
+
+    // @Value("#{'${app.project_repos}'.split(',')}")   
+     private List<String> projectRepos;
 
     @Value("${app.member.hosted-domain}")
     private String memberHostedDomain;
@@ -45,13 +46,23 @@ public class GithubOrgMembershipService implements MembershipService {
     @Autowired
     private OAuth2AuthorizedClientService clientService;
 
-    public GithubOrgMembershipService(@Value("#{'${app.admin.emails}'.split(',')}") List<String> adminEmails) {
+    public GithubOrgMembershipService(@Value("#{'${app.admin.emails}'.split(',')}") List<String> adminEmails,
+    @Value("#{'${app.project_repos}'.split(',')}") List<String> projectRepos )
+     {
         logger.info("GoogleHostedDomain=" + memberHostedDomain);
         this.adminEmails = adminEmails;
+        this.projectRepos = projectRepos;
+        
         for (int i = 0; i < adminEmails.size(); i++) {
             adminEmails.set(i, adminEmails.get(i).replaceAll("\\s+", ""));
         }
+
+          for (int i = 0; i < projectRepos.size(); i++) {
+            projectRepos.set(i, projectRepos.get(i).replaceAll("\\s+", ""));
+        }
+
         logger.info("adminEmails=" + adminEmails.toString());
+        logger.info("projectRepos=" + projectRepos.toString());
         logger.info("githubOrg=" + githubOrg);
         
     }
