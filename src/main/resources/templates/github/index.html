@@ -14,7 +14,7 @@
 		<tr th:each="repo: ${getRepos}"> 
 			<ul style="list-style-type:none;">
 			<li>
-			<a th:href="@{'https://github.com/ucsb-cs56-w20/' + ${repo}}"><td th:text="${repo}"></td></a>
+			<a th:href="@{'https://github.com/' + ${getProjectOrg} +'/' + ${repo}}"><td th:text="${repo}"></td></a>
 			</li>
 			</ul>
 		</tr>

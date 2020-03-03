@@ -27,9 +27,14 @@ public interface MembershipService {
     }
 
     /** get list of properties 
-     * @return list of properties from application.properties 
+     * @return list of repos from application.properties 
      * */
     public List<String> getRepos();
+
+     /** get Project Organization Name 
+     * @return Project Organization Name from application.properties 
+     * */
+    public String getProjectOrg();
 
     default public String role(OAuth2AuthenticationToken token) {
         if (token==null)
