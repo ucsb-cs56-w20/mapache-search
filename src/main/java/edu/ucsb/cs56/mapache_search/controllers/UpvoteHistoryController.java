@@ -42,5 +42,23 @@ public class UpvoteHistoryController {
         model.addAttribute("userVotes", byUser);
         return "user/upvotehistory";
     }
+
+    @GetMapping("/user/upvoteascending")
+    public String upvoteHistAscending (Model model, OAuth2AuthenticationToken token){
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);        
+        List<UserVote> byUser = voteRepository.findByUserAndUpvoteOrderByTimestampAsc(user, true);
+
+        model.addAttribute("userVotes", byUser);
+        return "user/upvoteascending";
+    }
+
+    @GetMapping("/user/upvotedescending")
+    public String upvoteHistDescending (Model model, OAuth2AuthenticationToken token){
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);        
+        List<UserVote> byUser = voteRepository.findByUserAndUpvoteOrderByTimestampDesc(user, true);
+
+        model.addAttribute("userVotes", byUser);
+        return "user/upvotedescending";
+    }
 }
 
