@@ -18,20 +18,24 @@
     color: orange;
 }
 
-.tag-button {
-  position: absolute;
-  right: 0;
-  border: none;
-  background-color: inherit;
-  cursor: pointer;
-  margin: 0px 40px;
-  padding: 0px 8px;
-  border-radius: 5px;
-  font-size: 120%;
+.tag-button-col {
+  flex: 1;
 }
 
-.tag-button:hover {
-  color: blue;
+.tag-button-text {
+  margin-left: auto;
+}
+
+.tag-button-text:hover {
+  color: rgb(55, 183, 226);
+  cursor: pointer;
+}
+
+.tag-button {
+  border: none;
+  background-color: inherit;
+  padding: 0px 8px;
+  color: inherit;
 }
 
 p.bigfont {
