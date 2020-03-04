@@ -81,7 +81,6 @@ public class GithubOrgMembershipService implements MembershipService {
         OAuth2User oAuth2User = oauthToken.getPrincipal();
         String user = (String) oAuth2User.getAttributes().get("login");
 
-        //logger.info(oAuth2User.getAttributes().get("email").toString());
 
         Github github = null;
 
@@ -111,6 +110,7 @@ public class GithubOrgMembershipService implements MembershipService {
         
         try {
 
+            //Check for Admin first
             if (oAuth2User.getAttributes().get("email") != null && roleToTest.equals("admin") && isAdminEmail((String) oAuth2User.getAttributes().get("email"))) {	
                 logger.info(oAuth2User.getAttributes().get("email") + " is an Admin"); 	
                 return true;	
