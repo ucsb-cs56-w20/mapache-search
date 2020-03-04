@@ -2,6 +2,7 @@
 <!-- See https://getbootstrap.com/docs/4.0/components/navbar/ for documentation on how to adjust HTML below -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">Mapache Search</a>
+    <a class="navbar-brand" href= "/filter" >Filter Mapache Search</a>
     <!-- Button to collapse/expand navbar when it doesn't fit on the screen-->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
         aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,11 +48,14 @@
                   Team 4
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="/tags">Tags</a>
                   <a class="dropdown-item" href="#">Another action</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#">Something else here</a>
                 </div>
+              </li>
+              <li class="nav navbar-nav" th:if="${isLoggedIn} and (${isMember} or ${isAdmin})">
+                <a class="nav-link" href="/github/">GitHub</a>
               </li>
           </ul>
           <div>
