@@ -18,6 +18,6 @@ public class InstructorController {
     @GetMapping("instructor")
     public String index(Model model) {
         //Iterable is interface in java.lang
-        return "instructorDashboard/index";
+        return "instructor/index";
     }
 }
