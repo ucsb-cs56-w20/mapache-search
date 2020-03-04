@@ -26,7 +26,7 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-@PostMapping("/instructorDashboard/delete/{uid}")
+@PostMapping("/instructor/delete/{uid}")
     public String deleteViewer(@PathVariable("id") String uid, Model model,
             RedirectAttributes redirAttrs, AppUser user) {
         if (!user.getIsInstructor()) {
@@ -42,10 +42,10 @@ public class InstructorController {
             userRepository.findByUid(uid).get(0).setIsInstructor(false);
             redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
         }
-        return "redirect:/instructorDashboard/addInstructor";
+        return "redirect:/instructor/addInstructor";
     }
 
-    @PostMapping("/instructorDashboard/add")
+    @PostMapping("/instructor/add")
     public String addInstructor(@Valid AppUser user, BindingResult result, Model model,
             RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
         if (!user.getIsInstructor()) {
@@ -65,6 +65,6 @@ public class InstructorController {
                 redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");    
             }
         }
-        return "redirect:/instructorDashboard/addInstructor";
+        return "redirect:/instructor/addInstructor";
     }
 }

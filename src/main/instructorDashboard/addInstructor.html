@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    
+<head>
+	<title>Add Instructor</title>
+</head>
+
+<body class="text-center">
+    <form method="post" th:object="${newInstructor}">
+       <div class="form-group row">
+          <label for="uid" class="col-sm-2 col-form-label">uid</label>
+            <div class="col-sm-10">
+                <table>
+                    <tr>
+                        <td>
+                            <input type="text" th:field="*{uid}" class="form-control" id="uid" />
+                        </td>
+                    </tr>
+                    <tr>
+                    </tr>
+                </table>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+              </div>
+        </div>
+
+        <button type="submit" th:formaction="@{/instructorDashboard/add}" class="btn btn-primary" id="selenium-instructor-add">
+        Add Instructor
+        </button>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>uid</th>
+            <th>username</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="a: ${appUsers}"
+                 th:if="${a.IsInstructor}">
+            <td th:text="${a.uid}"></td>
+            <td th:text="${a.username}"></td>
+            <td th:if="${a.isInstructor}">
+              <form th:action="@{/instructorDashboard/delete/{uid}(uid=${a.uid})}" th:method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    <body>
+</html>

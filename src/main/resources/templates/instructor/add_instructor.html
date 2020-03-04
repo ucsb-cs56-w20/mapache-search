@@ -29,7 +29,7 @@
               </div>
         </div>
 
-        <button type="submit" th:formaction="@{/instructorDashboard/add}" class="btn btn-primary" id="selenium-instructor-add">
+        <button type="submit" th:formaction="@{/instructor/add}" class="btn btn-primary" id="selenium-instructor-add">
         Add Instructor
         </button>
     </form>
@@ -48,7 +48,7 @@
               <td th:text="${a.uid}"></td>
               <td th:text="${a.username}"></td>
               <td th:if="${a.isInstructor}">
-                 <form th:action="@{/instructorDashboard/delete/{uid}(uid=${a.uid})}" th:method="post">
+                 <form th:action="@{/instructor/delete/{uid}(uid=${a.uid})}" th:method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <button type="submit" class="btn btn-danger">Delete</button>
                  </form>
