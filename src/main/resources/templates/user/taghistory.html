@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+ <html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+  <head>
+ 	<title>Tag History</title>
+ 	<div th:replace="fragments/bootstrap_head.html"></div>
+ </head>
+
+  <body class="text-center">
+ 	<div class="container">
+ 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
+		 <h2 class="text-center">Tag History</h2>
+	 </div>
+	 <div class = "container">
+		<form method="GET" th:action="@{/user/taghistory}" th:object="${Tag}">
+
+			<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"/>
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label"></label>
+			
+					
+					<div class="input-group mb-3">    
+					<input type="text" name="query" class="form-control" placeholder="Search your tag history here" autofocus="true"/>
+						<div class="input-group-append">
+						<button class="btn btn-outline-primary" type="submit" id="js-course-search-submit"><i class="fas
+						fa-search">Search</i></button>
+					  </div>
+					</div>
+			
+				</div>
+			
+			
+			
+			</form>
+			
+	 </div>
+	 <div class="container">
+		<div th:replace="fragments/bootstrap_footer.html"></div>
+		<div th:replace="fragments/bootstrap_scripts.html"></div>
+	 </div>
+ </body>
+
+  </html> 

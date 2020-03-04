@@ -90,11 +90,6 @@ public class SearchController {
         this.searchRepository = searchRepository;
     }
 
-    @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("searchObject", new SearchObject());
-        return "index";
-    }
 
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
