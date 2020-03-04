@@ -23,4 +23,11 @@ public class SearchResultEntity {
 
     public Long getVotecount() { return votecount; }
     public void setVotecount(Long votecount) { this.votecount = votecount; }
+
+    @Override
+    public String toString() {
+        return "SearchResultEntity [url=" + url + "]";
+    }
+
+    
 }
