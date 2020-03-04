@@ -9,9 +9,26 @@
 <body class="text-center">
 	<div class="container">
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
-        <h2 class="text-center">Tags</h2>
-        
-        
+		<h2 class="text-center">Tags</h2>
+		
+		<div style="padding:10px">
+    	    <button class="btn btn-outline-primary" type="button">New Tag</button>
+		</div>
+		<table class = "table">
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="t: ${tags}">
+					<td th:text="*{t.id}"></td>
+					<td th:text="${t.name}"></td>
+				  </tr>
+			</tbody>
+		</table>
+		
 		<div th:replace="fragments/bootstrap_footer.html"></div>
     </div>
 	<div th:replace="fragments/bootstrap_scripts.html"></div>
