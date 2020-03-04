@@ -10,6 +10,18 @@
  	<div class="container">
  		<div th:replace="fragments/bootstrap_nav_header.html"></div>
 		 <h2 class="text-center">Tag History</h2>
+		 <table class = "table">
+			<tbody>
+				<div th:if=" ${userTags.size()} == 0">
+					<h4 class = "text-center"> No tags</h4>
+				</div>
+				<div th:if=" ${userTags.size()} != 0">
+					<tr th:each="f: ${userTags}"> 
+						<td><a th:href="${f.getResult().getUrl()}" th:text="${f.getResult().getUrl()}"></a></td>
+					</tr>
+				</div>
+			</tbody>
+		</table>
 	 </div>
 	 <div class = "container">
 		<form method="GET" th:action="@{/user/taghistory}" th:object="${Tag}">
