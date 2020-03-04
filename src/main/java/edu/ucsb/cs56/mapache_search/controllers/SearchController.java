@@ -153,9 +153,6 @@ public class SearchController {
         }
 
         String json = searchService.getJSON(params, apiKey);
-        model.addAttribute("searchResultQueryFound",params.getQuery());
-        
-
         SearchResult sr = SearchResult.fromJSON(json);
 
         if(sr.getKind() != "error") {
