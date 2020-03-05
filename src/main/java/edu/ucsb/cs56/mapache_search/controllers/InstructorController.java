@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
+import edu.ucsb.cs56.mapache_search.membership.MembershipService;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import javax.validation.Valid;
 import java.util.List;
@@ -20,6 +21,9 @@ import org.slf4j.LoggerFactory;
 
 @Controller
 public class InstructorController {
+    @Autowired
+    private MembershipService ms;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -34,8 +38,9 @@ public class InstructorController {
 
 /*     WITH ADMIN CHECK
     @GetMapping("instructor")
-    public String index(Model model, RedirectAttributes redirAttrs, AppUser user) {
-        if (!user.getIsInstructor()) {
+    public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
