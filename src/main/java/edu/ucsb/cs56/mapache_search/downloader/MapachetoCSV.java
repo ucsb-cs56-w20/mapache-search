@@ -1,4 +1,4 @@
-package edu.ucsb.cs56.ucsb_courses_search.downloaders;
+package edu.ucsb.cs56.mapache_search.downloader;
 
 import java.io.PrintWriter;
 
@@ -24,46 +24,16 @@ public class MapachetoCSV {
 
   private static final Logger logger = LoggerFactory.getLogger(MapachetoCSV.class);
 
-  public static String instructorsToString(List<Instructor> instructors) {
-    switch (instructors.size()) {
-    case 0:
-      return "";
-    case 1:
-      return instructors.get(0).instructor;
-    default:
-      return instructors.stream().map(i -> i.instructor).collect(Collectors.toList()).toString();
-    }
-  }
 
-  public static String secondaryStatus(Section s) {
-    if (s.secondaryStatus==null)
-      return "Section";
-    if (s.secondaryStatus.equals("R"))
-      return "Lecture";
-    return "Section";
-  }
-
-  public static void writeSections(PrintWriter writer, CoursePage cp) {
-    String[] CSV_HEADER = { "quarter", "courseId", "title", "type", "lectureInstructor", "sectionInstructor", "days", "beginTime", "endTime" };
+  public static void writeSections(PrintWriter writer) {
+    String[] CSV_HEADER = { "Username", "Vote"};
     try (CSVWriter csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER,
         CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);) {
       csvWriter.writeNext(CSV_HEADER);
-      for (Course c : cp.classes) {
-        String lectureInstructor = instructorsToString(c.getClassSections().get(0).instructors);
-        for (Section s : c.getClassSections()) {
-          for (TimeLocation t : s.timeLocations) {
-            String[] data = { c.getQuarter(), c.getCourseId(), c.getTitle(), secondaryStatus(s), lectureInstructor,
-                instructorsToString(s.instructors), t.days, t.beginTime,
-                t.endTime };
-            csvWriter.writeNext(data);
-
-          } // t
-        } // s
-      } // c
 
       logger.info("CSV generated successfully");
     } catch (Exception e) {
       logger.error("CSV generation error", e);
-    } // try
+    }
   }
 }

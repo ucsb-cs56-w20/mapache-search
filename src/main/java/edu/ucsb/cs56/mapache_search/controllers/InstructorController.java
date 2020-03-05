@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+@Controller
 public class InstructorController {
     @Autowired
     private UserRepository userRepository;
@@ -74,4 +74,3 @@ public class InstructorController {
         return "redirect:/instructorDashboard/addInstructor";
     }
 }
->>>>>>> origin/w-7pm-a-user-permissions
