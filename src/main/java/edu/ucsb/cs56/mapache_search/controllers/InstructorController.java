@@ -18,6 +18,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Controller
 public class InstructorController {
     @Autowired
     private UserRepository userRepository;
@@ -26,7 +27,7 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-    @GetMapping("/instructor")
+    @GetMapping("instructor")
     public String index(Model model) {
         //Iterable is interface in java.lang
         return "instructor/index";
