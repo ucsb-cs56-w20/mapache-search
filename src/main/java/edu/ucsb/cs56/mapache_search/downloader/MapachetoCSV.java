@@ -2,11 +2,12 @@ package edu.ucsb.cs56.ucsb_courses_search.downloaders;
 
 import java.io.PrintWriter;
 
-import edu.ucsb.cs56.ucsbapi.academics.curriculums.v1.classes.CoursePage;
-import edu.ucsb.cs56.ucsbapi.academics.curriculums.v1.classes.Course;
-import edu.ucsb.cs56.ucsbapi.academics.curriculums.v1.classes.Section;
-import edu.ucsb.cs56.ucsbapi.academics.curriculums.v1.classes.Instructor;
-import edu.ucsb.cs56.ucsbapi.academics.curriculums.v1.classes.TimeLocation;
+import edu.ucsb.cs56.mapache_search.entities.AppUser;
+import edu.ucsb.cs56.mapache_search.entities.Item;
+import edu.ucsb.cs56.mapache_search.entities.ResultTag;
+import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.Tag;
+import edu.ucsb.cs56.mapache_search.entities.UserVote;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,9 @@ import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CoursePageToCSV {
+public class MapachetoCSV {
 
-  private static final Logger logger = LoggerFactory.getLogger(CoursePageToCSV.class);
+  private static final Logger logger = LoggerFactory.getLogger(MapachetoCSV.class);
 
   public static String instructorsToString(List<Instructor> instructors) {
     switch (instructors.size()) {
