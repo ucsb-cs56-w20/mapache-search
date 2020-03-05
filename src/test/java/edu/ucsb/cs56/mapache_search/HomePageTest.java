@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import edu.ucsb.cs56.mapache_search.controllers.SearchController;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 import edu.ucsb.cs56.mapache_search.search.SearchService;
@@ -49,6 +50,9 @@ public class HomePageTest {
 
     @MockBean
     private SearchResultRepository searchRepository;
+
+    @MockBean
+    private SearchTermsRepository searchTermsRepository;
 
     @MockBean
     private VoteRepository voteRepository;
