@@ -26,7 +26,13 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-@PostMapping("/instructor/delete/{uid}")
+    @GetMapping("/instructor")
+    public String index(Model model) {
+        //Iterable is interface in java.lang
+        return "instructor/index";
+    }
+    
+    @PostMapping("/instructor/delete/{uid}")
     public String deleteViewer(@PathVariable("id") String uid, Model model,
             RedirectAttributes redirAttrs, AppUser user) {
         if (!user.getIsInstructor()) {
