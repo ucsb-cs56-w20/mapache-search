@@ -336,7 +336,7 @@ public class SearchController {
     // Removes whitespace from search terms //
     private String sanitizedSearchTerms(String searchTerms) 
     {
-        return searchTerms.replaceAll("\\s", "").toLowerCase();
+        return searchTerms.toLowerCase();
     }
 
     //Search the term in the table add if the term exist return true and if not return false
