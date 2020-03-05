@@ -21,6 +21,8 @@ public class AppUser { //Can't use User since User is a defined word in DB
     private String username;
     private String apikey;
     private String uid;
+    
+    private boolean isInstructor;
 
     public long getTime() { return time; }
     public void setTime(long time) { this.time = time; }
@@ -47,4 +49,6 @@ public class AppUser { //Can't use User since User is a defined word in DB
 
     
     
+    public boolean getIsInstructor(){ return isInstructor; }
+    public void setIsInstructor(boolean isInstructor){ this.isInstructor = isInstructor; }
 }
