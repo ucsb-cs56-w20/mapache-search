@@ -153,7 +153,6 @@ public class SearchController {
         }
 
         String json = searchService.getJSON(params, apiKey);
-
         SearchResult sr = SearchResult.fromJSON(json);
 
         if(sr.getKind() != "error") {

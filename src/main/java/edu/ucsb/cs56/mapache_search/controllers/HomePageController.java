@@ -95,7 +95,7 @@ public class HomePageController {
         model.addAttribute("searchObject", new SearchObject());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
         ArrayList<String> upVoteLinks = new ArrayList<String>(); // A list that stores the url that got upvoted
-        //This for loop serves to get all the url linsk that have been upvoted
+        //This for loop is used to get all the url links that have been upvoted
         for(int pos = 0; pos < upVoteList.size(); pos++)
         {
             if (pos > 4)
@@ -108,7 +108,7 @@ public class HomePageController {
         //Addubg an attribute to the model indicating the size of the upVoteList
         int a = upVoteLinks.size();
         model.addAttribute("upVoteLinksSize",a);
-        //Adding the upvote link to a model
+        //Adding the upvote links to a model
         model.addAttribute("upVoteLinks", upVoteLinks);
         return "index";
     }
