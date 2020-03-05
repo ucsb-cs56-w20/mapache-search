@@ -27,9 +27,19 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-    @GetMapping("instructor")
+/*     @GetMapping("instructor")
     public String index(Model model) {
-        //Iterable is interface in java.lang
+        return "instructor/index";
+    }
+
+    WITH ADMIN CHECK */
+    @GetMapping("instructor")
+    public String index(Model model, RedirectAttributes redirAttrs, AppUser user) {
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
         return "instructor/index";
     }
     
