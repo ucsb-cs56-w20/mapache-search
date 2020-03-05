@@ -9,9 +9,36 @@
         <input type="text" name="query" class="form-control" placeholder="Enter a programming/coding query" th:value="${previousSearch}" aria-describedby="js-course-search-submit" autofocus="true"/>
             <div class="input-group-append">
             <button class="btn btn-outline-primary" type="submit" id="js-course-search-submit"><i class="fas
-            fa-search"></i><span>Search</span></button>
+            fa-search">Search</i></button>
           </div>
         </div>
+
+        <table class="table">
+            <tr>
+                <th>Search Filters</th>
+                <td><input type="reset" value="Reset Filters"></td>
+            </tr>
+            <tr></tr>
+                <td>Website:</td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Last updated:</td>
+                <td>
+                    <select id="time">
+                        <option value="anytime">anytime</option>
+                        <option value="day">past 24 hours</option>
+                        <option value="week">past week</option>
+                        <option value="month">past month</option>
+                        <option value="year">past year</option>
+                      </select>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Sort by highest upvotes</td>
+            </tr>
+        </table>
 
         <table class="table">
             <tr>
