@@ -12,10 +12,12 @@ import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
@@ -90,6 +92,10 @@ public class SearchController {
         this.searchRepository = searchRepository;
     }
 
+    @Autowired
+    private SearchTermsRepository searchTermsRepository;
+
+
 
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
@@ -141,6 +147,32 @@ public class SearchController {
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long
+
+        boolean haveSearched = isSearchExist(params.getQuery());
+        if (!haveSearched) // Have never been searched before
+        {
+            SearchTerms searchTerm = new SearchTerms();
+            searchTerm.setSearchTerms(params.getQuery());
+            searchTerm.setCount(1);
+            searchTerm.setTimestamp(new Date());
+            searchTermsRepository.save(searchTerm);
+            System.out.println("count is: " + searchTerm.getCount());
+            System.out.println("query is: " + searchTerm.getSearchTerms());
+
+        }
+        else
+        {
+            String cleanedStrings = sanitizedSearchTerms(params.getQuery());
+            SearchTerms searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
+            searchTerm.setSearchTerms(params.getQuery());
+            int newSearchTermCount = searchTerm.getCount() + 1;
+            searchTerm.setCount((newSearchTermCount));
+            searchTerm.setTimestamp(new Date());
+            searchTermsRepository.save(searchTerm);
+            System.out.println("count is: " + searchTerm.getCount());
+            System.out.println("query is: " + searchTerm.getSearchTerms());
+
+        }
 
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         u.setSearches(searches);
@@ -301,4 +333,26 @@ public class SearchController {
 
         return String.valueOf(voteCount); // returns the new vote total
     }
+
+    // Removes whitespace from search terms //
+    private String sanitizedSearchTerms(String searchTerms) 
+    {
+        return searchTerms.replaceAll("\\s", "").toLowerCase();
+    }
+
+    //Search the term in the table add if the term exist return true and if not return false
+    private boolean isSearchExist(String terms)
+    {
+        String cleanedStrings = sanitizedSearchTerms(terms);
+        SearchTerms searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
+        if (searchTerm == null)
+        {
+            return false; //If the terms have not been searched return false;
+        }
+        return true;
+    }
+
+
+
+    
 }
