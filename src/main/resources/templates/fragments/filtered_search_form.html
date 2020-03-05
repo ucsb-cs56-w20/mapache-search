@@ -1,4 +1,4 @@
-<form method="GET" th:action="@{/searchResults}" th:object="${searchParameters}">
+<form method="GET" th:action="@{/searchResults}" th:object="${searchParameteres}">
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"/>
         <div class="form-group row">
@@ -12,32 +12,31 @@
                 fa-search">Search</i></button>
               </div>
             </div>
-    
+            
             <table class="table">
                 <tr>
                     <th>Search Filters</th>
                     <td><input type="reset" value="Reset Filters"></td>
                 </tr>
                 <tr></tr>
-                    <!--  <td>Website:</td> -->
-                    <th><label for="website" class="col-form-label">Website:</label></th>
-                    <td><input type="text" th:field="*{website}" class="form-control" id="website"></td>
+                    <td>Website: </td>
+                    <td><input type="text" name="website" class="form-control" placeholder="stackoverflow.com" th:value="${website}" aria-describedby="js-course-search-submit"> </td>
                 </tr>
                 <tr>
                     <td>Last updated:</td>
                     <td>
-                        <select id="time" th:field="*{time}">
-                            <option th:value="'anytime'" th:text="anytime"></option>
-                            <option th:value="'day'" th:text="past 24 hours"></option>
-                            <option th:value="'week'" th:text="past week"></option>
-                            <option th:value="'month'" th:text="past month"></option>
-                            <option th:value="'year'" th:text="past year"></option>
-                          </select>
+                        <select name="lastUpdated">
+                            <option value="'anytime'">Anytime</option>
+                            <option value="'day'">Past 24 Hour</option>
+                            <option value="'week'">Past Week</option>
+                            <option value="'month'">Past Month</option>
+                            <option value="'year'">Past Year</option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" name="sortByUpvotes" th:checked="${sortByUpvotes}"></td>
                     <td>Sort by highest upvotes</td>
+                    <td><input type="checkbox" name="sortByUpvotes" th:checked="${sortByUpvotes}"></td>
                 </tr>
             </table>
     

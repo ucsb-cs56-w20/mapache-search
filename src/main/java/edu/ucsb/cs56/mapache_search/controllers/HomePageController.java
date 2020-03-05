@@ -115,7 +115,7 @@ public class HomePageController {
 
     @GetMapping("/filter")
     public String filter(Model model) {
-        model.addAttribute("searchObject", new SearchObject());
+        model.addAttribute("searchParameters", new SearchParameters());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
         ArrayList<String> upVoteLinks = new ArrayList<String>(); // A list that stores the url that got upvoted
         //This for loop serves to get all the url linsk that have been upvoted
