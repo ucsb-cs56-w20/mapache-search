@@ -12,7 +12,7 @@
 		<div class="col-xs-12" style="height:50px;"></div>
 		<h2 class="text-center">Mapache Search</h2>
 		<div class="col-xs-12" style="height:50px;"></div>
-		<div th:if="${not isLoggedIn}">
+		<span th:unless="${isLoggedIn}">
 			  
 
 			<div class="card-deck">
@@ -38,9 +38,9 @@
 					</div>
 				  </div>	
 			</div>
-		</div>
+		</span>
 
-		<div th:if="${isLoggedIn}">
+		<span th:if="${isLoggedIn}">
 			<div th:replace="fragments/basic_search_form.html"></div>
 
 			<h3 class="text-center">Recently Upvoted Link </h3>
@@ -58,9 +58,8 @@
 					</div>
 				</tbody>
 			</table>
-			<div th:replace="fragments/bootstrap_footer.html"></div>
-		</div>
-		
+		</span>
+		<div th:replace="fragments/bootstrap_footer.html"></div>
 
 		<!-- <div th:replace="fragments/bootstrap_footer.html"></div> -->
 		<div th:replace="fragments/bootstrap_scripts.html"></div>
