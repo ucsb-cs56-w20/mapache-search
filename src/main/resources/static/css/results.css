@@ -17,6 +17,11 @@
 .vb.vb-down:hover {
     color: orange;
 }
+
+.vb:hover {
+  cursor: pointer;
+}
+
 p.bigfont {
     color: red;
     font-size: 150%;
