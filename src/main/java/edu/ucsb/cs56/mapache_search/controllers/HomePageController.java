@@ -112,7 +112,7 @@ public class HomePageController {
                 UpvoteLink currUpvote = new UpvoteLink();
                 currUpvote.srEntity = vote.getResult();
                 if (upVoteLinks.contains(currUpvote)) {
-                    currUpvote.numUpvotes += 1;
+                    upVoteLinks.get(upVoteLinks.indexOf(currUpvote)).numUpvotes += 1;
                 }
                 else {
                     upVoteLinks.add(currUpvote);
