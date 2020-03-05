@@ -154,9 +154,11 @@ public class SearchController {
 
         String json = searchService.getJSON(params, apiKey);
         SearchResult sr = SearchResult.fromJSON(json);
+        /* remove this comment to test search Parameters
         if (params.getSortByUpvotes()) {
             System.out.println("ohdaijhdijsdisadhk, " + params.getWebsite() + " " + params.getLastUpdated());
         }
+        */
 
         if(sr.getKind() != "error") {
             List<ResultVoteWrapper> voteResults = new ArrayList<>();
