@@ -17,6 +17,32 @@
 .vb.vb-down:hover {
     color: orange;
 }
+
+.vb:hover {
+  cursor: pointer;
+}
+
+
+.tag-button-col {
+  flex: 1;
+}
+
+.tag-button-text {
+  margin-left: auto;
+}
+
+.tag-button-text:hover {
+  color: rgb(55, 183, 226);
+  cursor: pointer;
+}
+
+.tag-button {
+  border: none;
+  background-color: inherit;
+  padding: 0px 8px;
+  color: inherit;
+}
+
 p.bigfont {
     color: red;
     font-size: 150%;
