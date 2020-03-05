@@ -81,6 +81,7 @@ public class GithubOrgMembershipService implements MembershipService {
         OAuth2User oAuth2User = oauthToken.getPrincipal();
         String user = (String) oAuth2User.getAttributes().get("login");
 
+
         Github github = null;
 
         if (clientService == null) {
@@ -106,55 +107,51 @@ public class GithubOrgMembershipService implements MembershipService {
             logger.info(String.format("token was not null but getTokenValue returned null for user %s", user));
             return false;
         }
+        
+        try {
 
-        // github oauth email returns null
-        if (oAuth2User.getAttributes().get("email") == null) {
-            try {
-
-                // I forget why we have Github wrapped like this
-                // TODO: find the tutorial that explains it
-                // I think it has something to do with respecting rate limits
-                github = new RtGithub(new RtGithub(accessToken).entry().through(RetryCarefulWire.class, 50));
-
-                // logger.info("github=" + github);
-                // User ghuser = github.users().get(user);
-                // logger.info("ghuser=" + ghuser);
-                // JsonResponse jruser =
-                // github.entry().uri().path("/user").back().method(Request.GET).fetch()
-                // .as(JsonResponse.class);
-                // logger.info("jruser =" + jruser);
-                // Organization org = github.organizations().get(githubOrg);
-                // logger.info("org =" + org);
-
-                String path = String.format("/user/memberships/orgs/%s", githubOrg);
-
-                JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
-                        .as(JsonResponse.class);
-
-                logger.info("jr =" + jr);
-
-                String actualRole = jr.json().readObject().getString("role");
-                String state = jr.json().readObject().getString("state");
-
-                logger.info("actualRole =" + actualRole);
-                logger.info("roleToTest =" + roleToTest);
-                logger.info("state =" + state);
-
-                return actualRole.equals(roleToTest);
-            } catch (Exception e) {
-                logger.error("Exception happened while trying to determine membership in github org");
-                logger.error("Exception", e);
+            //Check for Admin first
+            if (oAuth2User.getAttributes().get("email") != null && roleToTest.equals("admin") && isAdminEmail((String) oAuth2User.getAttributes().get("email"))) {	
+                logger.info(oAuth2User.getAttributes().get("email") + " is an Admin"); 	
+                return true;	
             }
-            // this is google oauth
+
+            // I forget why we have Github wrapped like this
+            // TODO: find the tutorial that explains it
+            // I think it has something to do with respecting rate limits
+            github = new RtGithub(new RtGithub(accessToken).entry().through(RetryCarefulWire.class, 50));
+
+            // logger.info("github=" + github);
+            // User ghuser = github.users().get(user);
+            // logger.info("ghuser=" + ghuser);
+            // JsonResponse jruser =
+            // github.entry().uri().path("/user").back().method(Request.GET).fetch()
+            // .as(JsonResponse.class);
+            // logger.info("jruser =" + jruser);
+            // Organization org = github.organizations().get(githubOrg);
+            // logger.info("org =" + org);
+
+            String path = String.format("/user/memberships/orgs/%s", githubOrg);
+
+            JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
+                    .as(JsonResponse.class);
+
+            logger.info("jr =" + jr);
+
+            String actualRole = jr.json().readObject().getString("role");
+            String state = jr.json().readObject().getString("state");
+
+            logger.info("actualRole =" + actualRole);
+            logger.info("roleToTest =" + roleToTest);
+            logger.info("state =" + state);
+
+            return actualRole.equals(roleToTest);
+
+        } catch (Exception e) {
+            logger.error("Exception happened while trying to determine membership in github org");
+            logger.error("Exception", e);
         }
-        if (oAuth2User.getAttributes().get("email") != null) {
-            String email = (String) oAuth2User.getAttributes().get("email");
-            String hostedDomain = (String) oAuth2User.getAttributes().get("hd");
-            logger.info("token email=[" + email + "]");
-            logger.info(email + "'s hostedDomain=" + hostedDomain);
-            logger.info("All admin Emails=[" + adminEmails.toString() + "]");
-            
-        }
+        
         return false;
     }
 
