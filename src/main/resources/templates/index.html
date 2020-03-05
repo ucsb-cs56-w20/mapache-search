@@ -20,13 +20,13 @@
 	<table class = "table">
 		<tbody>
 			<!-- If there is no upvoted linsk then nothing will be printed out -->
-			<div th:if=" ${upVoteLinksSize} == 0">
+			<div th:if=" ${upVoteListSize} == 0">
 				<h4 class = "text-center"> No upvoted link</h4>
 			</div>
 			<!-- If there is any links that have been upvote, it will be printed out in a table format shown here -->
-			<div th:if=" ${upVoteLinksSize} != 0">
-				<tr th:each="f: ${upVoteLinks}"> 
-					<td><a th:href="${f}" th:text="${f}"></a></td>
+			<div th:if=" ${upVoteListSize} != 0">
+				<tr th:each="f: ${upVoteList}"> 
+					<td><a th:href="${f.getResult().getLink()}" th:utext="${f.getResult().getHtmlTitle()}"></a> from <a th:href="${f.getResult().getDisplayLink()}" th:text="${f.getResult().getDisplayLink()}"></a> </td>
 				</tr>
 			</div>
 		</tbody>

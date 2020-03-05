@@ -94,22 +94,11 @@ public class HomePageController {
     public String home(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
-        ArrayList<String> upVoteLinks = new ArrayList<String>(); // A list that stores the url that got upvoted
-        //This for loop serves to get all the url linsk that have been upvoted
-        for(int pos = 0; pos < upVoteList.size(); pos++)
-        {
-            if (pos > 4)
-            {
-                break;
-            }
-            String link = (upVoteList.get(pos)).getResult().getUrl();
-            upVoteLinks.add(link);
-        }
         //Addubg an attribute to the model indicating the size of the upVoteList
-        int a = upVoteLinks.size();
-        model.addAttribute("upVoteLinksSize",a);
-        //Adding the upvote link to a model
-        model.addAttribute("upVoteLinks", upVoteLinks);
+        int a = upVoteList.size();
+        model.addAttribute("upVoteListSize",a);
+        //Adding the upvote list to a model
+        model.addAttribute("upVoteList", upVoteList);
         return "index";
     }
 
@@ -117,26 +106,11 @@ public class HomePageController {
     public String filter(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
-        ArrayList<String> upVoteLinks = new ArrayList<String>(); // A list that stores the url that got upvoted
-        //This for loop serves to get all the url linsk that have been upvoted
-        for(int pos = 0; pos < upVoteList.size(); pos++)
-        {
-            if (pos > 4)
-            {
-                break;
-            }
-            String link = (upVoteList.get(pos)).getResult().getUrl();
-            upVoteLinks.add(link);
-        }
         //Addubg an attribute to the model indicating the size of the upVoteList
-        int a = upVoteLinks.size();
-        model.addAttribute("upVoteLinksSize",a);
-        //Adding the upvote link to a model
-        model.addAttribute("upVoteLinks", upVoteLinks);
+        int a = upVoteList.size();
+        model.addAttribute("upVoteListSize",a);
+        //Adding the upvote list to a model
+        model.addAttribute("upVoteList", upVoteList);
         return "filter";
     }
-
-
-
-
 };

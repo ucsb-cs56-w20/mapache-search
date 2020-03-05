@@ -160,11 +160,14 @@ public class SearchController {
             List<ResultVoteWrapper> voteResults = new ArrayList<>();
             int count = 0;
             for(Item item : sr.getItems()) {
-                List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
+                List<SearchResultEntity> matchingResults = searchRepository.findByLink(item.getLink());
                 SearchResultEntity result;
                 if (matchingResults.isEmpty()) {
                     result = new SearchResultEntity();
-                    result.setUrl(item.getLink());
+                    result.setLink(item.getLink());
+                    result.setHtmlTitle(item.getHtmlTitle());
+                    result.setDisplayLink(item.getDisplayLink());
+
                     result.setVotecount((long) 0);
                     searchRepository.save(result);
                 } else {
