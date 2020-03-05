@@ -28,7 +28,7 @@ public class InstructorController {
         this.userRepository = repo;
     }
 
-    @GetMapping("instructor")
+    @GetMapping("/instructor")
     public String index(Model model) {
         return "instructor/index";
     }
