@@ -4,7 +4,7 @@ public class SearchParameters {
     private String query;
     private int page = 1;
     private String website;
-    private int lastUpdated;
+    private String lastUpdated;
     private boolean sortByUpvotes;
 
     public String getQuery() {
@@ -31,11 +31,11 @@ public class SearchParameters {
         this.website = website;
     }
 
-    public int getLastUpdated(){
+    public String getLastUpdated(){
         return lastUpdated;
     }
 
-    public void setLastUpdated(int lastUpdated){
+    public void setLastUpdated(String lastUpdated){
         this.lastUpdated = lastUpdated;
     }
 
