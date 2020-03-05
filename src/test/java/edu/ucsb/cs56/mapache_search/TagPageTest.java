@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
+import edu.ucsb.cs56.mapache_search.repositories.TagRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 import edu.ucsb.cs56.mapache_search.search.SearchService;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(SearchController.class)
-public class HomePageTest {
+public class TagPageTest {
 
     @Autowired
     private MockMvc mvc;
