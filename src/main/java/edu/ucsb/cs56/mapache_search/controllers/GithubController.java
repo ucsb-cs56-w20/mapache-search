@@ -19,6 +19,7 @@ public class GithubController {
     private Logger logger = LoggerFactory.getLogger(SearchController.class);
 
     @Autowired
+
     private AuthControllerAdvice controllerAdvice;
 
     @GetMapping("/github/")

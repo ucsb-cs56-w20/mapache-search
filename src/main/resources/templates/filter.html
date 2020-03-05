@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-	<title>Filter Search - It's Spanish for "raccoon"</title>
+	<title>Mapache Search - It's Spanish for "raccoon"</title>
 	<div th:replace="fragments/bootstrap_head.html"></div>
 </head>
 
@@ -10,7 +10,7 @@
 	<div class="container">
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
 		<h2 class="text-center">Filter Search</h2>
-		<div th:replace="fragments/basic_search_form.html"></div>
+		<div th:replace="fragments/filtered_search_form.html"></div>
 		<div th:replace="fragments/bootstrap_scripts.html"></div>
 		
 		<!-- <div th:replace="fragments/bootstrap_footer.html"></div> -->
@@ -25,8 +25,8 @@
 			</div>
 			<!-- If there is any links that have been upvote, it will be printed out in a table format shown here -->
 			<div th:if=" ${upVoteLinksSize} != 0">
-				<tr th:each="f: ${upVoteLinks}"> 
-					<td><a th:href="${f}" th:text="${f}"></a></td>
+				<tr th:each="f: ${upVoteList}"> 
+					<td><a th:href="${f.getResult().getLink()}" th:text="${f.getResult().getHtmlTitle()}"></a> from <a th:href="${f.getResult().getDisplayLink()}" th:text="${f.getResult().getDisplayLink()}"></a> </td>
 				</tr>
 			</div>
 		</tbody>
