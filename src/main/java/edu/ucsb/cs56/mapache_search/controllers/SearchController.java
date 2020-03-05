@@ -90,11 +90,6 @@ public class SearchController {
         this.searchRepository = searchRepository;
     }
 
-    @GetMapping("/")
-    public String home(Model model) {
-        model.addAttribute("searchObject", new SearchObject());
-        return "index";
-    }
 
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
@@ -158,7 +153,6 @@ public class SearchController {
         }
 
         String json = searchService.getJSON(params, apiKey);
-
         SearchResult sr = SearchResult.fromJSON(json);
 
         if(sr.getKind() != "error") {
@@ -282,12 +276,16 @@ public class SearchController {
             List<UserVote> byUserAndResult = voteRepository.findByUserAndResult(user, result);
 
             if(byUserAndResult.size() > 0){
-                voteRepository.delete(byUserAndResult.get(0));
+                UserVote toRemove = byUserAndResult.get(0);
+                logger.debug("[VOTE DELETED] " + toRemove);
+                voteRepository.delete(toRemove);
             }
             if(!(direction.equals("none"))){
                 UserVote vote = new UserVote();
                 vote.setUser(user);
                 vote.setResult(result);
+                vote.setTimestamp(new Date());
+                logger.debug("[VOTE ADDED] " + vote);
                 if (direction.equals("up")){
                     vote.setUpvote(true);
                 }

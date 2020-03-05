@@ -27,17 +27,26 @@
       </span>
   </div>
   <div class="searchresult-info d-flex flex-column">
+    <div class="d-flex flex-row">
       <a
-          class="h5 m-0"
+          class="h5 m-0 flex-column"
           target="_blank"
           rel="noopener noreferrer"
-          th:href="${result.getGoogleResult().link}"
+          th:href="'/link?url=' + ${result.getGoogleResult().link}"
           th:utext="${result.getGoogleResult().htmlTitle}"
       ></a>
-      <span class="mb-1">
-      from
-      <a target="_blank" rel="noopener noreferrer" th:href="${'//' + result.getGoogleResult().displayLink}" th:text="${result.getGoogleResult().displayLink}"></a>
-      </span>
-      <th:block th:replace="fragments/result_preview :: ${@previewProvider.getPreviewType(item)} (item=${item}, iterStat=${iterStat})"></th:block>
+      <div class="tag-button-col flex-column">
+        <div class="d-flex flex-row justify-content-end">
+          <span class="h6 tag-button-text">Add Tag
+            <button class="h6 tag-button"> + </button>
+          </span>
+        </div>
+      </div>
+    </div>
+    <span class="mb-1">
+    from
+    <a target="_blank" rel="noopener noreferrer" th:href="${'//' + result.getGoogleResult().displayLink}" th:text="${result.getGoogleResult().displayLink}"></a>
+    </span>
+    <th:block th:replace="fragments/result_preview :: ${@previewProvider.getPreviewType(item)} (item=${item}, iterStat=${iterStat})"></th:block>
   </div>
 </div>

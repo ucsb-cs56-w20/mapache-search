@@ -39,5 +39,12 @@ public class AppUser { //Can't use User since User is a defined word in DB
    
     public String getUid() { return uid; }
     public void setUid (String uid) { this.uid = uid; }
+
+    @Override
+    public String toString() {
+        return "AppUser [uid=" + uid + ", username=" + username + "]";
+    }
+
+    
     
 }

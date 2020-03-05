@@ -73,10 +73,10 @@ public class HomePageTest {
     }
 
     @Test
-    public void getHomePage_SearchInputExists() throws Exception {
+    public void getHomePage_SearchInputNotExists() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.TEXT_HTML))
             .andExpect(status().isOk())
-            .andExpect(xpath("/html/body/div/form/div/div/input").exists());
+            .andExpect(xpath("/html/body/div/form/div/div/input").doesNotExist());
     }
 
     @Test

@@ -2,6 +2,7 @@
 <!-- See https://getbootstrap.com/docs/4.0/components/navbar/ for documentation on how to adjust HTML below -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">Mapache Search</a>
+    <a class="navbar-brand" href= "/filter" >Filter Mapache Search</a>
     <!-- Button to collapse/expand navbar when it doesn't fit on the screen-->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
         aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -9,49 +10,8 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Team 1
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Team 2
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Team 3
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Team 4
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
+              <li class="nav navbar-nav" th:if="${isLoggedIn} and (${isMember} or ${isAdmin})">
+                <a class="nav-link" href="/github/">GitHub</a>
               </li>
           </ul>
           <div>
@@ -90,3 +50,68 @@
           </div>
     </div>
 </nav>
+<div
+  class="alert alert-primary"
+  role="alert"
+  th:if="${alertPrimary}"
+  th:text="${alertPrimary}"
+>
+  This is a primary alert—check it out!
+</div>
+
+<div
+  class="alert alert-secondary"
+  role="alert"
+  th:if="${alertSecondary}"
+  th:text="${alertSecondary}"
+>
+  This is a secondary alert—check it out!
+</div>
+<div
+  class="alert alert-success"
+  role="alert"
+  th:if="${alertSuccess}"
+  th:text="${alertSuccess}"
+>
+  This is a success alert—check it out!
+</div>
+<div
+  class="alert alert-danger"
+  role="alert"
+  th:if="${alertDanger}"
+  th:text="${alertDanger}"
+>
+  This is a danger alert—check it out!
+</div>
+<div
+  class="alert alert-warning"
+  role="alert"
+  th:if="${alertWarning}"
+  th:text="${alertWarning}"
+>
+  This is a warning alert—check it out!
+</div>
+<div
+  class="alert alert-info"
+  role="alert"
+  th:if="${alertInfo}"
+  th:text="${alertInfo}"
+>
+  This is a info alert—check it out!
+</div>
+<div
+  class="alert alert-light"
+  role="alert"
+  th:if="${alertLight}"
+  th:text="${alertLight}"
+>
+  This is a light alert—check it out!
+</div>
+<div
+  class="alert alert-dark"
+  role="alert"
+  th:if="${alertDark}"
+  th:text="${alertDark}"
+>
+  This is a dark alert—check it out!
+</div>
