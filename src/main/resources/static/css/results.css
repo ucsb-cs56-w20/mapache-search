@@ -18,6 +18,11 @@
     color: orange;
 }
 
+.vb:hover {
+  cursor: pointer;
+}
+
+
 .tag-button-col {
   flex: 1;
 }
