@@ -148,7 +148,7 @@ public class SearchController {
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long
 
-        boolean haveSearched = isSearchExist(params.getQuery());
+        boolean haveSearched = doesSearchExist(params.getQuery());
         if (!haveSearched) // Have never been searched before
         {
             SearchTerms searchTerm = new SearchTerms();
@@ -156,9 +156,7 @@ public class SearchController {
             searchTerm.setCount(1);
             searchTerm.setTimestamp(new Date());
             searchTermsRepository.save(searchTerm);
-            System.out.println("count is: " + searchTerm.getCount());
-            System.out.println("query is: " + searchTerm.getSearchTerms());
-
+            logger.info("count is: " + searchTerm.getCount() + "query is: " + searchTerm.getSearchTerms());
         }
         else
         {
@@ -169,9 +167,7 @@ public class SearchController {
             searchTerm.setCount((newSearchTermCount));
             searchTerm.setTimestamp(new Date());
             searchTermsRepository.save(searchTerm);
-            System.out.println("count is: " + searchTerm.getCount());
-            System.out.println("query is: " + searchTerm.getSearchTerms());
-
+            logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
         }
 
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
@@ -341,7 +337,7 @@ public class SearchController {
     }
 
     //Search the term in the table add if the term exist return true and if not return false
-    private boolean isSearchExist(String terms)
+    private boolean doesSearchExist(String terms)
     {
         String cleanedStrings = sanitizedSearchTerms(terms);
         SearchTerms searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
@@ -351,6 +347,8 @@ public class SearchController {
         }
         return true;
     }
+
+
 
 
 
