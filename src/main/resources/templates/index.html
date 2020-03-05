@@ -26,7 +26,8 @@
 			<!-- If there is any links that have been upvote, it will be printed out in a table format shown here -->
 			<div th:if=" ${upVoteLinksSize} != 0">
 				<tr th:each="f: ${upVoteLinks}"> 
-					<td><a th:href="${f}" th:text="${f}"></a></td>
+					<td><a th:href="${f.url}" th:text="${f.url}"></a></td>
+					<td><a th:text="${f.numUpvotes}"></a></td>
 				</tr>
 			</div>
 		</tbody>

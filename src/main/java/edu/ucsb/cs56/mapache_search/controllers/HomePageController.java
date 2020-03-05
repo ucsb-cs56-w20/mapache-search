@@ -11,6 +11,7 @@ import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
 import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
+import edu.ucsb.cs56.mapache_search.entities.ResultTag;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
@@ -57,7 +58,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.Calendar;
+import java.util.Date;
 
 @Controller
 public class HomePageController {
@@ -94,18 +96,35 @@ public class HomePageController {
     public String home(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
-        ArrayList<String> upVoteLinks = new ArrayList<String>(); // A list that stores the url that got upvoted
+        ArrayList<upvotedLink> upVoteLinks = new ArrayList<upvotedLink>(); // A list that stores the url that got upvoted
         //This for loop is used to get all the url links that have been upvoted
-        for(int pos = 0; pos < upVoteList.size(); pos++)
-        {
-            if (pos > 4)
-            {
-                break;
+
+        Calendar currentDateBefore3Days = Calendar.getInstance();
+        currentDateBefore3Days.add(Calendar.DATE, -3);
+
+        int countAdded = 0;
+        UserVote vote;
+
+        for(int pos = 0; pos < upVoteList.size() && countAdded < 20; pos++) {
+            if (pos > 100) break;
+
+            vote = upVoteList.get(pos);
+            if (vote.getTimestamp().after(currentDateBefore3Days.getTime())) {
+                upvotedLink currUpvote = new upvotedLink();
+                currUpvote.url = vote.getResult().getUrl();
+                if (upVoteLinks.contains(currUpvote)) {
+                    currUpvote.numUpvotes += 1;
+                }
+                else {
+                    upVoteLinks.add(currUpvote);
+                    countAdded++;
+                }
             }
-            String link = (upVoteList.get(pos)).getResult().getUrl();
-            upVoteLinks.add(link);
         }
+
         //Addubg an attribute to the model indicating the size of the upVoteList
+        // need to do lamba sort thing
+        
         int a = upVoteLinks.size();
         model.addAttribute("upVoteLinksSize",a);
         //Adding the upvote links to a model
@@ -137,6 +156,20 @@ public class HomePageController {
     }
 
 
+    public class upvotedLink {
+        public String url;
+        public int numUpvotes = 1;
+        public SearchResultEntity srEntity;
+        public List<ResultTag> resultTag;
 
+        @Override
+        public boolean equals(Object o){
+            if(o instanceof upvotedLink){
+                upvotedLink p = (upvotedLink) o;
+                 return this.url.equals(p.url);
+            } else
+                 return false;
+        }
+    }
 
 };
