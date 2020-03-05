@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 @Controller
 public class InstructorController {
     @Autowired
@@ -26,11 +27,22 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-    @GetMapping("/instructor")
+
+    @GetMapping("instructor")
     public String index(Model model) {
-        //Iterable is interface in java.lang
         return "instructor/index";
     }
+
+/*     WITH ADMIN CHECK
+    @GetMapping("instructor")
+    public String index(Model model, RedirectAttributes redirAttrs, AppUser user) {
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        return "instructor/index";
+    } */
     
     @PostMapping("/instructor/delete/{uid}")
     public String deleteViewer(@PathVariable("id") String uid, Model model,
