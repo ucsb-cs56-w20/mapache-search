@@ -12,6 +12,7 @@
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
 		<div class="col-xs-12" style="height:50px;"></div>
 		<h2 class="text-center">Mapache Search</h2>
+		
 		<div class="col-xs-12" style="height:50px;"></div>
 		<span th:unless="${isLoggedIn}">
 			  
@@ -40,6 +41,7 @@
 			</div>
 		</span>
 
+
 		<span th:if="${isLoggedIn}">
 			<div th:replace="fragments/basic_search_form.html"></div>
 
@@ -53,7 +55,7 @@
 					<!-- If there is any links that have been upvote, it will be printed out in a table format shown here -->
 					<div th:if=" ${upVoteLinksSize} != 0">
 						<tr th:each="f: ${upVoteLinks}"> 
-							<td><a th:href="${f.url}" th:text="${f.url}"></a></td>
+							<td><a th:href="${f.srEntity.getLink()}" th:utext="${f.srEntity.getHtmlTitle()}"></a> from <a th:href="${f.srEntity.getDisplayLink()}" th:text="${f.srEntity.getDisplayLink()}"></a> </td>
 							<td><a th:text="${f.numUpvotes}"></a></td>
 						</tr>
 					</div>
