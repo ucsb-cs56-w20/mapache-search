@@ -17,7 +17,7 @@
 				</div>
 				<div th:if=" ${userTags.size()} != 0">
 					<tr th:each="f: ${userTags}"> 
-						<td><a th:href="${f.getResult().getUrl()}" th:text="${f.getResult().getLink()}"></a></td>
+						<td><a th:href="${f.getResult().getLink()}" th:text="${f.getResult().getLink()}"></a></td>
 					</tr>
 				</div>
 			</tbody>
