@@ -16,7 +16,8 @@
 
 		<h4>All tags</h4>
 		<h5>
-			<p th:each="t: ${tags}" th:text=${t.name} class="badge badge-primary badge-pill"></p>
+			<a href="#" th:each="t: ${tags}" th:text=${t.name} class="badge badge-primary badge-pill m-2"></a>
+
 		</h5>
 
 		<div th:replace="fragments/bootstrap_footer.html"></div>
