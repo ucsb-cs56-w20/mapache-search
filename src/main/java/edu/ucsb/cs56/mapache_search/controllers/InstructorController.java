@@ -27,10 +27,10 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-    @GetMapping("instructor")
+    @GetMapping("/instructor")
     public String index(Model model) {
         //Iterable is interface in java.lang
-        return "instructor/index";
+        return "/instructor/index";
     }
     @PostMapping("/instructorDashboard/delete/{uid}")
     public String deleteViewer(@PathVariable("id") String uid, Model model,

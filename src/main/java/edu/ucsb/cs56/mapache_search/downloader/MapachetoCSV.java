@@ -22,18 +22,20 @@ import java.util.stream.Collectors;
 
 public class MapachetoCSV {
 
-  private static final Logger logger = LoggerFactory.getLogger(MapachetoCSV.class);
+  // private static final Logger logger = LoggerFactory.getLogger(MapachetoCSV.class);
 
 
   public static void writeSections(PrintWriter writer) {
     String[] CSV_HEADER = { "Username", "Vote"};
-    try (CSVWriter csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER,
-        CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);) {
-      csvWriter.writeNext(CSV_HEADER);
+    writer.println("This is a Test.");
+    writer.println("If this is a real CSV, it would print.......");
+    // try (CSVWriter csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER,
+    //     CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);) {
+    //   csvWriter.writeNext(CSV_HEADER);
 
-      logger.info("CSV generated successfully");
-    } catch (Exception e) {
-      logger.error("CSV generation error", e);
-    }
+    //   logger.info("CSV generated successfully");
+    // } catch (Exception e) {
+    //   logger.error("CSV generation error", e);
+    // }
   }
 }
