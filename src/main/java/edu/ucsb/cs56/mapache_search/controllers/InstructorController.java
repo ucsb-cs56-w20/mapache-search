@@ -36,8 +36,18 @@ public class InstructorController {
         return "instructor/index";
     }
 
-/*     WITH ADMIN CHECK
-    @GetMapping("instructor")
+    @GetMapping("instructor/data")
+    public String data(Model model) {
+        return "instructor/data_stub";
+    }
+
+    @GetMapping("instructor/upvotes")
+    public String upvotes(Model model) {
+        return "instructor/upvote_page";
+    }
+
+  /*   WITH ADMIN CHECK */
+/*     @GetMapping("instructor")
     public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
         if (!role.equals("Admin")) {
@@ -46,6 +56,26 @@ public class InstructorController {
             return "redirect:/";
         }
         return "instructor/index";
+    }
+    @GetMapping("instructor/data")
+    public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        return "instructor/data_stub";
+    }
+    @GetMapping("instructor/upvotes")
+    public String upvotes(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        return "instructor/upvote_page";
     } */
     
     @PostMapping("/instructor/delete/{uid}")
