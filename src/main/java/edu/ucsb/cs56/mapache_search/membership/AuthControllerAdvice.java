@@ -107,6 +107,11 @@ public class AuthControllerAdvice {
        return membershipService.getRepos();
     }
 
+    @ModelAttribute("getTeams")
+    public List<String> getTeams(OAuth2AuthenticationToken token) {
+       return membershipService.getTeams(token);
+    }
+
     @ModelAttribute("getProjectOrg")
     public String getGetProjectOrg() {
        return membershipService.getProjectOrg();
