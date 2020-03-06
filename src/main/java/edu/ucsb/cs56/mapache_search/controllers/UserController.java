@@ -77,7 +77,7 @@ public class UserController {
         return "user/settings";
     }
     
-    @PostMapping("instructor/random_student_results")
+    @GetMapping("instructor/random_student_results")
     public String randomStudent(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
         Random rand = new Random();
         AppUser u = userRepository.findById(rand.nextLong()%userRepository.count()).get(0);
@@ -92,7 +92,7 @@ public class UserController {
         model.addAttribute("time", time);
         model.addAttribute("max_uses", AppUser.MAX_API_USES);
         model.addAttribute("userVotes", byUser);
-        return "user/settings";
+        return "instructor/random_student_results";
     }
 
     /* Removes whitespace from apikey */
