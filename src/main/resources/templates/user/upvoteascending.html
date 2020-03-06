@@ -17,7 +17,7 @@
 					</div>
 					<div th:if=" ${userVotes.size()} != 0">
 						<tr th:each="f: ${userVotes}"> 
-							<td><a th:href="${f.getResult().getLink()}" th:text="${f.getResult().getLink()}"></a></td>
+							<td align="left"><a th:href="${f.getResult().getLink()}" th:text="${f.getResult().getLink()}"></a></td>
 						</tr>
 					</div>
 				</tbody>
