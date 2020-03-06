@@ -70,7 +70,7 @@ public class InstructorController {
         }
         model.addAttribute("newInstructor", new AppUser());
         model.addAttribute("appUsers", userRepository.findAll());
-        return "redirect:/instructor/addInstructor";
+        return "redirect:/instructor/add_instructor";
     }
 
     @PostMapping("/instructor/add")
@@ -98,7 +98,7 @@ public class InstructorController {
             redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
         }
         model.addAttribute("appUsers", userRepository.findAll());
-        return "redirect:/instructor/addInstructor";
+        return "redirect:/instructor/add_instructor";
     }
 
     @GetMapping("/instructor/add_instructor")
