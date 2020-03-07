@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.membership.MembershipService;
-import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.ArrayList;
@@ -34,6 +36,9 @@ public class InstructorController {
 
     @Autowired
     private VoteRepository voteRepository;
+
+    @Autowired
+    private SearchTermsRepository searchtermsRepository;
 
     @Autowired
     public InstructorController(UserRepository repo) {
@@ -64,6 +69,23 @@ public class InstructorController {
         model.addAttribute("upVotedSearches", upVotedSearches);
 
         return "instructor/upvote_page";
+    }
+
+        @GetMapping("instructor/popular_searches")
+        public String searches(Model model) {
+        List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
+        ArrayList<searchedTermsWrapper> searchedTerms = new ArrayList<>();
+        for(int pos = 0; pos < searchTermsList.size(); pos++) {
+            if (pos > 100) break;
+            SearchTerms searched = searchTermsList.get(pos);
+            searchedTerms.add(new searchedTermsWrapper(searched));
+        }
+        Collections.sort(searchedTerms);
+        int x = searchedTerms.size();
+        model.addAttribute("searchedTermsSize",x);
+        model.addAttribute("searchedTerms", searchedTerms);
+
+        return "instructor/popular_searches";
     }
 
   /*   WITH ADMIN CHECK */
@@ -156,6 +178,29 @@ public class InstructorController {
                 return 1;
             }
             else if (getResult().getVotecount() < objSearch.getResult().getVotecount()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public class searchedTermsWrapper implements Comparable<searchedTermsWrapper> {
+        private SearchTerms result;
+
+        public searchedTermsWrapper(SearchTerms result) {
+            this.result = result;
+        }
+
+        public SearchTerms getResult() {
+            return result;
+        }
+
+        public int compareTo(searchedTermsWrapper objSearch) {
+            if (getResult().getCount() > objSearch.getResult().getCount()) {
+                return 1;
+            }
+            else if (getResult().getCount() < objSearch.getResult().getCount()) {
                 return -1;
             } else {
                 return 0;

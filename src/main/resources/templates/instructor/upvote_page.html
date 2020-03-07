@@ -9,9 +9,6 @@
       <div th:replace="fragments/bootstrap_nav_header.html"></div>
       <h2 class="text-center">Most Upvoted Searches</h2>
       <table class = "table">
-        <div th:if=" ${upVotedSearchesSize} == 0">
-          <h4 class = "text-center"> No upvoted link</h4>
-        </div>
         <thead>
             <tr>
                 <th>Search Result</th>
@@ -25,9 +22,12 @@
 							<td><a th:href="${f.getResult().getLink()}" th:utext="${f.getResult().getHtmlTitle()}"></a> from <a th:href="${f.getResult().getDisplayLink()}" th:text="${f.getResult().getDisplayLink()}"></a> </td>
 							<td><a th:text="${f.getResult().getVotecount()}"></a></td>
 						</tr>
-					</div>
+          </div>
 				</tbody>
-			</table>
+      </table>
+      <div th:if=" ${upVotedSearchesSize} == 0">
+        <h4 class = "text-center"> No upvoted links</h4>
+      </div>
     
       <div th:replace="fragments/bootstrap_footer.html"></div>
     </div>

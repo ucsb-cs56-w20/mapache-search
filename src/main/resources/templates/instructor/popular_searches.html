@@ -9,9 +9,6 @@
       <div th:replace="fragments/bootstrap_nav_header.html"></div>
       <h2 class="text-center">Most Popular Searches</h2>
       <table class = "table">
-        <div th:if=" ${upVotedSearchesSize} == 0">
-          <h4 class = "text-center"> No searches made yet</h4>
-        </div>
         <thead>
             <tr>
                 <th>Searches</th>
@@ -19,15 +16,18 @@
             </tr>
         </thead>
 				<tbody>
-					<div th:if=" ${upVotedSearchesSize} != 0">
+					<div th:if=" ${searchedTermsSize} != 0">
             
-						<tr th:each="f: ${upVotedSearches}"> 
-							<td><a th:href="${f.getResult().getLink()}" th:utext="${f.getResult().getHtmlTitle()}"></a> from <a th:href="${f.getResult().getDisplayLink()}" th:text="${f.getResult().getDisplayLink()}"></a> </td>
-							<td><a th:text="${f.getResult().getVotecount()}"></a></td>
+						<tr th:each="f: ${searchedTerms}"> 
+							<td><a th:utext="${f.getResult().getSearchTerms()}"></a></td>
+							<td><a th:text="${f.getResult().getCount()}"></a></td>
 						</tr>
-					</div>
+          </div>
 				</tbody>
-			</table>
+      </table>
+      <div th:if=" ${searchedTermsSize} == 0">
+        <h4 class = "text-center"> No searches made yet</h4>
+      </div>
     
       <div th:replace="fragments/bootstrap_footer.html"></div>
     </div>
