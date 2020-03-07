@@ -28,6 +28,14 @@
     </div>
     <div class="tag-menu-content">
       <div class="tag-menu-list">
+        <div th:each="tag : ${tags}" class="tag-menu-item">
+          <div class="tag-menu-item-checked">
+
+          </div>
+          <div class="tag-menu-item-text">
+            <span th:text="${tag.name}"></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
