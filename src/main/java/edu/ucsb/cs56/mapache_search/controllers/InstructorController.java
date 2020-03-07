@@ -51,7 +51,7 @@ public class InstructorController {
 
     @GetMapping("instructor/upvotes")
     public String upvotes(Model model) {
-        List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true);
+        List<UserVote> upVoteList = voteRepository.findAll();
         ArrayList<searchUpVotedWrapper> upVotedSearches = new ArrayList<>();
         for(int pos = 0; pos < upVoteList.size(); pos++) {
             if (pos > 100) break;
