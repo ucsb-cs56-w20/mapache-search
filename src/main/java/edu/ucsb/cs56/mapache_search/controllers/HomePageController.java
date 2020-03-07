@@ -133,7 +133,7 @@ public class HomePageController {
 
     @GetMapping("/filter")
     public String filter(Model model) {
-        model.addAttribute("searchObject", new SearchObject());
+        model.addAttribute("searchParameters", new SearchParameters());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
         //Addubg an attribute to the model indicating the size of the upVoteList
         int a = upVoteList.size();
