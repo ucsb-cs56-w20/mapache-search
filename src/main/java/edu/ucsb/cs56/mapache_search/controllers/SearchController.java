@@ -13,11 +13,13 @@ import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
+import edu.ucsb.cs56.mapache_search.entities.SearchQueries;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
@@ -95,6 +97,9 @@ public class SearchController {
     @Autowired
     private SearchTermsRepository searchTermsRepository;
 
+    @Autowired
+    private SearchQueriesRepository searchQueriesRepository;
+
 
 
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
@@ -148,6 +153,14 @@ public class SearchController {
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long
 
+        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        u.setSearches(searches);
+        userRepository.save(u);
+
+        SearchQueries searchQueries = new SearchQueries();
+        searchQueries.setUid(u.getUid());
+        searchQueries.setTimestamp(new Date());
+
         boolean haveSearched = doesSearchExist(params.getQuery());
         if (!haveSearched) // Have never been searched before
         {
@@ -156,6 +169,7 @@ public class SearchController {
             searchTerm.setCount(1);
             searchTerm.setTimestamp(new Date());
             searchTermsRepository.save(searchTerm);
+            searchQueries.setId(searchTerm.getId());
             logger.info("count is: " + searchTerm.getCount() + "query is: " + searchTerm.getSearchTerms());
         }
         else
@@ -167,12 +181,13 @@ public class SearchController {
             searchTerm.setCount((newSearchTermCount));
             searchTerm.setTimestamp(new Date());
             searchTermsRepository.save(searchTerm);
+            searchQueries.setId(searchTerm.getId());
             logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
         }
 
-        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        u.setSearches(searches);
-        userRepository.save(u);
+        searchQueriesRepository.save(searchQueries);
+        logger.info("uid is:" + searchQueries.getUid() + ", time stamp is: " + searchQueries.getTimestamp() + ", and Id of query is: " + searchQueries.getId());
+        
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){

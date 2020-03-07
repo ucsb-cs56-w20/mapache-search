@@ -22,6 +22,7 @@ import edu.ucsb.cs56.mapache_search.controllers.SearchController;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 import edu.ucsb.cs56.mapache_search.search.SearchService;
@@ -53,6 +54,9 @@ public class HomePageTest {
 
     @MockBean
     private SearchTermsRepository searchTermsRepository;
+
+    @MockBean
+    private SearchQueriesRepository searchQueriesRepository;
 
     @MockBean
     private VoteRepository voteRepository;
