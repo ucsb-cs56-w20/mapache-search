@@ -13,26 +13,16 @@
       </div>
       <div class="container">
         <p>
-          <h3>Instructions for getting API Key</h3>
-          <a href="https://developers.google.com/custom-search/v1/overview" target="_blank" rel="noopener noreferrer">
-            Click Here to get API Key
-          </a>
-        </p>
-        </div>
-      <div class="container">
-        <p>
-        <h3>Upvote History</h3>
-        <a href="upvotehistory">
-          Click Here to get to your upvote history
-        </a>
+        <form action="upvotehistory">
+            <input type="submit" class="btn btn-primary btn-lg" value="Upvote History" />
+        </form>
       </p>
       </div>
       <div class="container">
         <p>
-        <h3>Tag History</h3>
-        <a href="taghistory">
-          Click Here to get to your tag history
-        </a>
+            <form action="taghistory">
+                <input type="submit" class="btn btn-primary btn-lg" value="Tag History" />
+            </form>
         </p>
       </div>
       <!-- for debugging
@@ -54,8 +44,7 @@
             <label for="apikey" class="col-form-label col-sm-2">Enter a new API
               Key: </label>
             <input type="text" th:name="apikey" class="form-control col-sm-10"
-              id="apikey" placeholder="Enter API Key" th:value="${(user.apikey
-              == null) ? '' : user.apikey}" autofocus>
+              id="apikey" placeholder="Enter API Key" autofocus>
           </div>
           <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}"
             class="text-danger"></span>
@@ -63,6 +52,8 @@
             <input type="submit" class="btn btn-primary" value="Update API Key">
           </div>
         </form>
+        <br>
+        <p>Don't have an API key? <a href="https://developers.google.com/custom-search/v1/overview" target="_blank">Click here.</a></p>
       </div>
       <div th:replace="/../fragments/bootstrap_scripts.html"></div>
     </div>
