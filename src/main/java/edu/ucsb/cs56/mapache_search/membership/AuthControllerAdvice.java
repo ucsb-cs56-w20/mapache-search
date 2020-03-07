@@ -117,6 +117,11 @@ public class AuthControllerAdvice {
        return membershipService.getProjectOrg();
     }
 
+    @ModelAttribute("getOpenPullRequests")
+    public List<String> getOpenPullRequests(OAuth2AuthenticationToken token) {
+       return membershipService.getOpenPullRequests(token);
+    }
+
     @ModelAttribute("role")
     public String getRole(OAuth2AuthenticationToken token) {
         return membershipService.role(token);

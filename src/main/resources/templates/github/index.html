@@ -30,6 +30,15 @@
 			</ul>
 		</tr>
 
+		<h2 class="text-center">Open pull requests</h2>
+
+		<tr th:each="openPR: ${getOpenPullRequests}"> 
+			<ul style="list-style-type:none;">
+			<li>
+			<td th:text="${openPR}"></td>
+			</li>
+			</ul>
+		</tr>
 
 		<div th:replace="fragments/bootstrap_footer.html"></div>
 	</div>
