@@ -9,11 +9,19 @@
 <body class="text-center">
 	<div class="container">
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
-        <h2 class="text-center">Tags</h2>
-        
-        
+		<h2 class="text-center">Tags</h2>
+
+		
+		<div th:replace="fragments/tag_creation_form.html"></div>
+
+		<h4>All tags</h4>
+		<h5>
+			<a href="#" th:each="t: ${tags}" th:text=${t.name} class="badge badge-primary badge-pill m-2"></a>
+
+		</h5>
+
 		<div th:replace="fragments/bootstrap_footer.html"></div>
-    </div>
+	</div>
 	<div th:replace="fragments/bootstrap_scripts.html"></div>
 </body>
 

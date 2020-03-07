@@ -26,6 +26,10 @@ public interface MembershipService {
         return isMember(oAuth2AuthenticationToken) || isAdmin(oAuth2AuthenticationToken);
     }
 
+    default public List<String> getTeams(OAuth2AuthenticationToken oAuth2AuthenticationToken){
+        return getTeams(oAuth2AuthenticationToken);
+    }
+
     /** get list of properties 
      * @return list of repos from application.properties 
      * */

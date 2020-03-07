@@ -13,7 +13,7 @@ import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 //Driver-class-name in pom.xml tells u which db to use
 public interface ResultTagRepository extends CrudRepository<ResultTag, Long> {
     List<ResultTag> findById(long id);
-
+    List<ResultTag> findByUser(AppUser user);
     List<ResultTag> findByTag(Tag tag);
     List<ResultTag> findByUserAndResult(AppUser user, SearchResultEntity result);
     List<ResultTag> findByResult(SearchResultEntity result);
