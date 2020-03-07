@@ -6,7 +6,7 @@
   <body>
     <div class="container">
       <div th:replace="fragments/bootstrap_nav_header.html"></div>
-        <button type="button" formaction="@{/mapacheCSV}" class="btn btn-primary" id="js-mapache-search-csv">CSV File Download</button>
+        <button type="submit" th:formaction="@{/mapacheCSV}" class="btn btn-primary" id="js-mapache-search-csv">CSV File Download</button>
       <div th:replace="fragments/bootstrap_footer.html"></div>
     </div>
     <div th:replace="fragments/bootstrap_scripts.html"></div>

@@ -1,4 +1,4 @@
-package edu.ucsb.mapache_search.controller;
+package edu.ucsb.cs56.mapache_search.controllers;
 
 import edu.ucsb.cs56.mapache_search.downloader.MapachetoCSV;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CSVDownloadController {
 
-    @Autowired
-    private UserVote uservote;
 
     @GetMapping("/mapacheCSV")
     public void downloadCSV(HttpServletResponse response) throws IOException {
