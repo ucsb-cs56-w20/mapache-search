@@ -30,7 +30,7 @@ public class TagController {
         Iterable<Tag> tags = tagRepository.findAll();
         model.addAttribute("tag_template", new Tag());
         model.addAttribute("tags", tags);
-        return "/tags";
+        return "tags";
     }
 
     @PostMapping("/tags/create")
@@ -44,7 +44,7 @@ public class TagController {
         Iterable<Tag> tags = tagRepository.findAll();
         model.addAttribute("tag_template", new Tag());
         model.addAttribute("tags", tags);
-        return "/tags";
+        return "tags";
     }
 
 }
