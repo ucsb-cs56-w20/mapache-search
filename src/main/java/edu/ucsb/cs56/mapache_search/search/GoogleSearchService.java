@@ -24,8 +24,7 @@ public class GoogleSearchService implements SearchService {
     }
 
     private static final String SEARCH_ENDPOINT =
-        "https://www.googleapis.com/customsearch/v1?key={key}&cx={searchId}&q={query}&alt={outputFormat}&start={start}";
-        //"https://www.googleapis.com/customsearch/v1?key={key}&cx={searchId}&q={query}&alt={outputFormat}&start={start}&siteSearch={siteRestrict}&dateRestrict={dateRestrict}";
+        "https://www.googleapis.com/customsearch/v1?key={key}&cx={searchId}&q={query}&alt={outputFormat}&start={start}&siteSearch={siteRestrict}&dateRestrict={dateRestrict}";
 
     public String getJSON(SearchParameters params, String apiKey) {
         logger.info("apiKey=" + apiKey);
@@ -46,14 +45,9 @@ public class GoogleSearchService implements SearchService {
                 "searchId", searchId,
                 "query", params.getQuery(),
                 "outputFormat", "json",
-                "start", Integer.toString(startIndex)
-
-                //w-5pm-b documentation: for future issues like "filter by specific website" or "filter by date", fill these in
-                //see https://developers.google.com/custom-search/v1/cse/list for documentation
-
-                //"siteRestrict", "math.stackexchange.com", //<- just an example, will take user input of course
-                //"dateRestrict", "d5" //<- just an example, will take user input of course
-                
+                "start", Integer.toString(startIndex),
+                "siteRestrict", params.getWebsite(),
+                "dateRestrict", params.getLastUpdated()
             );
 
         String retVal = "";

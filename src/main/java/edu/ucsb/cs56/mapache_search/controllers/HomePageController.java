@@ -96,24 +96,23 @@ public class HomePageController {
     public String home(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
-        ArrayList<upvotedLink> upVoteLinks = new ArrayList<upvotedLink>(); // A list that stores the url that got upvoted
+        
+        ArrayList<UpvoteLink> upVoteLinks = new ArrayList<UpvoteLink>(); // A list that stores the url that got upvoted
         //This for loop is used to get all the url links that have been upvoted
 
         Calendar currentDateBefore3Days = Calendar.getInstance();
         currentDateBefore3Days.add(Calendar.DATE, -3);
 
         int countAdded = 0;
-        UserVote vote;
 
         for(int pos = 0; pos < upVoteList.size() && countAdded < 20; pos++) {
             if (pos > 100) break;
-
-            vote = upVoteList.get(pos);
+            UserVote vote = upVoteList.get(pos);
             if (vote.getTimestamp().after(currentDateBefore3Days.getTime())) {
-                upvotedLink currUpvote = new upvotedLink();
-                currUpvote.url = vote.getResult().getUrl();
+                UpvoteLink currUpvote = new UpvoteLink();
+                currUpvote.srEntity = vote.getResult();
                 if (upVoteLinks.contains(currUpvote)) {
-                    currUpvote.numUpvotes += 1;
+                    upVoteLinks.get(upVoteLinks.indexOf(currUpvote)).numUpvotes += 1;
                 }
                 else {
                     upVoteLinks.add(currUpvote);
@@ -134,42 +133,33 @@ public class HomePageController {
 
     @GetMapping("/filter")
     public String filter(Model model) {
-        model.addAttribute("searchObject", new SearchObject());
+        model.addAttribute("searchParameters", new SearchParameters());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
-        ArrayList<String> upVoteLinks = new ArrayList<String>(); // A list that stores the url that got upvoted
-        //This for loop serves to get all the url linsk that have been upvoted
-        for(int pos = 0; pos < upVoteList.size(); pos++)
-        {
-            if (pos > 4)
-            {
-                break;
-            }
-            String link = (upVoteList.get(pos)).getResult().getUrl();
-            upVoteLinks.add(link);
-        }
         //Addubg an attribute to the model indicating the size of the upVoteList
-        int a = upVoteLinks.size();
-        model.addAttribute("upVoteLinksSize",a);
-        //Adding the upvote link to a model
-        model.addAttribute("upVoteLinks", upVoteLinks);
+        int a = upVoteList.size();
+        model.addAttribute("upVoteListSize",a);
+        //Adding the upvote list to a model
+        model.addAttribute("upVoteList", upVoteList);
         return "filter";
     }
 
 
-    public class upvotedLink {
-        public String url;
+    public class UpvoteLink {
         public int numUpvotes = 1;
         public SearchResultEntity srEntity;
         public List<ResultTag> resultTag;
 
         @Override
         public boolean equals(Object o){
-            if(o instanceof upvotedLink){
-                upvotedLink p = (upvotedLink) o;
-                 return this.url.equals(p.url);
+            if(o instanceof UpvoteLink){
+                UpvoteLink p = (UpvoteLink) o;
+                 return this.srEntity.getId().equals(p.srEntity.getId());
             } else
                  return false;
         }
+
+
+
     }
 
 };
