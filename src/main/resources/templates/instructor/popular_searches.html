@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"> 
+  <head>
+    <title>Popular Searches</title>
+    <div th:replace="fragments/bootstrap_head.html"></div>
+  </head>
+  <body>
+    <div class="container">
+      <div th:replace="fragments/bootstrap_nav_header.html"></div>
+      <h2 class="text-center">Most Popular Searches</h2>
+      <table class = "table">
+        <div th:if=" ${upVotedSearchesSize} == 0">
+          <h4 class = "text-center"> No searches made yet</h4>
+        </div>
+        <thead>
+            <tr>
+                <th>Searches</th>
+                <th>Search Count</th>
+            </tr>
+        </thead>
+				<tbody>
+					<div th:if=" ${upVotedSearchesSize} != 0">
+            
+						<tr th:each="f: ${upVotedSearches}"> 
+							<td><a th:href="${f.getResult().getLink()}" th:utext="${f.getResult().getHtmlTitle()}"></a> from <a th:href="${f.getResult().getDisplayLink()}" th:text="${f.getResult().getDisplayLink()}"></a> </td>
+							<td><a th:text="${f.getResult().getVotecount()}"></a></td>
+						</tr>
+					</div>
+				</tbody>
+			</table>
+    
+      <div th:replace="fragments/bootstrap_footer.html"></div>
+    </div>
+    <div th:replace="fragments/bootstrap_scripts.html"></div>
+  </body>
+</html>

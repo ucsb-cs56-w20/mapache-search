@@ -139,6 +139,7 @@ public class InstructorController {
         }
         return "redirect:/instructor/addInstructor";
     }
+    
     public class searchUpVotedWrapper implements Comparable<searchUpVotedWrapper> {
         private SearchResultEntity result;
 
