@@ -9,19 +9,25 @@
       <div th:replace="fragments/bootstrap_nav_header.html"></div>
       <h2 class="text-center">Most Upvoted Searches</h2>
       <table class = "table">
-        <tbody>
-          <!-- If there is no upvoted linsk then nothing will be printed out -->
-          <div th:if=" ${upVoteLinksSize} == 0">
-            <h4 class = "text-center"> No upvoted link</h4>
-          </div>
-          <!-- If there is any links that have been upvote, it will be printed out in a table format shown here -->
-          <div th:if=" ${upVoteLinksSize} != 0">
-            <tr th:each="f: ${upVoteLinks}"> 
-              <td><a th:href="${f}" th:text="${f}"></a></td>
+        <div th:if=" ${upVotedSearchesSize} == 0">
+          <h4 class = "text-center"> No upvoted link</h4>
+        </div>
+        <thead>
+            <tr>
+                <th>Search Result</th>
+                <th>Vote Count</th>
             </tr>
-          </div>
-        </tbody>
-      </table>
+        </thead>
+				<tbody>
+					<div th:if=" ${upVotedSearchesSize} != 0">
+            
+						<tr th:each="f: ${upVotedSearches}"> 
+							<td><a th:href="${f.getResult().getLink()}" th:utext="${f.getResult().getHtmlTitle()}"></a> from <a th:href="${f.getResult().getDisplayLink()}" th:text="${f.getResult().getDisplayLink()}"></a> </td>
+							<td><a th:text="${f.getResult().getVotecount()}"></a></td>
+						</tr>
+					</div>
+				</tbody>
+			</table>
     
       <div th:replace="fragments/bootstrap_footer.html"></div>
     </div>

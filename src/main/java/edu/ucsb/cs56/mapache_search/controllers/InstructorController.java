@@ -9,12 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.membership.MembershipService;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +31,9 @@ public class InstructorController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private VoteRepository voteRepository;
 
     @Autowired
     public InstructorController(UserRepository repo) {
@@ -43,6 +51,18 @@ public class InstructorController {
 
     @GetMapping("instructor/upvotes")
     public String upvotes(Model model) {
+        List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true);
+        ArrayList<searchUpVotedWrapper> upVotedSearches = new ArrayList<>();
+        for(int pos = 0; pos < upVoteList.size(); pos++) {
+            if (pos > 100) break;
+            UserVote vote = upVoteList.get(pos);
+            upVotedSearches.add(new searchUpVotedWrapper(vote.getResult()));
+        }
+        Collections.sort(upVotedSearches);
+        int x = upVotedSearches.size();
+        model.addAttribute("upVotedSearchesSize",x);
+        model.addAttribute("upVotedSearches", upVotedSearches);
+
         return "instructor/upvote_page";
     }
 
@@ -119,4 +139,27 @@ public class InstructorController {
         }
         return "redirect:/instructor/addInstructor";
     }
+    public class searchUpVotedWrapper implements Comparable<searchUpVotedWrapper> {
+        private SearchResultEntity result;
+
+        public searchUpVotedWrapper(SearchResultEntity result) {
+            this.result = result;
+        }
+
+        public SearchResultEntity getResult() {
+            return result;
+        }
+
+        public int compareTo(searchUpVotedWrapper objSearch) {
+            if (getResult().getVotecount() > objSearch.getResult().getVotecount()) {
+                return 1;
+            }
+            else if (getResult().getVotecount() < objSearch.getResult().getVotecount()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
 }
