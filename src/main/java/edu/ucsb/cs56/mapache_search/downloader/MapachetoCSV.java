@@ -26,7 +26,7 @@ public class MapachetoCSV {
 
 
   public static void writeSections(PrintWriter writer) {
-    String[] CSV_HEADER = { "Username", "Vote"};
+    String[] CSV_HEADER = { "UserId","Time Stamp", "UpVote","Result"};
     writer.println("This is a Test.");
     writer.println("If this is a real CSV, it would print.......");
     // try (CSVWriter csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER,
