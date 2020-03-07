@@ -12,10 +12,14 @@ import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
+import edu.ucsb.cs56.mapache_search.entities.SearchQueries;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
@@ -90,6 +94,13 @@ public class SearchController {
         this.searchRepository = searchRepository;
     }
 
+    @Autowired
+    private SearchTermsRepository searchTermsRepository;
+
+    @Autowired
+    private SearchQueriesRepository searchQueriesRepository;
+
+
 
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
@@ -146,6 +157,38 @@ public class SearchController {
         u.setSearches(searches);
         userRepository.save(u);
 
+        SearchQueries searchQueries = new SearchQueries();
+        searchQueries.setUid(u.getUid());
+        searchQueries.setTimestamp(new Date());
+
+        boolean haveSearched = doesSearchExist(params.getQuery());
+        if (!haveSearched) // Have never been searched before
+        {
+            SearchTerms searchTerm = new SearchTerms();
+            searchTerm.setSearchTerms(params.getQuery());
+            searchTerm.setCount(1);
+            searchTerm.setTimestamp(new Date());
+            searchTermsRepository.save(searchTerm);
+            searchQueries.setId(searchTerm.getId());
+            logger.info("count is: " + searchTerm.getCount() + "query is: " + searchTerm.getSearchTerms());
+        }
+        else
+        {
+            String cleanedStrings = sanitizedSearchTerms(params.getQuery());
+            SearchTerms searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
+            searchTerm.setSearchTerms(params.getQuery());
+            int newSearchTermCount = searchTerm.getCount() + 1;
+            searchTerm.setCount((newSearchTermCount));
+            searchTerm.setTimestamp(new Date());
+            searchTermsRepository.save(searchTerm);
+            searchQueries.setId(searchTerm.getId());
+            logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
+        }
+
+        searchQueriesRepository.save(searchQueries);
+        logger.info("uid is:" + searchQueries.getUid() + ", time stamp is: " + searchQueries.getTimestamp() + ", and Id of query is: " + searchQueries.getId());
+        
+
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){
             userRepository.findByUid(controllerAdvice.getUid(token)).get(0).setSearches(1l);
@@ -154,16 +197,24 @@ public class SearchController {
 
         String json = searchService.getJSON(params, apiKey);
         SearchResult sr = SearchResult.fromJSON(json);
+        /* remove this comment to test search Parameters
+        if (params.getSortByUpvotes()) {
+            System.out.println("ohdaijhdijsdisadhk, " + params.getWebsite() + " " + params.getLastUpdated());
+        }
+        */
 
         if(sr.getKind() != "error") {
             List<ResultVoteWrapper> voteResults = new ArrayList<>();
             int count = 0;
             for(Item item : sr.getItems()) {
-                List<SearchResultEntity> matchingResults = searchRepository.findByUrl(item.getLink());
+                List<SearchResultEntity> matchingResults = searchRepository.findByLink(item.getLink());
                 SearchResultEntity result;
                 if (matchingResults.isEmpty()) {
                     result = new SearchResultEntity();
-                    result.setUrl(item.getLink());
+                    result.setLink(item.getLink());
+                    result.setHtmlTitle(item.getHtmlTitle());
+                    result.setDisplayLink(item.getDisplayLink());
+
                     result.setVotecount((long) 0);
                     searchRepository.save(result);
                 } else {
@@ -301,4 +352,28 @@ public class SearchController {
 
         return String.valueOf(voteCount); // returns the new vote total
     }
+
+    // Removes whitespace from search terms //
+    private String sanitizedSearchTerms(String searchTerms) 
+    {
+        return searchTerms.toLowerCase();
+    }
+
+    //Search the term in the table add if the term exist return true and if not return false
+    private boolean doesSearchExist(String terms)
+    {
+        String cleanedStrings = sanitizedSearchTerms(terms);
+        SearchTerms searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
+        if (searchTerm == null)
+        {
+            return false; //If the terms have not been searched return false;
+        }
+        return true;
+    }
+
+
+
+
+
+    
 }

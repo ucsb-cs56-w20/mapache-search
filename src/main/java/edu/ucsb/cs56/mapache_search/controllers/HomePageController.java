@@ -11,6 +11,7 @@ import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
 import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
+import edu.ucsb.cs56.mapache_search.entities.ResultTag;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
@@ -57,7 +58,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.Calendar;
+import java.util.Date;
 
 @Controller
 public class HomePageController {
@@ -94,18 +96,34 @@ public class HomePageController {
     public String home(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
-        ArrayList<String> upVoteLinks = new ArrayList<String>(); // A list that stores the url that got upvoted
+        
+        ArrayList<UpvoteLink> upVoteLinks = new ArrayList<UpvoteLink>(); // A list that stores the url that got upvoted
         //This for loop is used to get all the url links that have been upvoted
-        for(int pos = 0; pos < upVoteList.size(); pos++)
-        {
-            if (pos > 4)
-            {
-                break;
+
+        Calendar currentDateBefore3Days = Calendar.getInstance();
+        currentDateBefore3Days.add(Calendar.DATE, -3);
+
+        int countAdded = 0;
+
+        for(int pos = 0; pos < upVoteList.size() && countAdded < 20; pos++) {
+            if (pos > 100) break;
+            UserVote vote = upVoteList.get(pos);
+            if (vote.getTimestamp().after(currentDateBefore3Days.getTime())) {
+                UpvoteLink currUpvote = new UpvoteLink();
+                currUpvote.srEntity = vote.getResult();
+                if (upVoteLinks.contains(currUpvote)) {
+                    upVoteLinks.get(upVoteLinks.indexOf(currUpvote)).numUpvotes += 1;
+                }
+                else {
+                    upVoteLinks.add(currUpvote);
+                    countAdded++;
+                }
             }
-            String link = (upVoteList.get(pos)).getResult().getUrl();
-            upVoteLinks.add(link);
         }
+
         //Addubg an attribute to the model indicating the size of the upVoteList
+        // need to do lamba sort thing
+        
         int a = upVoteLinks.size();
         model.addAttribute("upVoteLinksSize",a);
         //Adding the upvote links to a model
@@ -115,28 +133,33 @@ public class HomePageController {
 
     @GetMapping("/filter")
     public String filter(Model model) {
-        model.addAttribute("searchObject", new SearchObject());
+        model.addAttribute("searchParameters", new SearchParameters());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
-        ArrayList<String> upVoteLinks = new ArrayList<String>(); // A list that stores the url that got upvoted
-        //This for loop serves to get all the url linsk that have been upvoted
-        for(int pos = 0; pos < upVoteList.size(); pos++)
-        {
-            if (pos > 4)
-            {
-                break;
-            }
-            String link = (upVoteList.get(pos)).getResult().getUrl();
-            upVoteLinks.add(link);
-        }
         //Addubg an attribute to the model indicating the size of the upVoteList
-        int a = upVoteLinks.size();
-        model.addAttribute("upVoteLinksSize",a);
-        //Adding the upvote link to a model
-        model.addAttribute("upVoteLinks", upVoteLinks);
+        int a = upVoteList.size();
+        model.addAttribute("upVoteListSize",a);
+        //Adding the upvote list to a model
+        model.addAttribute("upVoteList", upVoteList);
         return "filter";
     }
 
 
+    public class UpvoteLink {
+        public int numUpvotes = 1;
+        public SearchResultEntity srEntity;
+        public List<ResultTag> resultTag;
 
+        @Override
+        public boolean equals(Object o){
+            if(o instanceof UpvoteLink){
+                UpvoteLink p = (UpvoteLink) o;
+                 return this.srEntity.getId().equals(p.srEntity.getId());
+            } else
+                 return false;
+        }
+
+
+
+    }
 
 };

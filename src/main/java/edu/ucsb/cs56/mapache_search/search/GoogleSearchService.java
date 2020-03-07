@@ -24,7 +24,7 @@ public class GoogleSearchService implements SearchService {
     }
 
     private static final String SEARCH_ENDPOINT =
-        "https://www.googleapis.com/customsearch/v1?key={key}&cx={searchId}&q={query}&alt={outputFormat}&start={start}";
+        "https://www.googleapis.com/customsearch/v1?key={key}&cx={searchId}&q={query}&alt={outputFormat}&start={start}&siteSearch={siteRestrict}&dateRestrict={dateRestrict}";
 
     public String getJSON(SearchParameters params, String apiKey) {
         logger.info("apiKey=" + apiKey);
@@ -45,7 +45,9 @@ public class GoogleSearchService implements SearchService {
                 "searchId", searchId,
                 "query", params.getQuery(),
                 "outputFormat", "json",
-                "start", Integer.toString(startIndex)
+                "start", Integer.toString(startIndex),
+                "siteRestrict", params.getWebsite(),
+                "dateRestrict", params.getLastUpdated()
             );
 
         String retVal = "";
