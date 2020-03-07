@@ -9,7 +9,28 @@
 <body class="text-center">
 	<div class="container">
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
-		<h2 class="text-center">GitHub Page</h2>
+
+		<h2 class="text-center">ucsb-cs56 Legacy Code Projects</h2>
+		
+		<tr th:each="repo: ${getRepos}"> 
+			<ul style="list-style-type:none;">
+			<li>
+			<a th:href="@{'https://github.com/' + ${getProjectOrg} +'/' + ${repo}}"><td th:text="${repo}"></td></a>
+			</li>
+			</ul>
+		</tr>
+
+		<h2 class="text-center">Teams you are on</h2>
+
+		<tr th:each="team: ${getTeams}"> 
+			<ul style="list-style-type:none;">
+			<li>
+			<td th:text="${team}"></td>
+			</li>
+			</ul>
+		</tr>
+
+
 		<div th:replace="fragments/bootstrap_footer.html"></div>
 	</div>
 	<div th:replace="fragments/bootstrap_scripts.html"></div>
