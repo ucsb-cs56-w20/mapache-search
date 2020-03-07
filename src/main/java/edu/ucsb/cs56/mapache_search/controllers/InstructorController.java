@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
@@ -16,7 +17,6 @@ import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class InstructorController {
     public String deleteViewer(@PathVariable("id") String uid, OAuth2AuthenticationToken token, Model model,
             RedirectAttributes redirAttrs) {
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-         if (!user.getIsInstructor()) {
+        if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/"; 
@@ -70,11 +70,11 @@ public class InstructorController {
         }
         model.addAttribute("newInstructor", new AppUser());
         model.addAttribute("appUsers", userRepository.findAll());
-        return "redirect:/instructor/addInstructor";
+        return "redirect:/instructor/add_instructor";
     }
 
     @PostMapping("/instructor/add")
-    public String addInstructor(@Valid AppUser instructor, BindingResult result, Model model,
+    public String addInstructor(@ModelAttribute AppUser instructor, BindingResult result, Model model,
             RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         
@@ -84,13 +84,13 @@ public class InstructorController {
             return "redirect:/";
         } */
         try{
-            AppUser appUser = userRepository.findByUid(instructor.getUid()).get(0);
-            String uid = appUser.getUid();
-            if (appUser.getIsInstructor()) {
+            /* AppUser appUser = userRepository.findByUid(instructor.getUid()).get(0); // This line makes add crash; needs to change */
+            String uid = user.getUid();
+            if (user.getIsInstructor()) {
                 redirAttrs.addFlashAttribute("alertDanger", "User " + uid + " is already an Instructor.");    
                 model.addAttribute("newInstructor", new AppUser());
             } else {
-                appUser.setIsInstructor(true);
+                user.setIsInstructor(true);
                 redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");    
                 model.addAttribute("newInstructor", instructor);
             }
@@ -98,18 +98,18 @@ public class InstructorController {
             redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
         }
         model.addAttribute("appUsers", userRepository.findAll());
-        return "redirect:/instructor/addInstructor";
+        return "redirect:/instructor/add_instructor";
     }
 
     @GetMapping("/instructor/add_instructor")
     public String getaddInstructor(Model model, RedirectAttributes redirAttrs, OAuth2AuthenticationToken token){
-       /* AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        if (!user.getIsInstructor()) {
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        /* if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
-        }
-        model.addAttribute("appUsers", userRepository.findAll()); */
+        } */
+        model.addAttribute("appUsers", userRepository.findAll());
         return "instructor/add_instructor";
     }
     
