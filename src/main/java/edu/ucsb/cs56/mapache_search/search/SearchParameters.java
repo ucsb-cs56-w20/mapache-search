@@ -3,9 +3,9 @@ package edu.ucsb.cs56.mapache_search.search;
 public class SearchParameters {
     private String query;
     private int page = 1;
-    private String website;
-    private String lastUpdated;
-    private boolean sortByUpvotes;
+    private String website = " ";
+    private String lastUpdated = " ";
+    private boolean sortByUpvotes = false;
 
     public String getQuery() {
         return query;
