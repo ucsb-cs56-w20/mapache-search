@@ -192,8 +192,8 @@ public class GithubOrgMembershipService implements MembershipService {
         return githubOrg;
     }
 
-    public List<String> getTeams(final OAuth2AuthenticationToken oauthToken){
-        final List<String> teams = new ArrayList<String>();
+    public List<GitHubTeam> getTeams(final OAuth2AuthenticationToken oauthToken){
+        final List<GitHubTeam> teams = new ArrayList<GitHubTeam>();
 
         //Lots of code reuse with hasRole, could generalize
         if (oauthToken == null) {
@@ -248,7 +248,7 @@ public class GithubOrgMembershipService implements MembershipService {
             //You could build this to use the rest of the data if you wanted more than the names
             for (GitHubTeam gitHubTeam : teamArray) {
                 logger.info(user + " is part of team: " +gitHubTeam.name);
-                teams.add(gitHubTeam.name);
+                teams.add(gitHubTeam);
             }
         }
         catch(final Exception e){
@@ -261,8 +261,8 @@ public class GithubOrgMembershipService implements MembershipService {
 
     //api.github.com/repos/:owner/:repo/pulls gives all open PRs for that repo by default
     //need to loop through all repos user is in, currently hardcoded for just mapache search
-    public List<String> getOpenPullRequests(final OAuth2AuthenticationToken oauthToken){
-        final List<String> openPullRequests = new ArrayList<String>();
+    public List<GitHubOpenPRs> getOpenPullRequests(final OAuth2AuthenticationToken oauthToken){
+        final List<GitHubOpenPRs> openPullRequests = new ArrayList<GitHubOpenPRs>();
 
         if (oauthToken == null) {
             return openPullRequests;
@@ -315,9 +315,9 @@ public class GithubOrgMembershipService implements MembershipService {
                 List<GitHubOpenPRs> openPullRequestsArray = objectMapper.readValue(jr.body(), new TypeReference<List<GitHubOpenPRs>>(){});
 
                 //You could build this to use the rest of the data if you wanted more than the names
-                for (GitHubOpenPRs gitHubOpenPRs : openPullRequestsArray) {
-                    logger.info(user + " has open pull request " + gitHubOpenPRs.title);
-                    openPullRequests.add(gitHubOpenPRs.title);
+                for (GitHubOpenPRs gitHubOpenPR : openPullRequestsArray) {
+                    logger.info(user + " has open pull request " + gitHubOpenPR.title);
+                    openPullRequests.add(gitHubOpenPR);
                 }
             }
             catch(final Exception e){
