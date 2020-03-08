@@ -28,7 +28,15 @@
     </div>
     <div class="tag-menu-content">
       <div class="tag-menu-list">
-        <div th:each="tag : ${tags}" class="tag-menu-item">
+        <div th:each="tag : ${result.getAddedTags()}" class="tag-menu-item">
+          <div class="tag-menu-item-checked">
+            <i class="fas fa-check tag-check"></i>
+          </div>
+          <div class="tag-menu-item-text">
+            <span class="tag-menu-item-name" th:text="${tag.name}"></span>
+          </div>
+        </div>
+        <div th:each="tag : ${result.getOtherTags()}" class="tag-menu-item">
           <div class="tag-menu-item-checked">
             <i class="fas fa-check tag-check" style="display: none;"></i>
           </div>

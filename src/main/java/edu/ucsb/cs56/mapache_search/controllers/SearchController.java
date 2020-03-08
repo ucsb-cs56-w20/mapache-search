@@ -211,6 +211,12 @@ public class SearchController {
         }
         */
 
+        Iterable<Tag> tags = tagRepository.findAll();
+        List<Tag> allTags = new ArrayList<Tag>();
+        for( Tag tag : tags ) {
+            allTags.add(tag);
+        }
+
         if(sr.getKind() != "error") {
             List<ResultVoteWrapper> voteResults = new ArrayList<>();
             int count = 0;
@@ -239,8 +245,15 @@ public class SearchController {
                         downvoted = true;
                     }
                 }
-                voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted));
 
+                List<Tag> otherTags = new ArrayList<Tag>(allTags);
+                List<Tag> addedTags = new ArrayList<Tag>();
+                List<ResultTag> resultTags = resultTagRepository.findByResult(result);
+                for (ResultTag resultTag : resultTags) {
+                    addedTags.add(resultTag.getTag());
+                }
+                otherTags.removeAll(addedTags);
+                voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted, addedTags, otherTags));
 
                 if (++count == 10)
                     break;
@@ -267,8 +280,6 @@ public class SearchController {
         Map<Item, StackExchangeItem> stackExchangeQuestions = fetchFromStackExchange(sr);
         model.addAttribute("stackExchangeQuestions", stackExchangeQuestions);
 
-        Iterable<Tag> tags = tagRepository.findAll();
-        model.addAttribute("tags", tags);
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
@@ -278,13 +289,17 @@ public class SearchController {
         private int position;
         private boolean didUpvote;
         private boolean didDownvote;
+        private List<Tag> addedTags;
+        private List<Tag> otherTags;
 
-        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position, boolean upvoted, boolean downvoted) {
+        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position, boolean upvoted, boolean downvoted, List<Tag> addedTags, List<Tag> otherTags) {
             this.googleResult = googleResult;
             this.dbResult = dbResult;
             this.position = position;
             this.didUpvote = upvoted;
             this.didDownvote = downvoted;
+            this.addedTags = addedTags;
+            this.otherTags = otherTags;
         }
 
         public SearchResultEntity getDBResult() {
@@ -305,6 +320,14 @@ public class SearchController {
 
         public boolean hasDownvoted() {
             return didDownvote;
+        }
+
+        public List<Tag> getAddedTags() {
+            return addedTags;
+        }
+
+        public List<Tag> getOtherTags() {
+            return otherTags;
         }
 
         public int compareTo(ResultVoteWrapper oWrapper) {
