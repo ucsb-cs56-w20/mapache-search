@@ -18,9 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
+import edu.ucsb.cs56.mapache_search.entities.ResultTag;
+import edu.ucsb.cs56.mapache_search.entities.SearchQueries;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+import edu.ucsb.cs56.mapache_search.repositories.ResultTagRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
 
 
 @Controller
@@ -36,10 +40,15 @@ public class UserController {
     private VoteRepository voteRepository;
 
     @Autowired
+    private ResultTagRepository resultTagRepository;
+
+	@Autowired
+    private SearchQueriesRepository searchQueriesRepository;
+
+    @Autowired
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;   
     }
-    
     
     @GetMapping("admin/users")
     public String index(Model model) {
