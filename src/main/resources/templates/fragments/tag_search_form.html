@@ -1,0 +1,33 @@
+<form method="POST" action="#" th:action="@{/tags/search}" th:object="${tagRepository}">
+
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <label class="col-sm-2 col-form-label"></label>
+            <div class="input-group mb-3">
+                <input type="text" th:name="name" th:maxlength="50" class="form-control"
+                    placeholder="Search for a tag" />
+                <div class="input-group-append">
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div th:if="${foundTagsSize} == 0">
+                <h4>Tag Search Results</h4>
+                <p>No results found for "<em th:text="${tag.name}"></em>"</p>
+            </div>
+            <div th:if="${foundTagsSize &gt; 0}">
+                <h4>Tag Search Results</h4>
+                <h5>
+                    <a href="#" th:each="t: ${foundTags}" th:text=${t.name}
+                        class="badge badge-primary badge-pill m-2"></a>
+                </h5>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</form>
