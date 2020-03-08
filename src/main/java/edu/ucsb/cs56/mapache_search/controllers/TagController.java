@@ -1,6 +1,8 @@
 package edu.ucsb.cs56.mapache_search.controllers;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -64,15 +66,20 @@ public class TagController {
         return "tags";
     }
 
-    @GetMapping("/tags/search")
+    @GetMapping("/tags/filter")
     public String tagSort(@ModelAttribute Tag tag, Model model, OAuth2AuthenticationToken token, String filter) {
-        List<Tag> allTags = tagRepository.findAll();
-        if (filter == "alphabetical") {
-            Collections.sort(allTags, (t1, t2)->{
-                return t1.getName().compareTo(t2.getName());
-            });
-            model.addAttribute("alphabeticalTags", allTags);
+        Iterable<Tag> tags = tagRepository.findAll();
+        List<Tag> allTags = new ArrayList<Tag>();
+        for (Tag t : tags) {
+            allTags.add(t);
         }
+        if (filter.equals("alphabetical")) {
+            Collections.sort(allTags, (t1, t2)->{
+                return t1.getName().toLowerCase().compareTo(t2.getName().toLowerCase());
+            });
+            model.addAttribute("alphabetical", true);
+        }
+        model.addAttribute("tags", allTags);
+        return "tags";
     }
-
 }
