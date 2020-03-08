@@ -23,14 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class CSVDownloadController {
 
 
-    @GetMapping("/mapacheCSV")
-    public void downloadCSV(@RequestParam(name = "UserId", required = true) String UserId,
-            @RequestParam(name = "TimeStamp", required = true) String TimeStamp,
-            @RequestParam(name = "Upvote", required = true) String Upvote,
-            @RequestParam(name = "Result", required = true) String Result,
-            HttpServletResponse response) throws IOException {
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; file=courses.csv");
+    @GetMapping("/VoteHistory")
+    public void downloadCSV(HttpServletResponse response) throws IOException {
+        response.setContentType("VoteHistory/csv");
+        response.setHeader("Content-Disposition", "attachment; file=VoteHistory.csv");
 
 
         MapachetoCSV.writeSections(response.getWriter());
