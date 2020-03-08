@@ -71,7 +71,7 @@ public class InstructorController {
             UserVote vote = upVoteList.get(pos);
             upVotedSearches.add(new searchUpVotedWrapper(vote.getResult()));
         }
-        Collections.sort(upVotedSearches);
+        Collections.sort(upVotedSearches, Collections.reverseOrder());
         int x = upVotedSearches.size();
         model.addAttribute("upVotedSearchesSize",x);
         model.addAttribute("upVotedSearches", upVotedSearches);
@@ -88,7 +88,7 @@ public class InstructorController {
             SearchTerms searched = searchTermsList.get(pos);
             searchedTerms.add(new searchedTermsWrapper(searched));
         }
-        Collections.sort(searchedTerms);
+        Collections.sort(searchedTerms, Collections.reverseOrder());
         int x = searchedTerms.size();
         model.addAttribute("searchedTermsSize",x);
         model.addAttribute("searchedTerms", searchedTerms);

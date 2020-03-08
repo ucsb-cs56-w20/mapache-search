@@ -8,6 +8,16 @@
     <div class="container">
       <div th:replace="fragments/bootstrap_nav_header.html"></div>
       <h2 class="text-center">Most Popular Searches</h2>
+      <div>
+        <a class="dropdown-toggle" href="#" id="Dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Data Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="Dropdown">
+          <a class="dropdown-item" href = /instructor>Instructor page</a>
+          <a class="dropdown-item" href = /instructor/upvotes>Upvotes</a>
+          <a class="dropdown-item" href = /instructor/data>Data_Stub</a>
+        </div>
+      </div>
       <table class = "table">
         <thead>
             <tr>
