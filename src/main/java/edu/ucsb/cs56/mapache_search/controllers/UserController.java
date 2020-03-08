@@ -60,7 +60,17 @@ public class UserController {
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
-        u.setApikey(sanitizeApikey(user.getApikey()));
+        
+        String apiKey = sanitizeApikey(u.getApikey());
+
+        //check if new api key entered
+        if (apiKey.equals(sanitizeApikey(user.getApikey()))) {} 
+        else {
+            u.setApikey(user.getApikey());
+            searches = 0l;
+            u.setSearches(0l);
+        }
+        
         userRepository.save(u);
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());

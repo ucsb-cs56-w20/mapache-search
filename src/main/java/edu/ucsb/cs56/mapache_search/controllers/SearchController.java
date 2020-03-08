@@ -146,12 +146,7 @@ public class SearchController {
 
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
         
-        if (apiKey != null){
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
-        }
-        else {
-        Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches();
-        }
         RestTicketClient ticketClient = new RestTicketClient(apiKey);
 
 
@@ -181,7 +176,8 @@ public class SearchController {
         }
 
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        u.setSearches(searches);
+            if (apiKey == "") {     u.setSearches(0l);  }
+        else {       u.setSearches(searches);        }
         userRepository.save(u);
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
