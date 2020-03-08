@@ -152,7 +152,7 @@ public class HomePageController {
 
 
     public class UpvoteLink {
-        public int numUpvotes;
+        public int numUpvotes = 1;
         public SearchResultEntity srEntity;
         public List<ResultTag> resultTag;
 
