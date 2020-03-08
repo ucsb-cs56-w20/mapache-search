@@ -79,19 +79,21 @@ public class UserController {
     
     @GetMapping("instructor/random_student_results")
     public String randomStudent(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
-        Random rand = new Random();
-        AppUser u = userRepository.findById(rand.nextLong()%userRepository.count()).get(0);
+        Random rand = new Random();     
+        AppUser u = (userRepository.findAll()).get(Math.toIntExact(rand.nextInt()%userRepository.count()));
         Long searches = u.getSearches();
         Long time = u.getTime();
-        u.setApikey(sanitizeApikey(user.getApikey()));
         userRepository.save(u);
-        List<UserVote> byUser = voteRepository.findByUserAndUpvoteOrderByTimestampDesc(user, true);
+		List<SearchQueries> searchqueriesByUser = searchQueriesRepository.findByUid(u.getUid());
+        List<UserVote> voteByUser = voteRepository.findByUserAndUpvote(u, true);
+        List<ResultTag> tagByUser = resultTagRepository.findByUser(u);
         model.addAttribute("user", u);
         model.addAttribute("user_template", new AppUser());
         model.addAttribute("api_uses", searches);
-        model.addAttribute("time", time);
-        model.addAttribute("max_uses", AppUser.MAX_API_USES);
-        model.addAttribute("userVotes", byUser);
+		model.addAttribute("max_uses", AppUser.MAX_API_USES);
+		model.addAttribute("searchqueries", searchqueriesByUser);
+        model.addAttribute("userVotes", voteByUser);
+        model.addAttribute("userTags", tagByUser);
         return "instructor/random_student_results";
     }
 
