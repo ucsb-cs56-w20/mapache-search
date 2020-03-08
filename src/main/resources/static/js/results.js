@@ -1,5 +1,6 @@
 $(document).ready( function() {
     var $tagButtons = $(".tag-button-text"),
+        $tagItems = $(".tag-menu-item"),
         $voteButtons = $(".vb"),
         $document = $(document),
         $currentDropdown;
@@ -19,6 +20,30 @@ $(document).ready( function() {
             !$target.closest(".tag-button-text").length) {
             $currentDropdown.hide();
         }
+    }
+
+    function toggleTag(e) {
+        var $this = $(this);
+        var $tagName = $this.find(".tag-menu-item-name");
+        var $result = $this.closest(".searchresult-row");
+        var $vote = $result.find(".vote-info");
+
+        var tagName = $tagName[0].innerHTML;
+        var resultId = $vote.attr("id");
+        
+        $.ajax({
+            url: "../updateTags",
+            method: "GET",
+            data: {
+                tagName: tagName,
+                id: resultId,
+            }
+        }).done(function( html ) {
+            console.log(html);
+        });
+
+        var $check = $this.find(".tag-check");
+        $check.toggle();
     }
 
     function updateVote(e) {
@@ -65,7 +90,9 @@ $(document).ready( function() {
 
     $tagButtons.on("mousedown", showTagDropdown);
 
-    $voteButtons.on("click", updateVote);
-
     $document.on("mousedown", hideTagDropdown);
+
+    $tagItems.on("mousedown", toggleTag);
+
+    $voteButtons.on("click", updateVote);
 });

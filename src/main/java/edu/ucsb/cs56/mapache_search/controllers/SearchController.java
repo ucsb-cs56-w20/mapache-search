@@ -12,11 +12,13 @@ import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.entities.Tag;
+import edu.ucsb.cs56.mapache_search.entities.ResultTag;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 import edu.ucsb.cs56.mapache_search.repositories.TagRepository;
+import edu.ucsb.cs56.mapache_search.repositories.ResultTagRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
@@ -104,6 +106,9 @@ public class SearchController {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private ResultTagRepository resultTagRepository;
 
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
@@ -357,6 +362,46 @@ public class SearchController {
         }
 
         return String.valueOf(voteCount); // returns the new vote total
+    }
+
+    @GetMapping("/updateTags")
+    @ResponseBody
+    public String updateTags(@RequestParam(name = "tagName", required = true) String tagName, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
+        String message = "failed";
+        List<SearchResultEntity> matchingResults = searchRepository.findById(id);
+        if (!matchingResults.isEmpty()) {
+
+            SearchResultEntity result = matchingResults.get(0);
+            AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+            List<Tag> tags = tagRepository.findByName(tagName);
+
+            Tag tag = null;
+            if(tags.size() > 0) {
+                tag = tags.get(0);
+            } else {
+                tag = new Tag();
+                tag.setName(tagName);
+                tagRepository.save(tag);
+            }
+
+            List<ResultTag> byUserAndResultAndTag = resultTagRepository.findByUserAndResultAndTag(user, result, tag);
+
+            if(byUserAndResultAndTag.size() > 0){
+                ResultTag toRemove = byUserAndResultAndTag.get(0);
+                resultTagRepository.delete(toRemove);
+                message = "removed";
+            } else {
+                ResultTag resultTag = new ResultTag();
+                resultTag.setTag(tag);
+                resultTag.setUser(user);
+                resultTag.setResult(result);
+                resultTag.setTimestamp(new Date());
+                resultTagRepository.save(resultTag);
+                message = "added";
+            }
+        }
+
+        return message; // returns the new vote total
     }
 
     // Removes whitespace from search terms //
