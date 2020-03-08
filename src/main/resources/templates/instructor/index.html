@@ -1,23 +1,38 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="en"> 
-  <head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Instructor</title>
     <div th:replace="fragments/bootstrap_head.html"></div>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <div th:replace="fragments/bootstrap_nav_header.html"></div>
-      <h3>Hello</h3>
-      <div>
-      <a class="dropdown-toggle" href="#" id="Dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Data Dropdown
-      </a>
-       <div class="dropdown-menu" aria-labelledby="Dropdown">
-        <a class="dropdown-item" href = /instructor>Data 1</a>
-        <a class="dropdown-item" href = /instructor>Data 2</a>
-    </div>
-
-      <div th:replace="fragments/bootstrap_footer.html"></div>
-    </div>
-    <div th:replace="fragments/bootstrap_scripts.html"></div>
-  </body>
+        <div th:replace="fragments/bootstrap_nav_header.html"></div>
+        <h2 class="text-center">Instructor Page</h2>
+        <div>
+            <a class="dropdown-toggle" href="#" id="Dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Data Dropdown
+            </a>
+            <div class="dropdown-menu" aria-labelledby="Dropdown">
+                <a class="dropdown-item" href=/instructor/upvotes>Upvotes</a>
+                <a class="dropdown-item" href=/instructor/popular_searches>Popular Searches</a>
+                <a class="dropdown-item" href=/instructor/data>Data_Stub</a>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Amount of Searches Made</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <td><a th:text="${searchCount}"></a></td>
+                </tbody>
+            </table>
+            <h5><u>Student Information Generator</u></h5>
+            <a href=/instructor/random_student_generator>
+                Click Here to Generate a Random Student's Information
+            </a>
+            <div th:replace="fragments/bootstrap_footer.html"></div>
+        </div>
+        <div th:replace="fragments/bootstrap_scripts.html"></div>
+</body>
 </html>
