@@ -11,6 +11,7 @@ import edu.ucsb.cs56.mapache_search.entities.Tag;
 public interface TagRepository extends CrudRepository<Tag, Long> {
     List<Tag> findById(long id);
 
+
     List<Tag> findByName(String tag);
     
 }
