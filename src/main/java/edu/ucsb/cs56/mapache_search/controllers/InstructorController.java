@@ -57,9 +57,9 @@ public class InstructorController {
         return "instructor/index";
     }
 
-    @GetMapping("instructor/click_stats")
+    @GetMapping("instructor/student_stats")
     public String data(Model model) {
-        return "instructor/click_stats";
+        return "instructor/student_stats";
     }
 
     @GetMapping("instructor/upvotes")
@@ -116,7 +116,7 @@ public class InstructorController {
         return "instructor/index";
     }
 
-    @GetMapping("instructor/click_stats")
+    @GetMapping("instructor/student_stats")
     public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
         if (!role.equals("Admin")) {
@@ -124,7 +124,7 @@ public class InstructorController {
                     "You do not have permission to access that page");
             return "redirect:/";
         }
-        return "instructor/click_stats";
+        return "instructor/student_stats";
     }
 
     @GetMapping("instructor/upvotes")
