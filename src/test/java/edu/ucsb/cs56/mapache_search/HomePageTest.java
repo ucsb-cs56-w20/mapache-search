@@ -25,6 +25,7 @@ import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+import edu.ucsb.cs56.mapache_search.repositories.TagRepository;
 import edu.ucsb.cs56.mapache_search.search.SearchService;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
@@ -60,6 +61,9 @@ public class HomePageTest {
 
     @MockBean
     private VoteRepository voteRepository;
+
+    @MockBean
+    private TagRepository tagRepository;
 
     @MockBean
     private PreviewProviderService pps;

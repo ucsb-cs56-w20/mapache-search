@@ -1,5 +1,27 @@
 $(document).ready( function() {
-    $(".vb").click(function() {
+    var $tagButtons = $(".tag-button-text"),
+        $voteButtons = $(".vb"),
+        $document = $(document),
+        $currentDropdown;
+
+    function showTagDropdown(e) {
+        var $this = $(this);
+        var buttonId = $this.attr("id");
+        var dropdownId = buttonId.replace("button", "dropdown");
+        if ($currentDropdown) $currentDropdown.hide();
+        $currentDropdown = $("#" + dropdownId);
+        $currentDropdown.show();
+    }
+
+    function hideTagDropdown(e) {
+        var $target = $(e.target);
+        if (!$target.closest(".tag-dropdown").length &&
+            !$target.closest(".tag-button-text").length) {
+            $currentDropdown.hide();
+        }
+    }
+
+    function updateVote(e) {
         var direction = ""; // parameter which tells the API whether this was upvote or downvote
         var offset = 0; // how much the vote count should change by
         var otherElement = "";
@@ -39,5 +61,11 @@ $(document).ready( function() {
         var voteCount = $(this).parent().children(".vote-count");
         voteCount.text(parseInt(voteCount.text()) + offset); // update the displayed vote count
         $(this).toggleClass("vb-clicked"); // remember whether this button was clicked or not
-    });
+    }
+
+    $tagButtons.on("mousedown", showTagDropdown);
+
+    $voteButtons.on("click", updateVote);
+
+    $document.on("mousedown", hideTagDropdown);
 });
