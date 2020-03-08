@@ -14,14 +14,14 @@
       <div class="container">
         <p>
         <form action="upvotehistory">
-            <input type="submit" class="btn btn-primary btn-lg" value="Upvote History" />
+            <input type="submit" class="btn btn-primary btn-lg" title="Previously upvoted links" value="Upvote History" />
         </form>
       </p>
       </div>
       <div class="container">
         <p>
             <form action="taghistory">
-                <input type="submit" class="btn btn-primary btn-lg" value="Tag History" />
+                <input type="submit" class="btn btn-primary btn-lg" title="Previously tagged links" value="Tag History" />
             </form>
         </p>
       </div>
@@ -46,8 +46,8 @@
             <input type="submit" class="btn btn-primary" value="Update API Key">
           </div>
         </form>
-        <br>
         <p>Don't have an API key? <a href="https://developers.google.com/custom-search/v1/overview" target="_blank">Click here.</a></p>
+        <br>
         <p>Your current Google API key is: <a th:utext="${user.apikey}"></a></p>
         <span th:text="'Number of API calls: '"></span>
         <span style="color:red" th:text=" ${api_uses} + '/' + ${max_uses}"></span>
