@@ -14,6 +14,6 @@ import edu.ucsb.cs56.mapache_search.entities.SearchQueries;
 @Repository
 public interface SearchQueriesRepository extends CrudRepository<SearchQueries, Long> {
     // List<SearchQueries> findMostRecentEntries();
-
+	List<SearchQueries> findByUid(String uid);
     
 };
