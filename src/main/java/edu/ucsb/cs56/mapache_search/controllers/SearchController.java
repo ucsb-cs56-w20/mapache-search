@@ -216,6 +216,9 @@ public class SearchController {
         for( Tag tag : tags ) {
             allTags.add(tag);
         }
+        Collections.sort(allTags, (t1, t2)->{
+            return t1.getName().toLowerCase().compareTo(t2.getName().toLowerCase());
+        });
 
         if(sr.getKind() != "error") {
             List<ResultVoteWrapper> voteResults = new ArrayList<>();
@@ -252,6 +255,9 @@ public class SearchController {
                 for (ResultTag resultTag : resultTags) {
                     addedTags.add(resultTag.getTag());
                 }
+                Collections.sort(addedTags, (t1, t2)->{
+                    return t1.getName().toLowerCase().compareTo(t2.getName().toLowerCase());
+                });
                 otherTags.removeAll(addedTags);
                 voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted, addedTags, otherTags));
 
