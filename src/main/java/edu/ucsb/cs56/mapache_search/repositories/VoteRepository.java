@@ -11,6 +11,7 @@ import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 @Repository //Crud auto-configures everything, automatically know ur connected to PostgreSQL
 //Driver-class-name in pom.xml tells u which db to use
 public interface VoteRepository extends CrudRepository<UserVote, Long> {
+    List<UserVote> findAll();
     List<UserVote> findById(long id);
     List<UserVote> findByUpvoteOrderByTimestampDesc(boolean upvoted);
     List<UserVote> findByUserAndUpvoteOrderByTimestampAsc(AppUser user, boolean upvoted);

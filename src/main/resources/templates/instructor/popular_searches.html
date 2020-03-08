@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"> 
+  <head>
+    <title>Popular Searches</title>
+    <div th:replace="fragments/bootstrap_head.html"></div>
+  </head>
+  <body>
+    <div class="container">
+      <div th:replace="fragments/bootstrap_nav_header.html"></div>
+      <h2 class="text-center">Most Popular Searches</h2>
+      <table class = "table">
+        <thead>
+            <tr>
+                <th>Searches</th>
+                <th>Search Count</th>
+            </tr>
+        </thead>
+				<tbody>
+					<div th:if=" ${searchedTermsSize} != 0">
+            
+						<tr th:each="f: ${searchedTerms}"> 
+							<td><a th:utext="${f.getResult().getSearchTerms()}"></a></td>
+							<td><a th:text="${f.getResult().getCount()}"></a></td>
+						</tr>
+          </div>
+				</tbody>
+      </table>
+      <div th:if=" ${searchedTermsSize} == 0">
+        <h4 class = "text-center"> No searches made yet</h4>
+      </div>
+    
+      <div th:replace="fragments/bootstrap_footer.html"></div>
+    </div>
+    <div th:replace="fragments/bootstrap_scripts.html"></div>
+  </body>
+</html>
