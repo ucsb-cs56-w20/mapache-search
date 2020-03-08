@@ -11,10 +11,12 @@ import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
 import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
+import edu.ucsb.cs56.mapache_search.entities.Tag;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+import edu.ucsb.cs56.mapache_search.repositories.TagRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
@@ -100,7 +102,8 @@ public class SearchController {
     @Autowired
     private SearchQueriesRepository searchQueriesRepository;
 
-
+    @Autowired
+    private TagRepository tagRepository;
 
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
@@ -258,6 +261,9 @@ public class SearchController {
 
         Map<Item, StackExchangeItem> stackExchangeQuestions = fetchFromStackExchange(sr);
         model.addAttribute("stackExchangeQuestions", stackExchangeQuestions);
+
+        Iterable<Tag> tags = tagRepository.findAll();
+        model.addAttribute("tags", tags);
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
