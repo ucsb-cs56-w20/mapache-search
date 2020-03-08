@@ -64,4 +64,15 @@ public class TagController {
         return "tags";
     }
 
+    @GetMapping("/tags/search")
+    public String tagSort(@ModelAttribute Tag tag, Model model, OAuth2AuthenticationToken token, String filter) {
+        List<Tag> allTags = tagRepository.findAll();
+        if (filter == "alphabetical") {
+            Collections.sort(allTags, (t1, t2)->{
+                return t1.getName().compareTo(t2.getName());
+            });
+            model.addAttribute("alphabeticalTags", allTags);
+        }
+    }
+
 }
