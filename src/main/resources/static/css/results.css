@@ -87,6 +87,11 @@
   border-radius: 3px
 }
 
+.tag-menu-content {
+  max-height: 200px;
+  overflow: auto;
+}
+
 .tag-menu-item {
   text-align: left;
   background-color: #fff;
