@@ -30,6 +30,10 @@ public interface MembershipService {
         return getTeams(oAuth2AuthenticationToken);
     }
 
+    default public List<String> getIssues(OAuth2AuthenticationToken oAuth2AuthenticationToken){
+        return getIssues(oAuth2AuthenticationToken);
+    }
+
     /** get list of properties 
      * @return list of repos from application.properties 
      * */

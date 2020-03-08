@@ -30,6 +30,16 @@
 			</ul>
 		</tr>
 
+		<h2 class="text-center">Assigned Open Issues</h2>
+
+		<tr th:each="issues: ${getIssues}"> 
+			<ul style="list-style-type:none;">
+			<li>
+			<td th:text="${issues}"></td>
+			</li>
+			</ul>
+		</tr>
+
 
 		<div th:replace="fragments/bootstrap_footer.html"></div>
 	</div>

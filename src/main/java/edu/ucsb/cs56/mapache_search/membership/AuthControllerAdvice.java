@@ -112,6 +112,11 @@ public class AuthControllerAdvice {
        return membershipService.getTeams(token);
     }
 
+    @ModelAttribute("getIssues")
+    public List<String> getIssues(OAuth2AuthenticationToken token) {
+        return membershipService.getIssues(token);
+    }
+
     @ModelAttribute("getProjectOrg")
     public String getGetProjectOrg() {
        return membershipService.getProjectOrg();

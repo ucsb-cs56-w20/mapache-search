@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import edu.ucsb.cs56.mapache_search.entities.GitHubTeam;
+import edu.ucsb.cs56.mapache_search.entities.GitHubIssues;
+import edu.ucsb.cs56.mapache_search.entities.GitHubRepos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -257,5 +259,140 @@ public class GithubOrgMembershipService implements MembershipService {
         return teams;
     }
 
+    public List<String> getIssues(final OAuth2AuthenticationToken oauthToken){
+        final List<String> issues = new ArrayList<String>();
 
+        if (oauthToken == null) {
+            return issues;
+        }
+
+        final OAuth2User oAuth2User = oauthToken.getPrincipal();
+        final String user = (String) oAuth2User.getAttributes().get("login");
+
+        Github github = null;
+
+        if (clientService == null) {
+            logger.error(String.format("unable to obtain autowired clientService"));
+            return issues;
+        }
+        final OAuth2AuthorizedClient client = clientService
+                .loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), oauthToken.getName());
+
+        if (client == null) {
+            logger.info(String.format("clientService was not null but client returned was null for user %s", user));
+            return issues;
+        }
+
+        final OAuth2AccessToken token = client.getAccessToken();
+
+        if (token == null) {
+            logger.info(String.format("client for %s was not null but getAccessToken returned null", user));
+            return issues;
+        }
+        final String accessToken = token.getTokenValue();
+        if (accessToken == null) {
+            logger.info(String.format("token was not null but getTokenValue returned null for user %s", user));
+            return issues;
+        }
+
+        github = new RtGithub(new RtGithub(accessToken).entry().through(RetryCarefulWire.class, 50));
+
+        List<String> repos = getRepos(oauthToken);
+        for (String fullname : repos) {
+            final String path = String.format("/user/issues");
+        
+        
+            try{
+                /// /repos/:owner/:repo/issues
+                final JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
+                        .as(JsonResponse.class);
+                
+                logger.info("jr =" + jr);
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+                //Read the Json data as a list of issues
+                List<GitHubIssues> issueArray = objectMapper.readValue(jr.body(), new TypeReference<List<GitHubIssues>>(){});
+
+                //You could build this to use the rest of the data if you wanted more than the names
+                for (GitHubIssues gitHubIssue : issueArray) {
+                    logger.info(user + " is assigned issue: " + gitHubIssue.title);
+                    issues.add(gitHubIssue.title);
+                }
+            }
+            catch(final Exception e){
+                logger.error("Exception happened while trying to get issues of user");
+                logger.error("Exception", e);
+            }
+        }
+
+        return issues;
+    }
+
+    public List<String> getRepos(final OAuth2AuthenticationToken oauthToken){
+        final List<String> Repos = new ArrayList<String>();
+
+        if (oauthToken == null) {
+            return Repos;
+        }
+
+        final OAuth2User oAuth2User = oauthToken.getPrincipal();
+        final String user = (String) oAuth2User.getAttributes().get("login");
+
+        Github github = null;
+
+        if (clientService == null) {
+            logger.error(String.format("unable to obtain autowired clientService"));
+            return Repos;
+        }
+        final OAuth2AuthorizedClient client = clientService
+                .loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), oauthToken.getName());
+
+        if (client == null) {
+            logger.info(String.format("clientService was not null but client returned was null for user %s", user));
+            return Repos;
+        }
+
+        final OAuth2AccessToken token = client.getAccessToken();
+
+        if (token == null) {
+            logger.info(String.format("client for %s was not null but getAccessToken returned null", user));
+            return Repos;
+        }
+        final String accessToken = token.getTokenValue();
+        if (accessToken == null) {
+            logger.info(String.format("token was not null but getTokenValue returned null for user %s", user));
+            return Repos;
+        }
+
+        github = new RtGithub(new RtGithub(accessToken).entry().through(RetryCarefulWire.class, 50));
+
+        final String path = String.format("/user/repos");
+        try{
+            //GET /user/repos
+            final JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
+                    .as(JsonResponse.class);
+
+            logger.info("jr =" + jr);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            //Read the Json data as a list of teams
+            List<GitHubRepos> ReposArray = objectMapper.readValue(jr.body(), new TypeReference<List<GitHubRepos>>(){});
+
+            //You could build this to use the rest of the data if you wanted more than the names
+            for (GitHubRepos gitHubRepos : ReposArray) {
+                logger.info(user + " has repo " + gitHubRepos.full_name);
+                Repos.add(gitHubRepos.full_name);
+            }
+        }
+        catch(final Exception e){
+            logger.error("Exception happened while trying to get teams of user");
+            logger.error("Exception", e);
+        }
+
+        return Repos;
+    }
 }
