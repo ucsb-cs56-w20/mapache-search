@@ -51,6 +51,15 @@ public class CSVDownloadController {
         MapachetoCSV.writeSections(response.getWriter(),searchResultRepository);
     }
 
-    
+    @Autowired
+    private SearchResultRepository searchResultRepository;
+    @GetMapping("/UserTagHistory")
+    public void downloadCSV(HttpServletResponse response) throws IOException {
+        response.setContentType("UserTagHistory/csv");
+        response.setHeader("Content-Disposition", "attachment; file=UserTagHistory.csv");
+
+
+        MapachetoCSV.UserwriteSections(response.getWriter(),searchResultRepository);
+    }
 
 }

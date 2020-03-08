@@ -28,7 +28,10 @@
       </tbody>
     </table>
     <form action="#" data-th-action="@{/VoteHistory}" data-th-object="${model}" method="get">
-      <button type="submit" name="Download" class="btn btn-primary">Download Vote CSV</button>
+      <button type="submit" name="Download" class="btn btn-primary">Download VoteHistory CSV</button>
+    </form>    
+    <form action="#" data-th-action="@{/UserTagHistory}" data-th-object="${model}" method="get">
+      <button type="submit" name="Download" class="btn btn-primary">Download User TagHistory CSV</button>
     </form>
       <div th:replace="fragments/bootstrap_footer.html"></div>
     </div>

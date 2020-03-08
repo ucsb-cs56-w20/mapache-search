@@ -55,4 +55,24 @@ public class MapachetoCSV {
       logger.error("CSV generation error", e);
     }
   }
+
+  public static void UserwriteSections(PrintWriter writer, SearchResultRepository searchrepos) {
+    
+    List<SearchResultEntity> Searchresult= searchrepos.findAll();
+    String[] CSV_HEADER = { "HtmlTitle","Url", "Total Vote"};
+    try (CSVWriter csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER,
+        CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);) {
+      csvWriter.writeNext(CSV_HEADER);
+
+        for(int i=0;i<Searchresult.size();i++){
+            String data [] = {Searchresult.get(i).getHtmlTitle(),Searchresult.get(i).getLink(),Long.toString(Searchresult.get(i).getVotecount())}; 
+            
+            csvWriter.writeNext(data);
+        }
+      logger.info("CSV generated successfully");
+    } catch (Exception e) {
+      logger.error("CSV generation error", e);
+    }
+  }
+  
 }
