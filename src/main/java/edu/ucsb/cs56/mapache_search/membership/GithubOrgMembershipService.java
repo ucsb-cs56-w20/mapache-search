@@ -297,35 +297,31 @@ public class GithubOrgMembershipService implements MembershipService {
 
         github = new RtGithub(new RtGithub(accessToken).entry().through(RetryCarefulWire.class, 50));
 
-        List<String> repos = getRepos(oauthToken);
-        for (String fullname : repos) {
-            final String path = String.format("/user/issues");
-        
-        
-            try{
-                /// /repos/:owner/:repo/issues
-                final JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
-                        .as(JsonResponse.class);
-                
-                logger.info("jr =" + jr);
+        final String path = String.format("/user/issues");
+        try{
+            /// /user/issues
+            final JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
+                    .as(JsonResponse.class);
+            
+            logger.info("jr =" + jr);
 
-                ObjectMapper objectMapper = new ObjectMapper();
-                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-                //Read the Json data as a list of issues
-                List<GitHubIssues> issueArray = objectMapper.readValue(jr.body(), new TypeReference<List<GitHubIssues>>(){});
+            //Read the Json data as a list of issues
+            List<GitHubIssues> issueArray = objectMapper.readValue(jr.body(), new TypeReference<List<GitHubIssues>>(){});
 
-                //You could build this to use the rest of the data if you wanted more than the names
-                for (GitHubIssues gitHubIssue : issueArray) {
-                    logger.info(user + " is assigned issue: " + gitHubIssue.title);
-                    issues.add(gitHubIssue.title);
-                }
-            }
-            catch(final Exception e){
-                logger.error("Exception happened while trying to get issues of user");
-                logger.error("Exception", e);
+            //You could build this to use the rest of the data if you wanted more than the names
+            for (GitHubIssues gitHubIssue : issueArray) {
+                logger.info(user + " is assigned issue: " + gitHubIssue.title);
+                issues.add(gitHubIssue.title);
             }
         }
+        catch(final Exception e){
+            logger.error("Exception happened while trying to get issues of user");
+            logger.error("Exception", e);
+        }
+        
 
         return issues;
     }
