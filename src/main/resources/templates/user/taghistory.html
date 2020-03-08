@@ -23,137 +23,32 @@
 			</tbody>
 		</table>
 	 </div>
-	 <!-- <div class = "dropdown">
+	 <div class = "container">
 		<form method="GET" th:action="@{/user/taghistory}" th:object="${Tag}">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
-			integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" />
-		<div class="form-group row">
-			<label class="col-sm-2 col-form-label"></label>
-			<div class="input-group mb-3">
-				<button onclick="myFunction()" class="btn btn-primary">Search Tag History</button>
-				<input type="text" name="query" class="form-control" placeholder="Search your tag history here" id="myInput"
-					onkeyup="filterFunction()" autofocus="true" />
-				<div class="input-group-append">
-					<div id="myDropdown" class="dropdown-content">
-					<input type="text" placeholder="Search..." id="myInput" onkeyup="filterFunction()">
-					<tr th:each="f: ${userTags}">
-						<option value="{$f.getResult().getTag().getName()}">{$f.getResult().getTag().getName()}</option>
-					</tr>
+
+			<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous"/>
+				<div class="form-group row">
+					<label class="col-sm-2 col-form-label"></label>
+
+
+					<div class="input-group mb-3">    
+					<input type="text" name="query" class="form-control" placeholder="Search your tag history here" id="myInput" onkeyup="filterFunction()" autofocus="true"/>
+						<div class="input-group-append">
+							<tr th:each="f: ${userTags}">
+								<option value="{$f.getResult().getTag().getName()}">{$f.getResult().getTag().getName()}</option>
+							</tr>
+						<button class="btn btn-outline-primary" type="submit" id="js-course-search-submit"><i class="fas
+						fa-search">Search</i></button>
+					  </div>
 					</div>
-									</div>
-					<button class="btn btn-outline-primary" type="submit" id="js-course-search-submit"><i class="fas
-								fa-search">Search</i></button>
+
 				</div>
-			</div>
-		</div>
+
+
 
 			</form>
 
-	 </div>  -->
-
-	 <!-- <th:block th:replace="fragments/result_preview :: styles"></th:block>
-	<div class="dropdown">
-		<div th:if=" ${userTags.size()} != 0"> -->
-			<form method="GET" th:action="@{/user/taghistory}" th:object="${Tag}"></form>
-			<div class="form-group row">
-				<label class="col-sm-2 col-form-label"></label>
-				<button onclick="myFunction()" class="btn btn-primary">Search Tag History</button>
-				<div class="input-group-append">
-				<div id="myDropdown" class="dropdown-content">
-					<input type="text" placeholder="Search..." id="myInput" onkeyup="filterFunction()">
-					<tr th:each="f: ${userTags}">
-						<option value="{$f.getResult().getTag().getName()}">{$f.getResult().getTag().getName()}</option>
-					</tr>
-				</div>
-			</div>
-				
-			</div>
-	
-			</form>
-		<!-- </div> -->
-	</div>
-
-	<script>
-		/* When the user clicks on the button, toggle between hiding and showing the dropdown content */
-		function myFunction() {
-			document.getElementById("myDropdown").classList.toggle("show");
-		}
-
-		function filterFunction() {
-			var input, filter, ul, li, a, i;
-			input = document.getElementById("myInput");
-			filter = input.value.toUpperCase();
-			div = document.getElementById("myDropdown");
-			a = div.getElementsByTagName("a");
-			for (i = 0; i < a.length; i++) {
-				txtValue = a[i].textContent || a[i].innerText;
-				if (txtValue.toUpperCase().indexOf(filter) > -1) {
-					a[i].style.display = "";
-				} else {
-					a[i].style.display = "none";
-				}
-			}
-		} 
-	</script>
-
-	<style>
-
-		/* The search field */
-		#myInput {
-			box-sizing: border-box;
-			background-image: url('searchicon.png');
-			background-position: 14px 12px;
-			background-repeat: no-repeat;
-			font-size: 16px;
-			padding: 14px 20px 12px 45px;
-			border: none;
-			border-bottom: 1px solid #ddd;
-		}
-
-		/* The search field when it gets focus/clicked on */
-		#myInput:focus {
-			outline: 3px solid #ddd;
-		}
-
-		/* The container <div> - needed to position the dropdown content */
-		.dropdown {
-			position: relative;
-			display: inline-block;
-		}
-
-		/* Dropdown Content (Hidden by Default) */
-		.dropdown-content {
-			display: none;
-			position: absolute;
-			background-color: #f6f6f6;
-			min-width: 230px;
-			border: 1px solid #ddd;
-			z-index: 1;
-		}
-
-		/* Links inside the dropdown */
-		.dropdown-content a {
-			color: black;
-			padding: 12px 16px;
-			text-decoration: none;
-			display: block;
-		}
-
-		/* Change color of dropdown links on hover */
-		.dropdown-content a:hover {
-			background-color: #f1f1f1
-		}
-
-		/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-		.show {
-			display: block;
-		}
-	</style>
-
-	</div>
-	<br style = “line-height:1000”>
-	<br style = “line-height:2000px”>
-
+	 </div>
 
 	 <div class="container">
 		<div th:replace="fragments/bootstrap_footer.html"></div>
