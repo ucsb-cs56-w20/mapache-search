@@ -14,20 +14,11 @@
 		
 		<div th:replace="fragments/tag_creation_form.html"></div>
 
-		<table class="table">
-			<thead>
-				<tr>
-					<th>id</th>
-					<th>name</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="t: ${tags}">
-					<td th:text="*{t.id}"></td>
-					<td th:text="${t.name}"></td>
-				</tr>
-			</tbody>
-		</table>
+		<h4>All tags</h4>
+		<h5>
+			<a href="#" th:each="t: ${tags}" th:text=${t.name} class="badge badge-primary badge-pill m-2"></a>
+
+		</h5>
 
 		<div th:replace="fragments/bootstrap_footer.html"></div>
 	</div>
