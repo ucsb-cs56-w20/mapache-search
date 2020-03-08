@@ -10,6 +10,7 @@ import edu.ucsb.cs56.mapache_search.preview.PreviewProviderService;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+import edu.ucsb.cs56.mapache_search.repositories.TagRepository;
 import edu.ucsb.cs56.mapache_search.search.SearchService;
 import edu.ucsb.cs56.mapache_search.stackexchange.StackExchangeQueryService;
 
@@ -53,6 +54,9 @@ public class LinkControllerTest {
 
     @MockBean
     private VoteRepository voteRepository;
+
+    @MockBean
+    private TagRepository tagRepository;
 
     @MockBean
     private PreviewProviderService pps;
