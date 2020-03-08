@@ -171,13 +171,10 @@ public class SearchController {
         }
 
         AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        if (apiKey == "") {
-            u.setSearches(0l);
-        }
-        else {
-            u.setSearches(searches);
-        }
 
+        if (apiKey == "") {     u.setSearches(0l);  }
+        else {       u.setSearches(searches);        }
+        
         userRepository.save(u);
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
