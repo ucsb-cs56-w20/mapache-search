@@ -10,6 +10,6 @@ import edu.ucsb.cs56.mapache_search.entities.AppUser;
 //Driver-class-name in pom.xml tells u which db to use
 public interface UserRepository extends CrudRepository<AppUser, Long> {
    List<AppUser> findByUid(String uid); //any such attribute will work, as long as it's associated with the getter/setter
-   List<AppUser> findById(long id); //any such attribute will work, as long as it's associated with the getter/setter
+   List<AppUser> findAll();
 
 }
