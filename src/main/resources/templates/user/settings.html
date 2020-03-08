@@ -49,7 +49,8 @@
         <br>
         <p>Don't have an API key? <a href="https://developers.google.com/custom-search/v1/overview" target="_blank">Click here.</a></p>
         <p>Your current Google API key is: <a th:utext="${user.apikey}"></a></p>
-        <p style="color:red" th:text="'Number of API calls: ' + ${api_uses} + '/' + ${max_uses}"> </p>
+        <span th:text="'Number of API calls: '"></span>
+        <span style="color:red" th:text=" ${api_uses} + '/' + ${max_uses}"></span>
       </div>
       <div th:replace="/../fragments/bootstrap_scripts.html"></div>
     </div>
