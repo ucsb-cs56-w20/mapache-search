@@ -46,6 +46,14 @@ public class InstructorController {
     }
     @GetMapping("instructor")
     public String index(Model model) {
+        List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
+        int amountSearched = 0;
+        for(int pos = 0; pos < searchTermsList.size(); pos++) {
+            if (pos > 100) break;
+            SearchTerms searched = searchTermsList.get(pos);
+            amountSearched += searched.getCount();
+        }
+        model.addAttribute("searchCount",amountSearched);
         return "instructor/index";
     }
 
