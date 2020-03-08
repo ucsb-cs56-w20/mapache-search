@@ -9,7 +9,7 @@
       <div th:replace="/../fragments/bootstrap_head.html"></div>
       <div th:replace="/../fragments/bootstrap_nav_header.html"></div>
       <div class="container">
-        <p th:text="'Hello, ' + ${user.username} + '!'"></p>
+        <font size="5"> <p th:text="'Hello, ' + ${user.username} + '!'"></p></font>
       </div>
       <div class="container">
         <p>
@@ -31,29 +31,25 @@
                   <a th:text="${auth}"></a>
                 </div>
               -->
-      <div class="container" style="margin-top: 30px">
-        <h5>Number of API calls made today</h5>
-        <p style="color:red" th:text="${api_uses} + '/' + ${max_uses}"> </p>
-      </div>
+      <!-- <div class="container">
+        <p style="color:red" th:text="'Number of API calls: ' + ${api_uses} + '/' + ${max_uses}"> </p>
+      </div> -->
 
       <div class="container my-5">
         <form action="#" th:action="@{/user/settings/update/}"
           th:object="${user_template}" method="post">
-          <p>Your current Google API key is: <a th:utext="${user.apikey}"></a></p>
           <div class="form-group row">
-            <label for="apikey" class="col-form-label col-sm-2">Enter a new API
-              Key: </label>
             <input type="text" th:name="apikey" class="form-control col-sm-10"
               id="apikey" placeholder="Enter API Key" autofocus>
-          </div>
           <span th:if="${#fields.hasErrors('apikey')}" th:errors="*{apikey}"
             class="text-danger"></span>
-          <div>
             <input type="submit" class="btn btn-primary" value="Update API Key">
           </div>
         </form>
         <br>
         <p>Don't have an API key? <a href="https://developers.google.com/custom-search/v1/overview" target="_blank">Click here.</a></p>
+        <p>Your current Google API key is: <a th:utext="${user.apikey}"></a></p>
+        <p style="color:red" th:text="'Number of API calls: ' + ${api_uses} + '/' + ${max_uses}"> </p>
       </div>
       <div th:replace="/../fragments/bootstrap_scripts.html"></div>
     </div>
