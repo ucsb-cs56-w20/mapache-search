@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 
 @Controller
 public class InstructorController {
+
+    static final Logger logger = LoggerFactory.getLogger(InstructorController.class);
+
     @Autowired
     private UserRepository userRepository;
     
@@ -51,49 +54,37 @@ public class InstructorController {
         return "instructor/index";
     }   
     
-    @PostMapping("/instructor/delete/{uid}")
-    public String deleteViewer(@PathVariable("id") String uid, OAuth2AuthenticationToken token, Model model,
+    @PostMapping("/instructor/delete/{username}")
+    public String deleteViewer(@PathVariable("username") String username, OAuth2AuthenticationToken token, Model model,
             RedirectAttributes redirAttrs) {
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        if (!user.getIsInstructor()) {
+        /*if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/"; 
         }
-
-        AppUser appUser = userRepository.findByUid(uid).get(0);
-        if (appUser == null) {
-            redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
-        } else {
-            userRepository.findByUid(uid).get(0).setIsInstructor(false);
-            redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
-        }
+*/
+        userRepository.findByUsername(username).get(0).setIsInstructor(false);
+        redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
         model.addAttribute("newInstructor", new AppUser());
         model.addAttribute("appUsers", userRepository.findAll());
         return "redirect:/instructor/add_instructor";
     }
 
-    @PostMapping("/instructor/add")
-    public String addInstructor(@ModelAttribute AppUser instructor, BindingResult result, Model model,
+    @PostMapping("/instructor/add/{username}")
+    public String addInstructor(@PathVariable("username") String username, BindingResult result, Model model,
             RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
-        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
         
-         /* if (!user.getIsInstructor()) {
+        /*  if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
-        } */
+        }*/
         try{
-            /* AppUser appUser = userRepository.findByUid(instructor.getUid()).get(0); // This line makes add crash; needs to change */
-            String uid = user.getUid();
-            if (user.getIsInstructor()) {
-                redirAttrs.addFlashAttribute("alertDanger", "User " + uid + " is already an Instructor.");    
-                model.addAttribute("newInstructor", new AppUser());
-            } else {
-                user.setIsInstructor(true);
-                redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");    
-                model.addAttribute("newInstructor", instructor);
-            }
+            AppUser appUser = userRepository.findByUsername(username).get(0);
+            appUser.setIsInstructor(true);
+            redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");   
         }catch(NoSuchElementException e){
             redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
         }
@@ -101,8 +92,9 @@ public class InstructorController {
         return "redirect:/instructor/add_instructor";
     }
 
+
     @GetMapping("/instructor/add_instructor")
-    public String getaddInstructor(Model model, RedirectAttributes redirAttrs, OAuth2AuthenticationToken token){
+    public String getaddInstructor(Model model, RedirectAttributes redirAttrs, OAuth2AuthenticationToken token, AppUser newInstructor){
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         /* if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
