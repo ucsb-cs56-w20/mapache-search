@@ -105,8 +105,17 @@ public class InstructorController {
                     "You do not have permission to access that page");
             return "redirect:/";
         }
+        List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
+        int amountSearched = 0;
+        for(int pos = 0; pos < searchTermsList.size(); pos++) {
+            if (pos > 100) break;
+            SearchTerms searched = searchTermsList.get(pos);
+            amountSearched += searched.getCount();
+        }
+        model.addAttribute("searchCount",amountSearched);
         return "instructor/index";
     }
+
     @GetMapping("instructor/data")
     public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
@@ -117,6 +126,7 @@ public class InstructorController {
         }
         return "instructor/data_stub";
     }
+
     @GetMapping("instructor/upvotes")
     public String upvotes(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
@@ -125,8 +135,44 @@ public class InstructorController {
                     "You do not have permission to access that page");
             return "redirect:/";
         }
+        List<UserVote> upVoteList = voteRepository.findAll();
+        ArrayList<searchUpVotedWrapper> upVotedSearches = new ArrayList<>();
+        for(int pos = 0; pos < upVoteList.size(); pos++) {
+            if (pos > 100) break;
+            UserVote vote = upVoteList.get(pos);
+            upVotedSearches.add(new searchUpVotedWrapper(vote.getResult()));
+        }
+        Collections.sort(upVotedSearches);
+        int x = upVotedSearches.size();
+        model.addAttribute("upVotedSearchesSize",x);
+        model.addAttribute("upVotedSearches", upVotedSearches);
+
         return "instructor/upvote_page";
-    } */
+    }
+    
+    @GetMapping("instructor/popular_searches")
+    public String searches(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
+        ArrayList<searchedTermsWrapper> searchedTerms = new ArrayList<>();
+        for(int pos = 0; pos < searchTermsList.size(); pos++) {
+            if (pos > 100) break;
+            SearchTerms searched = searchTermsList.get(pos);
+            searchedTerms.add(new searchedTermsWrapper(searched));
+        }
+        Collections.sort(searchedTerms);
+        int x = searchedTerms.size();
+        model.addAttribute("searchedTermsSize",x);
+        model.addAttribute("searchedTerms", searchedTerms);
+
+        return "instructor/popular_searches";
+    }
+ */
     
     @PostMapping("/instructor/delete/{uid}")
     public String deleteViewer(@PathVariable("id") String uid, Model model,
