@@ -15,7 +15,9 @@ public interface ResultTagRepository extends CrudRepository<ResultTag, Long> {
     List<ResultTag> findById(long id);
     List<ResultTag> findByUser(AppUser user);
     List<ResultTag> findByTag(Tag tag);
-    List<ResultTag> findByUserAndResult(AppUser user, SearchResultEntity result);
     List<ResultTag> findByResult(SearchResultEntity result);
-    
+    List<ResultTag> findByUserAndResult(AppUser user, SearchResultEntity result);
+    List<ResultTag> findByUserAndResultAndTag(AppUser user, SearchResultEntity result, Tag tag);
+    List<ResultTag> findByUserOrderByTimestampAsc(AppUser user);
+    List<ResultTag> findByUserOrderByTimestampDesc(AppUser user);
 }

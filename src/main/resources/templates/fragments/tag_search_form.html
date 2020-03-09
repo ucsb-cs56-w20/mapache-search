@@ -10,6 +10,14 @@
                     <button class="btn btn-outline-primary" type="submit">Search</button>
                 </div>
             </div>
+
+            <div class="filer-checkboxes">
+                <h5> Filter by: </h5>
+                <input type="checkbox" class ="filter-checkbox" name="sortByAlphabetical" th:checked="${alphabetical}" value="alphabetical">
+                <span> Alphabetical </span>
+                <!--<input type="checkbox" class ="filter-checkbox" name="sortByArticles" var="articles">
+                <span> Number of articles </span>-->
+            </div>
         </div>
 
         <div class="container">
