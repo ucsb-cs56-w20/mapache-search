@@ -6,11 +6,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import java.util.Date;
+
 @Entity
 public class ResultTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private Date timestamp;
 
     @ManyToOne
     private Tag tag;
@@ -23,6 +27,9 @@ public class ResultTag {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public Date getTimestamp() { return timestamp; }
+    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 
     public Tag getTag() { return tag; }
     public void setTag(Tag tag) { this.tag = tag; }
