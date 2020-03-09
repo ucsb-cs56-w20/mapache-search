@@ -290,6 +290,7 @@ public class SearchController {
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
 
+
     public class ResultVoteWrapper implements Comparable<ResultVoteWrapper> {
         private Item googleResult;
         private SearchResultEntity dbResult;
