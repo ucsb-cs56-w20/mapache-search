@@ -14,6 +14,7 @@ public class UserVote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String searchQuery;
     private Date timestamp;
     private boolean upvote;
     @ManyToOne
@@ -38,10 +39,13 @@ public class UserVote {
     public SearchResultEntity getResult() { return result; }
     public void setResult(SearchResultEntity result) { this.result = result; }
 
+    public String getSearchQuery() {return searchQuery;}
+    public void setSearchQuery(String searchQuery) {this.searchQuery = searchQuery;}
+
     @Override
     public String toString() {
         return "UserVote [id=" + id + ", result=" + result + ", timestamp=" + timestamp + ", upvote=" + upvote
-                + ", user=" + user + "]";
+                + ", user=" + user + ", searchQuery=" + searchQuery + "]";
     }
 
 }
