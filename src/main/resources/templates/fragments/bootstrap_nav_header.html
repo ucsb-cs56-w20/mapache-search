@@ -2,8 +2,7 @@
 <!-- See https://getbootstrap.com/docs/4.0/components/navbar/ for documentation on how to adjust HTML below -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">Mapache Search</a>
-    <a class="navbar-brand" href= "/filter" >Filter Mapache Search</a>
-    <a class="navbar-brand" href="/tags">Tags</a>
+    
 
     <!-- Button to collapse/expand navbar when it doesn't fit on the screen-->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
@@ -12,6 +11,15 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href= "/filter" >Filter Mapache Search</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href= "/tags" >Tags</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href= "/searchStatistics" >Search Statistics</a>
+              </li>
               <li class="nav navbar-nav" th:if="${isLoggedIn} and (${isMember} or ${isAdmin})">
                 <a class="nav-link" href="/github/">GitHub</a>
               </li>
