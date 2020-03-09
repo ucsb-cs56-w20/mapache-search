@@ -1,6 +1,8 @@
 $(document).ready( function() {
     var $tagButtons = $(".tag-button-text"),
+        $tagItems = $(".tag-menu-item"),
         $voteButtons = $(".vb"),
+        $filterInput = $(".js-tag-filter-field"),
         $document = $(document),
         $currentDropdown;
 
@@ -18,6 +20,50 @@ $(document).ready( function() {
         if (!$target.closest(".tag-dropdown").length &&
             !$target.closest(".tag-button-text").length) {
             $currentDropdown.hide();
+        }
+    }
+
+    function toggleTag(e) {
+        if (e.button) return;
+
+        var $this = $(this);
+        var $tagName = $this.find(".tag-menu-item-name");
+        var $result = $this.closest(".searchresult-row");
+        var $vote = $result.find(".vote-info");
+
+        var tagName = $tagName[0].innerHTML;
+        var resultId = $vote.attr("id");
+        
+        $.ajax({
+            url: "../updateTags",
+            method: "GET",
+            data: {
+                tagName: tagName,
+                id: resultId,
+            }
+        }).done(function( html ) {
+            console.log(html);
+        });
+
+        var $check = $this.find(".tag-check");
+        $check.toggle();
+    }
+
+    function filterTags(e) {
+        var $this = $(this);
+        var $dropdown = $this.closest(".tag-dropdown");
+        var $items = $dropdown.find(".tag-menu-item");
+
+        var query = $this.val().toLowerCase().trim();
+        var $item, itemName, i;
+        for (i = 0; i < $items.length; i++) {
+            $item = $($items[i]);
+            itemName = $item.find('.tag-menu-item-name').text().toLowerCase().trim();
+            if (query != itemName.substring(0, query.length)) {
+                $item.hide();
+            } else {
+                $item.show();
+            }
         }
     }
 
@@ -65,7 +111,11 @@ $(document).ready( function() {
 
     $tagButtons.on("mousedown", showTagDropdown);
 
-    $voteButtons.on("click", updateVote);
-
     $document.on("mousedown", hideTagDropdown);
+
+    $tagItems.on("mousedown", toggleTag);
+
+    $filterInput.on("input", filterTags)
+
+    $voteButtons.on("click", updateVote);
 });
