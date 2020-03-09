@@ -139,33 +139,10 @@ public class HomePageController {
     @GetMapping("/searchStatistics")
     public String searchStats(Model model)
     {
-        List<SearchTerms> recent =  searchTermsRepository.findByOrderByCountDesc();
-        ArrayList<SearchTerms> searchQueryPopularity = new ArrayList<SearchTerms>();
-        // List<SearchTerms> popularity = searchTermsRepository.findByTimestampDesc(true);
-        for (int pos = 0; pos < 5; pos++)
-        {
-            if (pos == recent.size())
-            {
-                break;
-            }
-            searchQueryPopularity.add(recent.get(pos));
-        }
-        model.addAttribute("searchQueryPopularityList",searchQueryPopularity);
-        int size = searchQueryPopularity.size();
-        model.addAttribute("searchQueryPopularityListSize", size);
-        List<SearchTerms> recentDates =  searchTermsRepository.findByOrderByTimestampDesc();
-        ArrayList<SearchTerms> recentSearchesList = new ArrayList<SearchTerms>();
-        for (int pos = 0; pos < 5; pos++)
-        {
-            if (pos == recentDates.size())
-            {
-                break;
-            }
-            recentSearchesList.add(recentDates.get(pos));
-        }
-        model.addAttribute("recentSearchesList",recentSearchesList);
-        int recentSearchesListSize = searchQueryPopularity.size();
-        model.addAttribute("recentSearchesListSize", recentSearchesListSize);
+        List<SearchTerms> searchQueryPopularity = searchTermsRepository.findByOrderByCountDesc().subList(0,5);
+        model.addAttribute("searchQueryPopularity",searchQueryPopularity);
+        List<SearchTerms> recentSearches =  searchTermsRepository.findByOrderByTimestampDesc().subList(0,5);
+        model.addAttribute("recentSearches",recentSearches);
 
         return "searchStatistics";
     }
