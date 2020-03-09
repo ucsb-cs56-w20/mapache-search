@@ -16,12 +16,21 @@
             <div class="col-xs-12" style="height:50px;"></div>
             <h2 class="text-center">Search Statistics</h2>
 
-            <h3 class="text-center">Popular Searches </h3>
+            <h3 class="text-center">Popular Searches & Search Frequency</h3>
                 <table class = "table">
+                    <thead>
+                        <div th:if=" ${searchQueryPopularityListSize} != 0">
+                            <tr>
+                                <th>Search Query</th>
+                                <th>Search Frequency</th>
+                            </tr>
+                        </div>
+                    </thead>
                     <tbody>
                         <div th:if=" ${searchQueryPopularityListSize} != 0">
                             <tr th:each="f: ${searchQueryPopularityList}"> 
-                                <td><a th:text="${f}"></a></td>
+                                <td><a th:text="${f.getSearchTerms()}"></a></td>
+                                <td><a th:text="${f.getCount()}"></a></td>
                             </tr>
                         </div>
                         <div th:if=" ${searchQueryPopularityListSize} == 0">
@@ -30,12 +39,21 @@
                     </tbody>
                 </table>
 
-            <h3 class ="text-center"> Recent Searches</h4>
+            <h3 class ="text-center">Recent Searches & Time Searched</h3>
                 <table class = "table">
+                    <thead>
+                        <div th:if=" ${recentSearchesListSize} != 0">
+                            <tr>
+                                <th>Search Query</th>
+                                <th>Search Time</th>
+                            </tr>
+                        </div>
+                    </thead>
                     <tbody>
                         <div th:if=" ${recentSearchesListSize} != 0">
                             <tr th:each="f: ${recentSearchesList}"> 
-                                <td><a th:text="${f}"></a></td>
+                                <td><a th:text="${f.getSearchTerms()}"></a></td>
+                                <td><a th:text="${f.getTimestamp()}"></a></td>
                             </tr>
                         </div>
                         <div th:if=" ${recentSearchesListSize} == 0">

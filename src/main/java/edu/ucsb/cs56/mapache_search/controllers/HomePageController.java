@@ -140,7 +140,7 @@ public class HomePageController {
     public String searchStats(Model model)
     {
         List<SearchTerms> recent =  searchTermsRepository.findByOrderByCountDesc();
-        ArrayList<String> searchQueryPopularity = new ArrayList<String>();
+        ArrayList<SearchTerms> searchQueryPopularity = new ArrayList<SearchTerms>();
         // List<SearchTerms> popularity = searchTermsRepository.findByTimestampDesc(true);
         for (int pos = 0; pos < 5; pos++)
         {
@@ -148,21 +148,20 @@ public class HomePageController {
             {
                 break;
             }
-            searchQueryPopularity.add(recent.get(pos).getSearchTerms());
+            searchQueryPopularity.add(recent.get(pos));
         }
         model.addAttribute("searchQueryPopularityList",searchQueryPopularity);
         int size = searchQueryPopularity.size();
         model.addAttribute("searchQueryPopularityListSize", size);
         List<SearchTerms> recentDates =  searchTermsRepository.findByOrderByTimestampDesc();
-        ArrayList<String> recentSearchesList = new ArrayList<String>();
-        // List<SearchTerms> popularity = searchTermsRepository.findByTimestampDesc(true);
+        ArrayList<SearchTerms> recentSearchesList = new ArrayList<SearchTerms>();
         for (int pos = 0; pos < 5; pos++)
         {
             if (pos == recentDates.size())
             {
                 break;
             }
-            recentSearchesList.add(recentDates.get(pos).getSearchTerms());
+            recentSearchesList.add(recentDates.get(pos));
         }
         model.addAttribute("recentSearchesList",recentSearchesList);
         int recentSearchesListSize = searchQueryPopularity.size();
