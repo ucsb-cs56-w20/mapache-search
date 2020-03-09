@@ -59,6 +59,18 @@ public class InstructorController {
 
     @GetMapping("instructor/student_stats")
     public String data(Model model) {
+        List<AppUser> AppUserList = userRepository.findAll();
+        ArrayList<AppUserWrapper> AppUsers= new ArrayList<>();
+         for(int pos = 0; pos <AppUserList.size(); pos++) {
+            if (pos > 100) break;
+            AppUser user = AppUserList.get(pos);
+            AppUsers.add(new AppUserWrapper(user));
+        }
+        Collections.sort(AppUsers);
+        int x = AppUsers.size();
+        model.addAttribute("AppUsers",x);
+        model.addAttribute("AppUsers", AppUsers);
+
         return "instructor/student_stats";
     }
 
@@ -262,4 +274,20 @@ public class InstructorController {
         }
     }
 
+    public class AppUserWrapper implements Comparable<AppUserWrapper> {
+        private AppUser result;
+
+        public AppUserWrapper(AppUser result) {
+            this.result = result;
+        }
+
+        public AppUser getResult() {
+            return result;
+        }
+
+        public int compareTo(AppUserWrapper objSearch) {
+            return this.getResult().getUid().compareTo(objSearch.getResult().getUid());
+          
+        }
+    }
 }

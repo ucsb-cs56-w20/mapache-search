@@ -13,6 +13,7 @@
             <tr>
                 <th>Search Result</th>
                 <th>Vote Count</th>
+                <th>Click Count</th>
             </tr>
         </thead>
 				<tbody>
@@ -20,7 +21,7 @@
             
 						<tr th:each="f: ${upVotedSearches}"> 
 							<td><a th:href="${f.getResult().getLink()}" th:utext="${f.getResult().getHtmlTitle()}"></a> from <a th:href="${f.getResult().getDisplayLink()}" th:text="${f.getResult().getDisplayLink()}"></a> </td>
-							<td><a th:text="${f.getResult().getVotecount()}"></a></td>
+              <td><a th:text="${f.getResult().getVotecount()}"></a></td>
 						</tr>
           </div>
 				</tbody>

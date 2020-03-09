@@ -7,7 +7,29 @@
   <body>
     <div class="container">
       <div th:replace="fragments/bootstrap_nav_header.html"></div>
-      <h2 class="text-center">This is a STUB!!</h2>
+      <h2 class="text-center">Student Stats</h2>
+      <table class = "table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Number of Searches</th>
+                <th>Number of Clicks</th>
+                <th>Click per Search Ratio</th>
+            </tr>
+        </thead>
+				<tbody>
+					<div th:if=" ${AppUsers} != 0">
+            
+						<tr th:each="f: ${AppUsers}"> 
+							<td><a th:utext="${f.getResult().getUid()}"></a></td>
+							<td><a th:text="${f.getResult().getSearches()}"></a></td>
+						</tr>
+          </div>
+				</tbody>
+      </table>
+      <div th:if=" ${searchedTermsSize} == 0">
+        <h4 class = "text-center"> No searches made yet</h4>
+      </div>
       <div th:replace="fragments/bootstrap_footer.html"></div>
     </div>
     <div th:replace="fragments/bootstrap_scripts.html"></div>
