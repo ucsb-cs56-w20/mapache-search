@@ -139,34 +139,12 @@ public class HomePageController {
     @GetMapping("/searchStatistics")
     public String searchStats(Model model)
     {
-        List<SearchTerms> recent =  searchTermsRepository.findByOrderByCountDesc();
-        ArrayList<String> searchQueryPopularity = new ArrayList<String>();
-        // List<SearchTerms> popularity = searchTermsRepository.findByTimestampDesc(true);
-        for (int pos = 0; pos < 5; pos++)
-        {
-            if (pos == recent.size())
-            {
-                break;
-            }
-            searchQueryPopularity.add(recent.get(pos).getSearchTerms());
-        }
-        model.addAttribute("searchQueryPopularityList",searchQueryPopularity);
-        int size = searchQueryPopularity.size();
-        model.addAttribute("searchQueryPopularityListSize", size);
-        List<SearchTerms> recentDates =  searchTermsRepository.findByOrderByTimestampDesc();
-        ArrayList<String> recentSearchesList = new ArrayList<String>();
-        // List<SearchTerms> popularity = searchTermsRepository.findByTimestampDesc(true);
-        for (int pos = 0; pos < 5; pos++)
-        {
-            if (pos == recentDates.size())
-            {
-                break;
-            }
-            recentSearchesList.add(recentDates.get(pos).getSearchTerms());
-        }
-        model.addAttribute("recentSearchesList",recentSearchesList);
-        int recentSearchesListSize = searchQueryPopularity.size();
-        model.addAttribute("recentSearchesListSize", recentSearchesListSize);
+        List<SearchTerms> searchQueryPopularity = searchTermsRepository.findByOrderByCountDesc();
+        if (searchQueryPopularity.size() > 5) searchQueryPopularity = searchQueryPopularity.subList(0,5);
+        model.addAttribute("searchQueryPopularity",searchQueryPopularity);
+        List<SearchTerms> recentSearches =  searchTermsRepository.findByOrderByTimestampDesc();
+        if (recentSearches.size() > 5) recentSearches = recentSearches.subList(0,5);
+        model.addAttribute("recentSearches",recentSearches);
 
         return "searchStatistics";
     }

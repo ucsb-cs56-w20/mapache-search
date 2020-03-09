@@ -16,33 +16,45 @@
             <div class="col-xs-12" style="height:50px;"></div>
             <h2 class="text-center">Search Statistics</h2>
 
-            <h3 class="text-center">Popular Searches </h3>
-                <table class = "table">
+            <h4 class="text-center">Popular Searches</h4>
+                <table th:unless=" ${searchQueryPopularity.isEmpty()}" class="table">
+                    <thead>
+                        <tr>
+                            <th>Search Term</th>
+                            <th>Frequency</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <div th:if=" ${searchQueryPopularityListSize} != 0">
-                            <tr th:each="f: ${searchQueryPopularityList}"> 
-                                <td><a th:text="${f}"></a></td>
-                            </tr>
-                        </div>
-                        <div th:if=" ${searchQueryPopularityListSize} == 0">
-                            <h5 class = "text-center"> No search have been done</h5>
-                        </div>
+                        <tr th:each="f: ${searchQueryPopularity}"> 
+                            <td><a th:text="${f.getSearchTerms()}"></a></td>
+                            <td><a th:text="${f.getCount()}"></a></td>
+                        </tr>
+                        
                     </tbody>
                 </table>
-
-            <h3 class ="text-center"> Recent Searches</h4>
-                <table class = "table">
-                    <tbody>
-                        <div th:if=" ${recentSearchesListSize} != 0">
-                            <tr th:each="f: ${recentSearchesList}"> 
-                                <td><a th:text="${f}"></a></td>
+                <div th:if=" ${searchQueryPopularity.isEmpty()}">
+                    <h5 class = "text-center">No searches have been done</h5>
+                </div>
+            <h4 class ="text-center">Recent Searches</h4>
+                <table th:unless="${recentSearches.isEmpty()}" class="table">
+                    <thead>
+                        <div >
+                            <tr>
+                                <th>Search Term</th>
+                                <th>Most Recent Time</th>
                             </tr>
                         </div>
-                        <div th:if=" ${recentSearchesListSize} == 0">
-                            <h5 class = "text-center"> No search have been done</h5>
-                        </div>
+                    </thead>
+                    <tbody>
+                        <tr th:each="f: ${recentSearches}"> 
+                            <td><a th:text="${f.getSearchTerms()}"></a></td>
+                            <td><a th:text="${#dates.format(f.getTimestamp(), 'HH:mm MM/dd/yyyy')}"></a></td>
+                        </tr>
                     </tbody>
                 </table>
+                <div th:if="${recentSearches.isEmpty()}">
+                    <h5 class = "text-center">No searches have been done</h5>
+                </div>
  
 
 		<div th:replace="fragments/bootstrap_footer.html"></div>
