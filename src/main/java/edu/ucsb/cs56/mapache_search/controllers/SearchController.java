@@ -258,6 +258,7 @@ public class SearchController {
                 Collections.sort(addedTags, (t1, t2)->{
                     return t1.getName().toLowerCase().compareTo(t2.getName().toLowerCase());
                 });
+
                 otherTags.removeAll(addedTags);
                 voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted, addedTags, otherTags));
 
