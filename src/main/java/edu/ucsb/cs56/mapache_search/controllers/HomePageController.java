@@ -139,9 +139,11 @@ public class HomePageController {
     @GetMapping("/searchStatistics")
     public String searchStats(Model model)
     {
-        List<SearchTerms> searchQueryPopularity = searchTermsRepository.findByOrderByCountDesc().subList(0,5);
+        List<SearchTerms> searchQueryPopularity = searchTermsRepository.findByOrderByCountDesc();
+        if (searchQueryPopularity.size() > 5) searchQueryPopularity = searchQueryPopularity.subList(0,5);
         model.addAttribute("searchQueryPopularity",searchQueryPopularity);
-        List<SearchTerms> recentSearches =  searchTermsRepository.findByOrderByTimestampDesc().subList(0,5);
+        List<SearchTerms> recentSearches =  searchTermsRepository.findByOrderByTimestampDesc();
+        if (recentSearches.size() > 5) recentSearches = recentSearches.subList(0,5);
         model.addAttribute("recentSearches",recentSearches);
 
         return "searchStatistics";
