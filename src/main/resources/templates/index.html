@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 
 <head>
 	<title>Mapache Search - It's Spanish for "raccoon"</title>
@@ -10,29 +10,69 @@
 	<div class="container">
 		
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
+		<div class="col-xs-12" style="height:50px;"></div>
 		<h2 class="text-center">Mapache Search</h2>
-		<div th:replace="fragments/basic_search_form.html"></div>
-		<div th:replace="fragments/bootstrap_scripts.html"></div>
-		
+
+		<div class="col-xs-12" style="height:50px;"></div>
+		<span th:unless="${isLoggedIn}">
+			  
+			<div class="card-deck">
+				<div class="card text-center border-primary" style="width: 18rem;">
+					<div class="card-body">
+					  <h5 class="card-title">Students</h5>
+					  <p class="card-text">Students can use the app to search for and share helpful resources with their class.</p>
+					</div>
+				  </div>
+	
+
+				  <div class="card text-center border-primary" style="width: 18rem;">
+					<div class="card-body">
+					  <h5 class="card-title">Instructors</h5>
+					  <p class="card-text">Instructors can monitor the types of searchers that students are performing, and point them in the right direction.</p>
+					</div>
+				  </div>	
+
+				  <div class="card text-center border-primary" style="width: 18rem;">
+					<div class="card-body">
+					  <h5 class="card-title">Researchers</h5>
+					  <p class="card-text">Researchers can use the data from Mapache Search to study metacognition - in particular, the way students formulate questions.</p>
+
+					  <button type="button" class="btn btn-outline-black and-all-other-classes"> 
+						<a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1915198&amp;HistoricalAwards=false" style="color:primary"> Read More About the Research Project </a>
+						</button>
+
+					</div>
+				  </div>	
+			</div>
+		</span>
+
+
+		<span th:if="${isLoggedIn}">
+			<div th:replace="fragments/basic_search_form.html"></div>
+
+			<h3 class="text-center">Recently Upvoted Link </h3>
+			<table class = "table">
+				<tbody>
+					<!-- If there is no upvoted links then nothing will be printed out -->
+					<div th:if=" ${upVoteLinksSize} == 0">
+						<h4 class = "text-center"> No upvoted link</h4>
+					</div>
+					<!-- If there is any links that have been upvote, it will be printed out in a table format shown here -->
+					<div th:if=" ${upVoteLinksSize} != 0">
+						<tr th:each="f: ${upVoteLinks}"> 
+							<td><a th:href="${f.srEntity.getLink()}" th:utext="${f.srEntity.getHtmlTitle()}"></a> from <a th:href="${f.srEntity.getDisplayLink()}" th:text="${f.srEntity.getDisplayLink()}"></a> </td>
+							<td><a th:text="${f.numUpvotes}"></a></td>
+						</tr>
+					</div>
+				</tbody>
+			</table>
+		</span>
+		<div th:replace="fragments/bootstrap_footer.html"></div>
+
 		<!-- <div th:replace="fragments/bootstrap_footer.html"></div> -->
-		<!-- <div th:replace="fragments/bootstrap_scripts.html"></div> -->
-    </div>
-	<h3 class="text-center">Recently Upvoted Link </h3>
-	<table class = "table">
-		<tbody>
-			<!-- If there is no upvoted links then nothing will be printed out -->
-			<div th:if=" ${upVoteLinksSize} == 0">
-				<h4 class = "text-center"> No upvoted link</h4>
-			</div>
-			<!-- If there is any links that have been upvote, it will be printed out in a table format shown here -->
-			<div th:if=" ${upVoteLinksSize} != 0">
-				<tr th:each="f: ${upVoteLinks}"> 
-					<td><a th:href="${f}" th:text="${f}"></a></td>
-				</tr>
-			</div>
-		</tbody>
-	</table>
-	<div th:replace="fragments/bootstrap_footer.html"></div>
+		<div th:replace="fragments/bootstrap_scripts.html"></div>
+	</div>
+	
 
 </body>
 </html>

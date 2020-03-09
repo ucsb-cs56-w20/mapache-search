@@ -17,7 +17,37 @@
   <th:block th:replace="fragments/result_preview :: styles"></th:block>
 </th:block>
 <div class="card searchresult-row p-4 my-2 d-flex flex-row" th:fragment="row (item, query, iterStat)" th:id="${'searchresult-' + iterStat.index}">
-  <div class="d-flex flex-column mr-3 align-items-center vote-info" th:id="${result.getDBResult().getId()}" th:attr="data-url=${result.getDBResult().getUrl()}">
+  <div class="tag-dropdown" style="display: none;" th:id="${'tagdropdown-' + iterStat.index}">
+    <div class="tag-menu-header">
+      <span class="tag-menu-title">Add tags to this result</span>
+    </div>
+    <div class="tag-menu-filters">
+      <div class="tag-menu-text-filter">
+        <input type="text" class="js-tag-filter-field" placeholder="Filter tags" aria-label="Filter tags" autocomplete="off" autofocus>
+      </div>
+    </div>
+    <div class="tag-menu-content">
+      <div class="tag-menu-list">
+        <div th:each="tag : ${result.getAddedTags()}" class="tag-menu-item">
+          <div class="tag-menu-item-checked">
+            <i class="fas fa-check tag-check"></i>
+          </div>
+          <div class="tag-menu-item-text">
+            <span class="tag-menu-item-name" th:text="${tag.name}"></span>
+          </div>
+        </div>
+        <div th:each="tag : ${result.getOtherTags()}" class="tag-menu-item">
+          <div class="tag-menu-item-checked">
+            <i class="fas fa-check tag-check" style="display: none;"></i>
+          </div>
+          <div class="tag-menu-item-text">
+            <span class="tag-menu-item-name" th:text="${tag.name}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex flex-column mr-3 align-items-center vote-info" th:id="${result.getDBResult().getId()}" th:attr="data-url=${result.getDBResult().getLink()}">
       <span class="vb vb-up" th:classappend="${result.hasUpvoted()} ? vb-clicked : vb">
           <i class="far fa-thumbs-up"></i>
       </span>
@@ -37,7 +67,7 @@
       ></a>
       <div class="tag-button-col flex-column">
         <div class="d-flex flex-row justify-content-end">
-          <span class="h6 tag-button-text">Add Tag
+          <span class="h6 tag-button-text" th:id="${'tagbutton-' + iterStat.index}">Add Tag
             <button class="h6 tag-button"> + </button>
           </span>
         </div>
