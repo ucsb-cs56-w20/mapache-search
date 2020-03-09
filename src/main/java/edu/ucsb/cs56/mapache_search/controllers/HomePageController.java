@@ -13,10 +13,12 @@ import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.entities.ResultTag;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
@@ -88,6 +90,9 @@ public class HomePageController {
     private PreviewProviderService previewService;
 
     @Autowired
+    private SearchTermsRepository searchTermsRepository;
+
+    @Autowired
     public HomePageController(SearchResultRepository searchRepository) {
         this.searchRepository = searchRepository;
     }
@@ -129,6 +134,41 @@ public class HomePageController {
         //Adding the upvote links to a model
         model.addAttribute("upVoteLinks", upVoteLinks);
         return "index";
+    }
+
+    @GetMapping("/searchStatistics")
+    public String searchStats(Model model)
+    {
+        List<SearchTerms> recent =  searchTermsRepository.findByOrderByCountDesc();
+        ArrayList<String> searchQueryPopularity = new ArrayList<String>();
+        // List<SearchTerms> popularity = searchTermsRepository.findByTimestampDesc(true);
+        for (int pos = 0; pos < 5; pos++)
+        {
+            if (pos == recent.size())
+            {
+                break;
+            }
+            searchQueryPopularity.add(recent.get(pos).getSearchTerms());
+        }
+        model.addAttribute("searchQueryPopularityList",searchQueryPopularity);
+        int size = searchQueryPopularity.size();
+        model.addAttribute("searchQueryPopularityListSize", size);
+        List<SearchTerms> recentDates =  searchTermsRepository.findByOrderByTimestampDesc();
+        ArrayList<String> recentSearchesList = new ArrayList<String>();
+        // List<SearchTerms> popularity = searchTermsRepository.findByTimestampDesc(true);
+        for (int pos = 0; pos < 5; pos++)
+        {
+            if (pos == recentDates.size())
+            {
+                break;
+            }
+            recentSearchesList.add(recentDates.get(pos).getSearchTerms());
+        }
+        model.addAttribute("recentSearchesList",recentSearchesList);
+        int recentSearchesListSize = searchQueryPopularity.size();
+        model.addAttribute("recentSearchesListSize", recentSearchesListSize);
+
+        return "searchStatistics";
     }
 
     @GetMapping("/filter")

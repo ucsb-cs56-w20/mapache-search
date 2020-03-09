@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+
+
+    <head>
+        <title>Search Statistics</title>
+        <div th:replace="fragments/bootstrap_head.html"></div>
+        <th:block th:replace="fragments/result_row :: styles"></th:block>
+    </head>
+
+    <body>
+        <div class="container">
+            <div th:replace="fragments/bootstrap_nav_header.html"></div>
+            <div class="col-xs-12" style="height:50px;"></div>
+            <h2 class="text-center">Search Statistics</h2>
+
+            <h3 class="text-center">Popular Searches </h3>
+                <table class = "table">
+                    <tbody>
+                        <div th:if=" ${searchQueryPopularityListSize} != 0">
+                            <tr th:each="f: ${searchQueryPopularityList}"> 
+                                <td><a th:text="${f}"></a></td>
+                            </tr>
+                        </div>
+                        <div th:if=" ${searchQueryPopularityListSize} == 0">
+                            <h5 class = "text-center"> No search have been done</h5>
+                        </div>
+                    </tbody>
+                </table>
+
+            <h3 class ="text-center"> Recent Searches</h4>
+                <table class = "table">
+                    <tbody>
+                        <div th:if=" ${recentSearchesListSize} != 0">
+                            <tr th:each="f: ${recentSearchesList}"> 
+                                <td><a th:text="${f}"></a></td>
+                            </tr>
+                        </div>
+                        <div th:if=" ${recentSearchesListSize} == 0">
+                            <h5 class = "text-center"> No search have been done</h5>
+                        </div>
+                    </tbody>
+                </table>
+ 
+
+		<div th:replace="fragments/bootstrap_footer.html"></div>
+		<div th:replace="fragments/bootstrap_scripts.html"></div>
+	</div>
+    </body>
+    
+</html>
+
