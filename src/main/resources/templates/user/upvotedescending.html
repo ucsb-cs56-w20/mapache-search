@@ -18,7 +18,8 @@
 					<div th:if=" ${userVotes.size()} != 0">
 						<tr th:each="f: ${userVotes}"> 
 							<td align="left"><a th:href="${f.getResult().getLink()}" th:text="${f.getResult().getLink()}"></a></td>
-						</tr>
+                            <td align="left" th:text="${f.getTimestamp()}"></td>
+                        </tr>
 					</div>
 				</tbody>
 			</table>
