@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.entities.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -108,13 +109,18 @@ public class AuthControllerAdvice {
     }
 
     @ModelAttribute("getTeams")
-    public List<String> getTeams(OAuth2AuthenticationToken token) {
+    public List<GitHubTeam> getTeams(OAuth2AuthenticationToken token) {
        return membershipService.getTeams(token);
     }
 
     @ModelAttribute("getProjectOrg")
     public String getGetProjectOrg() {
        return membershipService.getProjectOrg();
+    }
+
+    @ModelAttribute("getOpenPullRequests")
+    public List<GitHubOpenPRs> getOpenPullRequests(OAuth2AuthenticationToken token) {
+       return membershipService.getOpenPullRequests(token);
     }
 
     @ModelAttribute("role")
