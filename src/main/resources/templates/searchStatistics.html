@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+
+
+    <head>
+        <title>Search Statistics</title>
+        <div th:replace="fragments/bootstrap_head.html"></div>
+        <th:block th:replace="fragments/result_row :: styles"></th:block>
+    </head>
+
+    <body>
+        <div class="container">
+            <div th:replace="fragments/bootstrap_nav_header.html"></div>
+            <div class="col-xs-12" style="height:50px;"></div>
+            <h2 class="text-center">Search Statistics</h2>
+
+            <h4 class="text-center">Popular Searches</h4>
+                <table th:unless=" ${searchQueryPopularity.isEmpty()}" class="table">
+                    <thead>
+                        <tr>
+                            <th>Search Term</th>
+                            <th>Frequency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="f: ${searchQueryPopularity}"> 
+                            <td><a th:text="${f.getSearchTerms()}"></a></td>
+                            <td><a th:text="${f.getCount()}"></a></td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+                <div th:if=" ${searchQueryPopularity.isEmpty()}">
+                    <h5 class = "text-center">No searches have been done</h5>
+                </div>
+            <h4 class ="text-center">Recent Searches</h4>
+                <table th:unless="${recentSearches.isEmpty()}" class="table">
+                    <thead>
+                        <div >
+                            <tr>
+                                <th>Search Term</th>
+                                <th>Most Recent Time</th>
+                            </tr>
+                        </div>
+                    </thead>
+                    <tbody>
+                        <tr th:each="f: ${recentSearches}"> 
+                            <td><a th:text="${f.getSearchTerms()}"></a></td>
+                            <td><a th:text="${#dates.format(f.getTimestamp(), 'HH:mm MM/dd/yyyy')}"></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div th:if="${recentSearches.isEmpty()}">
+                    <h5 class = "text-center">No searches have been done</h5>
+                </div>
+ 
+
+		<div th:replace="fragments/bootstrap_footer.html"></div>
+		<div th:replace="fragments/bootstrap_scripts.html"></div>
+	</div>
+    </body>
+    
+</html>
+
