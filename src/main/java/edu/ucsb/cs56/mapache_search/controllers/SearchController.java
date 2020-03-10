@@ -161,10 +161,11 @@ public class SearchController {
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long
 
-        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        u.setSearches(searches);
+       AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        if (apiKey == "") {     u.setSearches(0l);  }
+        else {       u.setSearches(searches);        }
         userRepository.save(u);
-
+      
         SearchQueries searchQueries = new SearchQueries();
         searchQueries.setUid(u.getUid());
         searchQueries.setTimestamp(new Date());
@@ -192,10 +193,10 @@ public class SearchController {
             searchQueries.setId(searchTerm.getId());
             logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
         }
-
+      
         searchQueriesRepository.save(searchQueries);
         logger.info("uid is:" + searchQueries.getUid() + ", time stamp is: " + searchQueries.getTimestamp() + ", and Id of query is: " + searchQueries.getId());
-        
+       
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){
@@ -274,6 +275,7 @@ public class SearchController {
         model.addAttribute("previousSearch", params.getQuery());
 
         if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
+
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
 
