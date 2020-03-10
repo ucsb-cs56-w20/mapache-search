@@ -11,9 +11,10 @@
 		<div th:replace="fragments/bootstrap_nav_header.html"></div>
 		<h2 class="text-center">Tags</h2>
 
-		
 		<div th:replace="fragments/tag_creation_form.html"></div>
 
+		<div th:replace="fragments/tag_search_form.html"></div>
+		
 		<h4>All tags</h4>
 		<h5>
 			<a href="#" th:each="t: ${tags}" th:text=${t.name} class="badge badge-primary badge-pill m-2"></a>
@@ -23,6 +24,7 @@
 		<div th:replace="fragments/bootstrap_footer.html"></div>
 	</div>
 	<div th:replace="fragments/bootstrap_scripts.html"></div>
+	<script src="/static/js/tags.js" th:src="@{/js/tags.js}"></script>
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 package edu.ucsb.cs56.mapache_search.repositories;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -14,9 +15,10 @@ import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 public interface SearchTermsRepository extends CrudRepository<SearchTerms, Long> {
     List<SearchTerms> findAll();
     SearchTerms findOneBySearchTerms(String searchTerms);
-
+    List<SearchTerms> findByOrderByCountDesc();
+    List<SearchTerms> findByOrderByTimestampDesc();
     
-};
+}
 
 
 
