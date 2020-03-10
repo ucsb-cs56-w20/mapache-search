@@ -13,10 +13,12 @@ import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.entities.ResultTag;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
@@ -88,6 +90,9 @@ public class HomePageController {
     private PreviewProviderService previewService;
 
     @Autowired
+    private SearchTermsRepository searchTermsRepository;
+
+    @Autowired
     public HomePageController(SearchResultRepository searchRepository) {
         this.searchRepository = searchRepository;
     }
@@ -129,6 +134,19 @@ public class HomePageController {
         //Adding the upvote links to a model
         model.addAttribute("upVoteLinks", upVoteLinks);
         return "index";
+    }
+
+    @GetMapping("/searchStatistics")
+    public String searchStats(Model model)
+    {
+        List<SearchTerms> searchQueryPopularity = searchTermsRepository.findByOrderByCountDesc();
+        if (searchQueryPopularity.size() > 5) searchQueryPopularity = searchQueryPopularity.subList(0,5);
+        model.addAttribute("searchQueryPopularity",searchQueryPopularity);
+        List<SearchTerms> recentSearches =  searchTermsRepository.findByOrderByTimestampDesc();
+        if (recentSearches.size() > 5) recentSearches = recentSearches.subList(0,5);
+        model.addAttribute("recentSearches",recentSearches);
+
+        return "searchStatistics";
     }
 
     @GetMapping("/filter")

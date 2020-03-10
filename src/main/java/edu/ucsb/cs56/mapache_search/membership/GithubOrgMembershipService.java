@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import edu.ucsb.cs56.mapache_search.entities.GitHubTeam;
+import edu.ucsb.cs56.mapache_search.entities.GitHubOpenPRs;
+import edu.ucsb.cs56.mapache_search.entities.GitHubRepos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,8 +192,8 @@ public class GithubOrgMembershipService implements MembershipService {
         return githubOrg;
     }
 
-    public List<String> getTeams(final OAuth2AuthenticationToken oauthToken){
-        final List<String> teams = new ArrayList<String>();
+    public List<GitHubTeam> getTeams(final OAuth2AuthenticationToken oauthToken){
+        final List<GitHubTeam> teams = new ArrayList<GitHubTeam>();
 
         //Lots of code reuse with hasRole, could generalize
         if (oauthToken == null) {
@@ -246,7 +248,7 @@ public class GithubOrgMembershipService implements MembershipService {
             //You could build this to use the rest of the data if you wanted more than the names
             for (GitHubTeam gitHubTeam : teamArray) {
                 logger.info(user + " is part of team: " +gitHubTeam.name);
-                teams.add(gitHubTeam.name);
+                teams.add(gitHubTeam);
             }
         }
         catch(final Exception e){
@@ -257,5 +259,139 @@ public class GithubOrgMembershipService implements MembershipService {
         return teams;
     }
 
+    //api.github.com/repos/:owner/:repo/pulls gives all open PRs for that repo by default
+    //need to loop through all repos user is in, currently hardcoded for just mapache search
+    public List<GitHubOpenPRs> getOpenPullRequests(final OAuth2AuthenticationToken oauthToken){
+        final List<GitHubOpenPRs> openPullRequests = new ArrayList<GitHubOpenPRs>();
 
+        if (oauthToken == null) {
+            return openPullRequests;
+        }
+
+        final OAuth2User oAuth2User = oauthToken.getPrincipal();
+        final String user = (String) oAuth2User.getAttributes().get("login");
+
+        Github github = null;
+
+        if (clientService == null) {
+            logger.error(String.format("unable to obtain autowired clientService"));
+            return openPullRequests;
+        }
+        final OAuth2AuthorizedClient client = clientService
+                .loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), oauthToken.getName());
+
+        if (client == null) {
+            logger.info(String.format("clientService was not null but client returned was null for user %s", user));
+            return openPullRequests;
+        }
+
+        final OAuth2AccessToken token = client.getAccessToken();
+
+        if (token == null) {
+            logger.info(String.format("client for %s was not null but getAccessToken returned null", user));
+            return openPullRequests;
+        }
+        final String accessToken = token.getTokenValue();
+        if (accessToken == null) {
+            logger.info(String.format("token was not null but getTokenValue returned null for user %s", user));
+            return openPullRequests;
+        }
+
+        github = new RtGithub(new RtGithub(accessToken).entry().through(RetryCarefulWire.class, 50));
+        List<String> repos = getRepos(oauthToken);
+        for(String repo : repos){
+            final String path = String.format("/repos/"+repo+"/pulls");
+            try{
+                //GET /repos/:owner/:repo/pulls
+                final JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
+                        .as(JsonResponse.class);
+
+                logger.info("jr =" + jr);
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+                //Read the Json data as a list of teams
+                List<GitHubOpenPRs> openPullRequestsArray = objectMapper.readValue(jr.body(), new TypeReference<List<GitHubOpenPRs>>(){});
+
+                //You could build this to use the rest of the data if you wanted more than the names
+                for (GitHubOpenPRs gitHubOpenPR : openPullRequestsArray) {
+                    logger.info(user + " has open pull request " + gitHubOpenPR.title);
+                    openPullRequests.add(gitHubOpenPR);
+                }
+            }
+            catch(final Exception e){
+                logger.error("Exception happened while trying to get teams of user");
+                logger.error("Exception", e);
+            }
+        }
+        return openPullRequests;
+    }
+
+    //helper for getOpenPullRequests, could pretty easily be displayed on github/index.html too though
+    public List<String> getRepos(final OAuth2AuthenticationToken oauthToken){
+        final List<String> Repos = new ArrayList<String>();
+
+        if (oauthToken == null) {
+            return Repos;
+        }
+
+        final OAuth2User oAuth2User = oauthToken.getPrincipal();
+        final String user = (String) oAuth2User.getAttributes().get("login");
+
+        Github github = null;
+
+        if (clientService == null) {
+            logger.error(String.format("unable to obtain autowired clientService"));
+            return Repos;
+        }
+        final OAuth2AuthorizedClient client = clientService
+                .loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), oauthToken.getName());
+
+        if (client == null) {
+            logger.info(String.format("clientService was not null but client returned was null for user %s", user));
+            return Repos;
+        }
+
+        final OAuth2AccessToken token = client.getAccessToken();
+
+        if (token == null) {
+            logger.info(String.format("client for %s was not null but getAccessToken returned null", user));
+            return Repos;
+        }
+        final String accessToken = token.getTokenValue();
+        if (accessToken == null) {
+            logger.info(String.format("token was not null but getTokenValue returned null for user %s", user));
+            return Repos;
+        }
+
+        github = new RtGithub(new RtGithub(accessToken).entry().through(RetryCarefulWire.class, 50));
+
+        final String path = String.format("/user/repos");
+        try{
+            //GET /user/repos
+            final JsonResponse jr = github.entry().uri().path(path).back().method(Request.GET).fetch()
+                    .as(JsonResponse.class);
+
+            logger.info("jr =" + jr);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            //Read the Json data as a list of teams
+            List<GitHubRepos> ReposArray = objectMapper.readValue(jr.body(), new TypeReference<List<GitHubRepos>>(){});
+
+            //You could build this to use the rest of the data if you wanted more than the names
+            for (GitHubRepos gitHubRepos : ReposArray) {
+                logger.info(user + " has repo " + gitHubRepos.full_name);
+                Repos.add(gitHubRepos.full_name);
+            }
+        }
+        catch(final Exception e){
+            logger.error("Exception happened while trying to get teams of user");
+            logger.error("Exception", e);
+        }
+
+        return Repos;
+    }
 }
