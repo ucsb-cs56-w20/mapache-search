@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <div th:replace="fragments/bootstrap_nav_header.html"></div>
-        <h1 class="text-center">Add New Instructor</h1>
+        <h1>Add New Instructor</h1>
 
     <table class="table table-striped">
        <thead>
@@ -23,17 +23,14 @@
            <tr th:each="a: ${appUsers}">
               <td th:text="${a.username}"></td>
               <td th:if="${a.isInstructor}">
-                 <form th:action="@{/instructor/delete/{username}(username=${a.username})}" th:method="post">
+                 <form th:action="@{/instructor/delete/{username}(username=${a.username})}" th:method="post" th:object="${newInstructor}">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <button type="submit" class="btn btn-danger">Delete</button>
                  </form>
-                 <td th:if="${!a.isInstructor}">
-                  <form th:action="@{/instructor/add/{username}(username=${a.username})}" th:method="post">
+               <td th:if="${!a.isInstructor}">
+                  <form th:action="@{/instructor/add/{username}(username=${a.username})}" th:method="post" th:object="${newInstructor}">
                      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                      <button type="submit" class="btn btn-primary">Add</button>
-                  </form>
- 
-
               </td>
            </tr>
         </tbody>

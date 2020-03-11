@@ -55,16 +55,17 @@ public class InstructorController {
     }   
     
     @PostMapping("/instructor/delete/{username}")
-    public String deleteViewer(@PathVariable("username") String username, OAuth2AuthenticationToken token, Model model,
-            RedirectAttributes redirAttrs) {
-        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+    public String deleteViewer(@PathVariable("username") String username, Model model,
+            RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
+        AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
         /*if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/"; 
         }
 */
-        userRepository.findByUsername(username).get(0).setIsInstructor(false);
+        AppUser appUser = userRepository.findByUsername(username).get(0);
+        appUser.setIsInstructor(false);
         redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
         model.addAttribute("newInstructor", new AppUser());
         model.addAttribute("appUsers", userRepository.findAll());
@@ -72,22 +73,20 @@ public class InstructorController {
     }
 
     @PostMapping("/instructor/add/{username}")
-    public String addInstructor(@PathVariable("username") String username, BindingResult result, Model model,
+    public String addInstructor(@PathVariable("username") String username, Model model,
             RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
         AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
-        
         /*  if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
         }*/
-        try{
-            AppUser appUser = userRepository.findByUsername(username).get(0);
-            appUser.setIsInstructor(true);
-            redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");   
-        }catch(NoSuchElementException e){
-            redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
-        }
+        AppUser appUser = userRepository.findByUsername(username).get(0);
+        appUser.setIsInstructor(true);
+        redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");   
+        //catch(NoSuchElementException e){
+        // redirAttrs.addFlashAttribute("alertDanger", "Instructor with that username does not exist."); }
+        model.addAttribute("newInstructor", new AppUser());
         model.addAttribute("appUsers", userRepository.findAll());
         return "redirect:/instructor/add_instructor";
     }
