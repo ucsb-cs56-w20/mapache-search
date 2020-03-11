@@ -54,7 +54,9 @@ public class LinkController {
 	} else {
 	    return signInError.loginError();
 	}*/
-    public String redirect(@RequestParam(name = "url", required = true) String url) {
+    //public String redirect(@RequestParam(name = "url", required = true) String url) {
+    public String redirect(@RequestParam(name = "url", required = true) String url, OAuth2AuthenticationToken token) {
+
 	
 	AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         
