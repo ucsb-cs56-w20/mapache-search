@@ -1,5 +1,6 @@
 package edu.ucsb.cs56.mapache_search.controllers;
 
+import edu.ucsb.cs56.mapache_search.utils.RestTicketClient;
 import edu.ucsb.cs56.mapache_search.preview.PreviewProviderService;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.search.SearchObject;
@@ -157,10 +158,11 @@ public class SearchController {
         model.addAttribute("searchParams", params);
 
         String apiKey = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getApikey();
+         RestTicketClient ticketClient = new RestTicketClient(apiKey);
         Long searches = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getSearches() + 1l;
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long
-
+        
        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
         if (apiKey == "") {     u.setSearches(0l);  }
         else {       u.setSearches(searches);        }
