@@ -55,8 +55,10 @@ public class LinkController {
 	    return signInError.loginError();
 	}*/
     public String redirect(@RequestParam(name = "url", required = true) String url) {
-	    
-        Link userLink = new Link();
+	
+	AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        
+	Link userLink = new Link();
         userLink.setUserId(user);
         userLink.setUrl(url);
         userLink.setTimestamp(new Date());
