@@ -22,11 +22,11 @@ public class LinkController {
 
     private Logger logger = LoggerFactory.getLogger(SearchController.class);
 
-    @Autowired
-    private AuthControllerAdvice controllerAdvice;
+   // @Autowired
+   // private AuthControllerAdvice controllerAdvice;
 
-    @Autowired
-    private BasicErrorController signInError;
+   // @Autowired
+   // private BasicErrorController signInError;
 
     @Autowired
     private LinkRepository linkRepository;
@@ -35,10 +35,9 @@ public class LinkController {
     private UserRepository userRepository;
     
     @GetMapping("/link")
+	/*
     public String redirect(@RequestParam(name = "url", required = true) String url, OAuth2AuthenticationToken token) {
         logger.info("Redirecting to: "  + url);
-
-    
     
 	if (controllerAdvice.getIsAdmin(token) || controllerAdvice.getIsMember(token)) {
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
@@ -54,6 +53,17 @@ public class LinkController {
 	    return "redirect:" + url;
 	} else {
 	    return signInError.loginError();
-	}
+	}*/
+    public String redirect(@RequestParam(name = "url", required = true) String url) {
+	    
+        Link userLink = new Link();
+        userLink.setUserId(user);
+        userLink.setUrl(url);
+        userLink.setTimestamp(new Date());
+
+        linkRepository.save(userLink);
+
+        logger.info("Redirecting to: "  + url);
+	return "redirect:" + url;
     }
 }
