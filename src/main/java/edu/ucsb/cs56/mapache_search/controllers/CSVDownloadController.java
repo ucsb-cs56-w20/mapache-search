@@ -15,6 +15,8 @@ import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
+import edu.ucsb.cs56.mapache_search.repositories.ResultTagRepository;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -52,14 +54,18 @@ public class CSVDownloadController {
     }
 
     @Autowired
-    private SearchResultRepository searchResultRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private ResultTagRepository resultTagRepository;
+
+    
     @GetMapping("/UserTagHistory")
-    public void downloadCSV(HttpServletResponse response) throws IOException {
+    public void downloadUserCSV(HttpServletResponse response) throws IOException {
         response.setContentType("UserTagHistory/csv");
         response.setHeader("Content-Disposition", "attachment; file=UserTagHistory.csv");
 
 
-        MapachetoCSV.UserwriteSections(response.getWriter(),searchResultRepository);
+        MapachetoCSV.UserwriteSections(response.getWriter(),userRepository,resultTagRepository);
     }
 
 }

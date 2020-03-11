@@ -27,12 +27,18 @@
           <td><a th:text="${searchCount}"></a></td>
       </tbody>
     </table>
+    
+    <div align="left" style="float:left">
     <form action="#" data-th-action="@{/VoteHistory}" data-th-object="${model}" method="get">
       <button type="submit" name="Download" class="btn btn-primary">Download VoteHistory CSV</button>
-    </form>    
+    </form>
+    </div>
+  
+    <div align="right">    
     <form action="#" data-th-action="@{/UserTagHistory}" data-th-object="${model}" method="get">
       <button type="submit" name="Download" class="btn btn-primary">Download User TagHistory CSV</button>
     </form>
+    </div>
       <div th:replace="fragments/bootstrap_footer.html"></div>
     </div>
     <div th:replace="fragments/bootstrap_scripts.html"></div>

@@ -93,31 +93,31 @@ public class InstructorController {
     @GetMapping("instructor")
     public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
-        if (!role.equals("Admin")) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        }
+        // if (!role.equals("Admin")) {
+        //     redirAttrs.addFlashAttribute("alertDanger",
+        //             "You do not have permission to access that page");
+        //     return "redirect:/";
+        // }
         return "instructor/index";
     }
     @GetMapping("instructor/data")
     public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
-        if (!role.equals("Admin")) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        }
+        // if (!role.equals("Admin")) {
+        //     redirAttrs.addFlashAttribute("alertDanger",
+        //             "You do not have permission to access that page");
+        //     return "redirect:/";
+        // }
         return "instructor/data_stub";
     }
     @GetMapping("instructor/upvotes")
     public String upvotes(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
-        if (!role.equals("Admin")) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        }
+        // if (!role.equals("Admin")) {
+        //     redirAttrs.addFlashAttribute("alertDanger",
+        //             "You do not have permission to access that page");
+        //     return "redirect:/";
+        // }
         return "instructor/upvote_page";
     }
     
@@ -125,11 +125,11 @@ public class InstructorController {
     public String deleteViewer(@PathVariable("id") String uid, OAuth2AuthenticationToken token, Model model,
             RedirectAttributes redirAttrs) {
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        if (!user.getIsInstructor()) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/"; 
-        }
+        // if (!user.getIsInstructor()) {
+        //     redirAttrs.addFlashAttribute("alertDanger",
+        //             "You do not have permission to access that page");
+        //     return "redirect:/"; 
+        // }
 
         AppUser appUser = userRepository.findByUid(uid).get(0);
         if (appUser == null) {
