@@ -99,13 +99,10 @@ public class HomePageController {
     private SearchTermsRepository searchTermsRepository;
 
     @Autowired
-<<<<<<< HEAD
     private SearchQueriesRepository searchQueriesRepository;
 
 
     @Autowired
-=======
->>>>>>> origin
     public HomePageController(SearchResultRepository searchRepository) {
         this.searchRepository = searchRepository;
     }
