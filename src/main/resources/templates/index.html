@@ -62,6 +62,11 @@
 						<tr th:each="f: ${upVoteLinks}"> 
 							<td><a th:href="${f.srEntity.getLink()}" th:utext="${f.srEntity.getHtmlTitle()}"></a> from <a th:href="${f.srEntity.getDisplayLink()}" th:text="${f.srEntity.getDisplayLink()}"></a> </td>
 							<td><a th:text="${f.numUpvotes}"></a></td>
+							<td th:each="t: ${f.resultTag}">
+								<button type = "button" class = "btn btn-outline-primary">
+									<a th:text="${t.getTag().getName()}"></a>
+								</button>
+							</td>
 						</tr>
 					</div>
 				</tbody>
