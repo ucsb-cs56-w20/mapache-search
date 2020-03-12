@@ -44,7 +44,7 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-    @GetMapping("instructor")
+/*     @GetMapping("instructor")
     public String index(Model model) {
         List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
         int amountSearched = 0;
@@ -94,10 +94,10 @@ public class InstructorController {
         model.addAttribute("searchedTerms", searchedTerms);
 
         return "instructor/popular_searches";
-    }
+    } */
 
   /*   WITH ADMIN CHECK */
-/*     @GetMapping("instructor")
+    @GetMapping("instructor")
     public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
         if (!role.equals("Admin")) {
@@ -172,7 +172,7 @@ public class InstructorController {
 
         return "instructor/popular_searches";
     }
- */
+
     
     @PostMapping("/instructor/delete/{uid}")
     public String deleteViewer(@PathVariable("id") String uid, Model model,
