@@ -12,6 +12,7 @@ import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.entities.ResultTag;
+import edu.ucsb.cs56.mapache_search.repositories.ResultTagRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
@@ -96,6 +97,9 @@ public class HomePageController {
     private PreviewProviderService previewService;
 
     @Autowired
+    private ResultTagRepository ResultTagRepo;
+
+    @Autowired
     private SearchTermsRepository searchTermsRepository;
 
     @Autowired
@@ -111,6 +115,7 @@ public class HomePageController {
     public String home(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
+
         
         ArrayList<UpvoteLink> upVoteLinks = new ArrayList<UpvoteLink>(); // A list that stores the url that got upvoted
         //This for loop is used to get all the url links that have been upvoted
@@ -126,6 +131,7 @@ public class HomePageController {
             if (vote.getTimestamp().after(currentDateBefore3Days.getTime())) {
                 UpvoteLink currUpvote = new UpvoteLink();
                 currUpvote.srEntity = vote.getResult();
+                currUpvote.resultTag = ResultTagRepo.findByResult(currUpvote.srEntity);
                 if (upVoteLinks.contains(currUpvote)) {
                     upVoteLinks.get(upVoteLinks.indexOf(currUpvote)).numUpvotes += 1;
                 }
@@ -135,6 +141,7 @@ public class HomePageController {
                 }
             }
         }
+
 
         //Addubg an attribute to the model indicating the size of the upVoteList
         // need to do lamba sort thing
