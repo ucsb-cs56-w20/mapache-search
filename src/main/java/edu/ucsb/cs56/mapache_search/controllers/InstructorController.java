@@ -53,7 +53,7 @@ public class InstructorController {
     public String deleteViewer(@PathVariable("username") String username, Model model,
             RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
         AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
-        (if !user.getIsInstructor()) {
+        if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/"; 
@@ -90,7 +90,7 @@ public class InstructorController {
     @GetMapping("/instructor/add_instructor")
     public String getaddInstructor(Model model, RedirectAttributes redirAttrs, OAuth2AuthenticationToken token, AppUser newInstructor){
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        f (if !user.getIsInstructor()) {
+        if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
