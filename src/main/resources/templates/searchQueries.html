@@ -12,10 +12,10 @@
         <h2 class="text-center">Search Queries</h2>
         <table class = "table">
             <tbody>
-                <div th:if=" ${SearchQueriesSize} == 0">
+                <div th:if=" ${SearchQueriesSize.size()} == 0">
                     <h4 class = "text-center"> No Search Queries</h4>
                 </div>
-                <div th:if=" ${SearchQueriesSize} != 0">
+                <div th:if=" ${SearchQueriesSize.size()} != 0">
                         <tr>
                                 <th>Uid</th>
                                 <th>ID of the search terms</th>

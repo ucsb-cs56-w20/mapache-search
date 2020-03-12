@@ -160,9 +160,9 @@ public class HomePageController {
     public String searchQueries(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
         model.addAttribute("searchObject", new SearchObject());
         List<SearchQueries> queries = searchQueriesRepository.findAllByOrderByTimestampDesc();
-        model.addAttribute("SearchQueries", queries);
-        model.addAttribute("SearchQueriesSize", queries.size());
+        if(queries.size() > 20) queries = queries.subList(0,20);
 
+        model.addAttribute("SearchQueries", queries);
         logger.info(controllerAdvice.toString());
         
         if(controllerAdvice.getIsAdmin(token)){
@@ -188,8 +188,6 @@ public class HomePageController {
             } else
                  return false;
         }
-
-
 
     }
 
