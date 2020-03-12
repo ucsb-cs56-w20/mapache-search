@@ -26,34 +26,32 @@ public class LinkController {
     private AuthControllerAdvice controllerAdvice;
 
     @Autowired
-    private BasicErrorController signInError;
-
-    @Autowired
     private LinkRepository linkRepository;
 
     @Autowired
     private UserRepository userRepository;
     
     @GetMapping("/link")
-    public String redirect(@RequestParam(name = "url", required = true) String url, OAuth2AuthenticationToken token) {
+    public String redirect(@RequestParam(name = "url", required = true) String url, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
         logger.info("Redirecting to: "  + url);
-
+        logger.info(Boolean.toString(controllerAdvice.getIsLoggedIn(token)));
     
-    
-	if (controllerAdvice.getIsAdmin(token) || controllerAdvice.getIsMember(token)) {
-        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        if (controllerAdvice.getIsAdmin(token) || controllerAdvice.getIsMember(token)) {
+            AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
 
-         Link userLink = new Link();
-        userLink.setUserId(user);
-        userLink.setUrl(url);
-                userLink.setTimestamp(new Date());
+            Link userLink = new Link();
+            userLink.setUserId(user);
+            userLink.setUrl(url);
+            userLink.setTimestamp(new Date());
 
             linkRepository.save(userLink);
 
-
-	    return "redirect:" + url;
-	} else {
-	    return signInError.loginError();
-	}
+            return "redirect:" + url;
+            
+        } 
+        else {
+            redirAttrs.addFlashAttribute("alertDanger", "You need to be logged in to access that endpoint");
+            return "redirect:/";
+        }
     }
 }
