@@ -110,9 +110,8 @@ public class UserController {
         Random rand = new Random();     
         AppUser u = (userRepository.findAll()).get(Math.toIntExact(rand.nextInt()%userRepository.count()));
         Long searches = u.getSearches();
-        Long time = u.getTime();
         userRepository.save(u);
-	List<SearchQueries> searchqueriesByUser = searchQueriesRepository.findByUid(u.getUid());
+	List<SearchQueries> searchqueriesByUser = searchQueriesRepository.findByUser(u);
         List<UserVote> voteByUser = voteRepository.findByUserAndUpvote(u, true);
         List<ResultTag> tagByUser = resultTagRepository.findByUser(u);
         model.addAttribute("user", u);
