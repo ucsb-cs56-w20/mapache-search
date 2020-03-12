@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+	<title>SearchQueries</title>
+	<div th:replace="fragments/bootstrap_head.html"></div>
+</head>
+
+<body class="text-center">
+	<div class="container">
+        <div th:replace="fragments/bootstrap_nav_header.html"></div>
+        <div class="col-xs-12" style="height:50px;"></div>
+        <ul class="nav nav-tabs nav-justified bg-light">
+            <li class="nav-item">
+                <a class="nav-link" href="searchTerms">Search Terms</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="searchQueries">Search Queries</a>
+            </li>
+        </ul>
+        <table class = "table">
+            <tbody>
+                <div th:if=" ${SearchQueries.size()} == 0">
+                    <h4 class = "text-center"> No Search Queries</h4>
+                </div>
+                <div th:if=" ${SearchQueries.size()} != 0">
+                        <tr>
+                                <th>User #</th>
+                                <th>Search Term</th>
+                                <th>Time Stamp</th>
+                            </tr>
+                    <tr th:each="f: ${SearchQueries}"> 
+                        <td><a th:text="${f.getUser().getId()}"></a> </td>
+                        <td><a th:text="${f.getTerm().getSearchTerms()}"></a></td>
+                        <td><a th:text="${#dates.format(f.getTimestamp(), 'HH:mm MM/dd/yyyy')}"></a></td>
+                    </tr>
+                </div>
+            </tbody>
+        </table>
+        
+		<div th:replace="fragments/bootstrap_footer.html"></div>
+    </div>
+	<div th:replace="fragments/bootstrap_scripts.html"></div>
+</body>
+
+</html>
