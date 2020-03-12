@@ -12,11 +12,14 @@ import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.entities.ResultTag;
+import edu.ucsb.cs56.mapache_search.repositories.ResultTagRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
@@ -27,6 +30,7 @@ import edu.ucsb.cs56.mapache_search.search.SearchService;
 import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import java.io.IOException;
+
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -49,6 +53,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
+import edu.ucsb.cs56.mapache_search.entities.SearchQueries;
 
 import java.io.IOException;
 import java.util.*;
@@ -88,6 +97,16 @@ public class HomePageController {
     private PreviewProviderService previewService;
 
     @Autowired
+    private ResultTagRepository ResultTagRepo;
+
+    @Autowired
+    private SearchTermsRepository searchTermsRepository;
+
+    @Autowired
+    private SearchQueriesRepository searchQueriesRepository;
+
+
+    @Autowired
     public HomePageController(SearchResultRepository searchRepository) {
         this.searchRepository = searchRepository;
     }
@@ -96,6 +115,7 @@ public class HomePageController {
     public String home(Model model) {
         model.addAttribute("searchObject", new SearchObject());
         List<UserVote> upVoteList = voteRepository.findByUpvoteOrderByTimestampDesc(true); //A List that stores UserVote only when the user upvoted 
+
         
         ArrayList<UpvoteLink> upVoteLinks = new ArrayList<UpvoteLink>(); // A list that stores the url that got upvoted
         //This for loop is used to get all the url links that have been upvoted
@@ -111,6 +131,7 @@ public class HomePageController {
             if (vote.getTimestamp().after(currentDateBefore3Days.getTime())) {
                 UpvoteLink currUpvote = new UpvoteLink();
                 currUpvote.srEntity = vote.getResult();
+                currUpvote.resultTag = ResultTagRepo.findByResult(currUpvote.srEntity);
                 if (upVoteLinks.contains(currUpvote)) {
                     upVoteLinks.get(upVoteLinks.indexOf(currUpvote)).numUpvotes += 1;
                 }
@@ -121,6 +142,7 @@ public class HomePageController {
             }
         }
 
+
         //Addubg an attribute to the model indicating the size of the upVoteList
         // need to do lamba sort thing
         
@@ -129,6 +151,19 @@ public class HomePageController {
         //Adding the upvote links to a model
         model.addAttribute("upVoteLinks", upVoteLinks);
         return "index";
+    }
+
+    @GetMapping("/searchTerms")
+    public String searchStats(Model model)
+    {
+        List<SearchTerms> searchQueryPopularity = searchTermsRepository.findByOrderByCountDesc();
+        if (searchQueryPopularity.size() > 5) searchQueryPopularity = searchQueryPopularity.subList(0,5);
+        model.addAttribute("searchQueryPopularity",searchQueryPopularity);
+        List<SearchTerms> recentSearches =  searchTermsRepository.findByOrderByTimestampDesc();
+        if (recentSearches.size() > 5) recentSearches = recentSearches.subList(0,5);
+        model.addAttribute("recentSearches",recentSearches);
+
+        return "searchTerms";
     }
 
     @GetMapping("/filter")
@@ -141,6 +176,24 @@ public class HomePageController {
         //Adding the upvote list to a model
         model.addAttribute("upVoteList", upVoteList);
         return "filter";
+    }
+
+    @GetMapping("/searchQueries")
+    public String searchQueries(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
+        model.addAttribute("searchObject", new SearchObject());
+        List<SearchQueries> queries = searchQueriesRepository.findAllByOrderByTimestampDesc();
+        if(queries.size() > 20) queries = queries.subList(0,20);
+
+        model.addAttribute("SearchQueries", queries);
+        logger.info(controllerAdvice.toString());
+        
+        if(controllerAdvice.getIsAdmin(token)){
+            return "searchQueries"; // new html in the template folder that only admin can access
+        }
+        else{
+            redirAttrs.addFlashAttribute("alertDanger", "You need to be admin to access that page");
+            return "redirect:/";
+        }
     }
 
 
@@ -157,8 +210,6 @@ public class HomePageController {
             } else
                  return false;
         }
-
-
 
     }
 

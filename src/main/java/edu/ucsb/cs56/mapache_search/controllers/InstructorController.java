@@ -56,7 +56,45 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-    public String upvotes(Model model) {
+    
+    @GetMapping("instructor")
+    public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
+        int amountSearched = 0;
+        for(int pos = 0; pos < searchTermsList.size(); pos++) {
+            if (pos > 100) break;
+            SearchTerms searched = searchTermsList.get(pos);
+            amountSearched += searched.getCount();
+        }
+        model.addAttribute("searchCount",amountSearched);
+        return "instructor/index";
+    }
+
+    @GetMapping("instructor/data")
+    public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        return "instructor/data_stub";
+    }
+
+    @GetMapping("instructor/upvotes")
+    public String upvotes(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
         List<UserVote> upVoteList = voteRepository.findAll();
         ArrayList<searchUpVotedWrapper> upVotedSearches = new ArrayList<>();
         for(int pos = 0; pos < upVoteList.size(); pos++) {
@@ -71,9 +109,15 @@ public class InstructorController {
 
         return "instructor/upvote_page";
     }
-
-        @GetMapping("instructor/popular_searches")
-        public String searches(Model model) {
+    
+    @GetMapping("instructor/popular_searches")
+    public String searches(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
         List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
         ArrayList<searchedTermsWrapper> searchedTerms = new ArrayList<>();
         for(int pos = 0; pos < searchTermsList.size(); pos++) {
@@ -87,99 +131,6 @@ public class InstructorController {
         model.addAttribute("searchedTerms", searchedTerms);
 
         return "instructor/popular_searches";
-    }
-
-  /*   WITH ADMIN CHECK */
-    @GetMapping("instructor")
-    public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
-        String role = ms.role(token);
-        if (!role.equals("Admin")) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        }
-        return "instructor/index";
-    }
-    @GetMapping("instructor/data")
-    public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
-        String role = ms.role(token);
-        if (!role.equals("Admin")) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        }
-        return "instructor/data_stub";
-    }
-    @GetMapping("instructor/upvotes")
-    public String upvotes(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
-        String role = ms.role(token);
-        if (!role.equals("Admin")) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        }
-        return "instructor/upvote_page";
-    }
-    
-    @PostMapping("/instructor/delete/{uid}")
-    public String deleteViewer(@PathVariable("id") String uid, OAuth2AuthenticationToken token, Model model,
-            RedirectAttributes redirAttrs) {
-        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        if (!user.getIsInstructor()) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/"; 
-        }
-
-        AppUser appUser = userRepository.findByUid(uid).get(0);
-        if (appUser == null) {
-            redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
-        } else {
-            userRepository.findByUid(uid).get(0).setIsInstructor(false);
-            redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
-        }
-        model.addAttribute("newInstructor", new AppUser());
-        return "redirect:/instructor/add_instructor";
-    }
-
-    @PostMapping("/instructor/add")
-    public String addInstructor(@ModelAttribute AppUser instructor, BindingResult result, Model model,
-            RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
-        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        
-         /* if (!user.getIsInstructor()) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        } */
-        try{
-            /* AppUser appUser = userRepository.findByUid(instructor.getUid()).get(0); // This line makes add crash; needs to change */
-            String uid = user.getUid();
-            if (user.getIsInstructor()) {
-                redirAttrs.addFlashAttribute("alertDanger", "User " + uid + " is already an Instructor.");    
-                model.addAttribute("newInstructor", new AppUser());
-            } else {
-                user.setIsInstructor(true);
-                redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");    
-                model.addAttribute("newInstructor", instructor);
-            }
-        }catch(NoSuchElementException e){
-            redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
-        }
-        model.addAttribute("appUsers", userRepository.findAll());
-        return "redirect:/instructor/add_instructor";
-    }
-
-    @GetMapping("/instructor/add_instructor")
-    public String getaddInstructor(Model model, RedirectAttributes redirAttrs, OAuth2AuthenticationToken token){
-        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        /* if (!user.getIsInstructor()) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        } */
-        model.addAttribute("appUsers", userRepository.findAll());
-        return "instructor/add_instructor";
     }
     
 

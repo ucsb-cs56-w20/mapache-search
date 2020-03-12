@@ -10,10 +10,11 @@ import edu.ucsb.cs56.mapache_search.entities.ResultTag;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 import edu.ucsb.cs56.mapache_search.entities.SearchQueries;
+import java.util.Date;
 
 @Repository
 public interface SearchQueriesRepository extends CrudRepository<SearchQueries, Long> {
-    // List<SearchQueries> findMostRecentEntries();
+    List<SearchQueries> findAllByOrderByTimestampDesc();
 
     
 };
