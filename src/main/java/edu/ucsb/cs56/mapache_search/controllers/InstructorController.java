@@ -8,15 +8,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
-import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
-import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
+import edu.ucsb.cs56.mapache_search.membership.MembershipService;
+import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.UserVote;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
