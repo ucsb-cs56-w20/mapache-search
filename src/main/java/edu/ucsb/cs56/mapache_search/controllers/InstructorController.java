@@ -37,17 +37,24 @@ public class InstructorController {
         this.userRepository = repo;
     }
 
-    @GetMapping("/instructor")
-    public String index(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
-       AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-       if (!user.getIsInstructor()) {
+    @GetMapping("instructor")
+    public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
+        String role = ms.role(token);
+        if (!role.equals("Admin")) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
         }
-        
+        List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
+        int amountSearched = 0;
+        for(int pos = 0; pos < searchTermsList.size(); pos++) {
+            if (pos > 100) break;
+            SearchTerms searched = searchTermsList.get(pos);
+            amountSearched += searched.getCount();
+        }
+        model.addAttribute("searchCount",amountSearched);
         return "instructor/index";
-    }   
+    }  
     
     @PostMapping("/instructor/delete/{username}")
     public String deleteViewer(@PathVariable("username") String username, Model model,
