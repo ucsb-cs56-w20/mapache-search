@@ -29,6 +29,8 @@ import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import edu.ucsb.cs56.mapache_search.search.SearchService;
 import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
+import edu.ucsb.cs56.mapache_search.membership.GithubOrgMembershipService;
 import java.io.IOException;
 
 import java.net.URI;
@@ -52,6 +54,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -99,6 +103,7 @@ public class SearchController {
 
     @Autowired
     private SearchQueriesRepository searchQueriesRepository;
+
 
 
 

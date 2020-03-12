@@ -28,6 +28,7 @@ import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import java.io.IOException;
 
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -49,6 +50,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
+import edu.ucsb.cs56.mapache_search.entities.SearchQueries;
 
 import java.io.IOException;
 import java.util.*;
@@ -86,6 +92,13 @@ public class HomePageController {
 
     @Autowired
     private PreviewProviderService previewService;
+
+    @Autowired
+    private SearchTermsRepository searchTermsRepository;
+
+    @Autowired
+    private SearchQueriesRepository searchQueriesRepository;
+
 
     @Autowired
     public HomePageController(SearchResultRepository searchRepository) {
@@ -141,6 +154,24 @@ public class HomePageController {
         //Adding the upvote list to a model
         model.addAttribute("upVoteList", upVoteList);
         return "filter";
+    }
+
+    @GetMapping("/searchQueries")
+    public String searchQueries(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
+        model.addAttribute("searchObject", new SearchObject());
+        List<SearchQueries> queries = searchQueriesRepository.findAllByOrderByTimestampDesc();
+        model.addAttribute("SearchQueries", queries);
+        model.addAttribute("SearchQueriesSize", queries.size());
+
+        logger.info(controllerAdvice.toString());
+        
+        if(controllerAdvice.getIsAdmin(token)){
+            return "searchQueries"; // new html in the template folder that only admin can access
+        }
+        else{
+            redirAttrs.addFlashAttribute("alertDanger", "You need to be admin to access that page");
+            return "redirect:/";
+        }
     }
 
 

@@ -13,6 +13,7 @@ public class SearchQueries {
     private long id;
 
     private String uid;
+
     private Date timestamp;
 
 
