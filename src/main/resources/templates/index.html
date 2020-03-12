@@ -64,7 +64,7 @@
 							<td><a th:text="${f.numUpvotes}"></a></td>
 							<td th:each="t: ${f.resultTag}">
 								<button type = "button" class = "btn btn-outline-primary">
-									<a th:text="${t.getTag()}"></a>
+									<a th:text="${t.getTag().getName()}"></a>
 								</button>
 							</td>
 						</tr>
