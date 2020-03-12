@@ -123,7 +123,7 @@ public class InstructorController {
     
 
     @GetMapping("/instructor/random_student_generator")
-    public String getRandomStudent(Model model, OAuth2AuthenticationToken token){
+    public String getRandomStudent(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs){
         if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
