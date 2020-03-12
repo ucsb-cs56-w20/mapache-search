@@ -72,6 +72,7 @@ public class AuthControllerAdvice {
             u.setUsername(token2username(token));
             u.setApikey("");
             u.setSearches(0l);
+            u.setIsInstructor(membershipService.isAdmin(token));
             userRepository.save(u);
             // username, apikey, uid
         } else {
