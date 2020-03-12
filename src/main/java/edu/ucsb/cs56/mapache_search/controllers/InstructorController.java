@@ -36,20 +36,15 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-/*     @GetMapping("instructor")
-    public String index(Model model) {
-        return "instructor/index";
-    }
 
-    WITH ADMIN CHECK */
     @GetMapping("/instructor")
     public String index(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
-       /* AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+       AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
        if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
-        } */
+        }
         
         return "instructor/index";
     }   
@@ -58,12 +53,12 @@ public class InstructorController {
     public String deleteViewer(@PathVariable("username") String username, Model model,
             RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
         AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
-        /*if (!user.getIsInstructor()) {
+        (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/"; 
         }
-*/
+
         AppUser appUser = userRepository.findByUsername(username).get(0);
         appUser.setIsInstructor(false);
         redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
@@ -76,11 +71,11 @@ public class InstructorController {
     public String addInstructor(@PathVariable("username") String username, Model model,
             RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
         AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
-        /*  if (!user.getIsInstructor()) {
+        if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
-        }*/
+        }
         AppUser appUser = userRepository.findByUsername(username).get(0);
         appUser.setIsInstructor(true);
         redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");   
@@ -95,11 +90,11 @@ public class InstructorController {
     @GetMapping("/instructor/add_instructor")
     public String getaddInstructor(Model model, RedirectAttributes redirAttrs, OAuth2AuthenticationToken token, AppUser newInstructor){
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        /* if (!user.getIsInstructor()) {
+        f (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
-        } */
+        }
         model.addAttribute("appUsers", userRepository.findAll());
         return "instructor/add_instructor";
     }
