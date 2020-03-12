@@ -33,12 +33,7 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-/*     @GetMapping("instructor")
-    public String index(Model model) {
-        return "instructor/index";
-    }
 
-    WITH ADMIN CHECK */
     @GetMapping("instructor")
     public String index(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
