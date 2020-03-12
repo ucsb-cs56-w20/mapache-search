@@ -9,14 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
+import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
-import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
-import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
+import edu.ucsb.cs56.mapache_search.membership.MembershipService;
+import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
+import edu.ucsb.cs56.mapache_search.entities.UserVote;
+import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.NoSuchElementException;
-
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,25 +29,30 @@ import org.slf4j.LoggerFactory;
 @Controller
 public class InstructorController {
     @Autowired
-    private UserRepository userRepository;
-    
+    private MembershipService ms;
+
     @Autowired
-    private AuthControllerAdvice controllerAdvice;
+    private UserRepository userRepository;
+
+    @Autowired
+    private VoteRepository voteRepository;
+
+    @Autowired
+    private SearchTermsRepository searchtermsRepository;
 
     @Autowired
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-
+    
     @GetMapping("instructor")
     public String index(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
         AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-       /*if (!user.getIsInstructor()) {
+        if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
         }
-        */
         return "instructor/index";
     }
     
@@ -111,6 +121,11 @@ public class InstructorController {
 
     @GetMapping("/instructor/random_student_generator")
     public String getRandomStudent(Model model, OAuth2AuthenticationToken token){
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
         return "/instructor/random_student_generator";
     }
 
