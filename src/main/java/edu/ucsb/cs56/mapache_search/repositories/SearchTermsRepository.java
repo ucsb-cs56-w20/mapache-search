@@ -13,6 +13,7 @@ import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
 
 @Repository
 public interface SearchTermsRepository extends CrudRepository<SearchTerms, Long> {
+    List<SearchTerms> findAll();
     SearchTerms findOneBySearchTerms(String searchTerms);
     List<SearchTerms> findByOrderByCountDesc();
     List<SearchTerms> findByOrderByTimestampDesc();
