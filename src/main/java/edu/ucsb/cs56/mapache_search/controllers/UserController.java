@@ -98,7 +98,7 @@ public class UserController {
     }
     
     @GetMapping("instructor/random_student_results")
-    public String randomStudent(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
+    public String randomStudent(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
        AppUser current = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
        if (!current.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
