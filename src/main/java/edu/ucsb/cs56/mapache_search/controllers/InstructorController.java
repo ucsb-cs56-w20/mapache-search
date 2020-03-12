@@ -14,6 +14,8 @@ import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
+
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.membership.MembershipService;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
@@ -36,6 +38,9 @@ public class InstructorController {
 
     @Autowired
     private VoteRepository voteRepository;
+
+    @Autowired
+    private AuthControllerAdvice controllerAdvice;
 
     @Autowired
     private SearchTermsRepository searchtermsRepository;

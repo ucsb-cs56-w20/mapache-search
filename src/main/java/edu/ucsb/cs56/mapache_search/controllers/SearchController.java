@@ -33,6 +33,8 @@ import edu.ucsb.cs56.mapache_search.search.SearchResult;
 import edu.ucsb.cs56.mapache_search.search.SearchService;
 import net.minidev.json.JSONObject;
 import edu.ucsb.cs56.mapache_search.search.SearchResult;
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
+import edu.ucsb.cs56.mapache_search.membership.GithubOrgMembershipService;
 import java.io.IOException;
 
 import java.net.URI;
@@ -56,6 +58,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -110,6 +114,7 @@ public class SearchController {
     @Autowired
     private ResultTagRepository resultTagRepository;
 
+
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
         Map<String, Map<Integer, List<StackExchangeItem>>> itemsBySite = sr.getItems().stream()
@@ -161,41 +166,42 @@ public class SearchController {
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long
 
-        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        u.setSearches(searches);
+       AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        if (apiKey == "") {     u.setSearches(0l);  }
+        else {       u.setSearches(searches);        }
         userRepository.save(u);
-
+      
         SearchQueries searchQueries = new SearchQueries();
-        searchQueries.setUid(u.getUid());
+        searchQueries.setUser(u);
         searchQueries.setTimestamp(new Date());
 
         boolean haveSearched = doesSearchExist(params.getQuery());
+        SearchTerms searchTerm;
         if (!haveSearched) // Have never been searched before
         {
-            SearchTerms searchTerm = new SearchTerms();
+            searchTerm = new SearchTerms();
             searchTerm.setSearchTerms(params.getQuery());
             searchTerm.setCount(1);
-            searchTerm.setTimestamp(new Date());
-            searchTermsRepository.save(searchTerm);
-            searchQueries.setId(searchTerm.getId());
-            logger.info("count is: " + searchTerm.getCount() + "query is: " + searchTerm.getSearchTerms());
         }
         else
         {
             String cleanedStrings = sanitizedSearchTerms(params.getQuery());
-            SearchTerms searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
-            searchTerm.setSearchTerms(params.getQuery());
+            searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
             int newSearchTermCount = searchTerm.getCount() + 1;
             searchTerm.setCount((newSearchTermCount));
-            searchTerm.setTimestamp(new Date());
-            searchTermsRepository.save(searchTerm);
-            searchQueries.setId(searchTerm.getId());
-            logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
         }
 
-        searchQueriesRepository.save(searchQueries);
-        logger.info("uid is:" + searchQueries.getUid() + ", time stamp is: " + searchQueries.getTimestamp() + ", and Id of query is: " + searchQueries.getId());
-        
+        searchTerm.setSearchTerms(params.getQuery());
+        searchTerm.setTimestamp(new Date());
+        searchTermsRepository.save(searchTerm);
+
+
+
+        // logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
+        searchQueries.setTerm(searchTerm);
+
+      
+        searchQueriesRepository.save(searchQueries);       
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){
@@ -274,6 +280,7 @@ public class SearchController {
         model.addAttribute("previousSearch", params.getQuery());
 
         if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
+
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
 

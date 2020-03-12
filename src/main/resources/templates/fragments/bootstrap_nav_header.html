@@ -11,16 +11,16 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href= "/filter" >Filter Mapache Search</a>
+              <li class="nav-item" th:if="${isLoggedIn}">
+                <a class="nav-link" href="/filter">Filter Search</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href= "/tags" >Tags</a>
+              <li class="nav-item" th:if="${isLoggedIn}">
+                <a class="nav-link" href="/tags">Tags</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href= "/searchStatistics" >Search Statistics</a>
+              <li class="nav-item" th:if="${isLoggedIn}">
+                <a class="nav-link" href="/searchTerms">Search Statistics</a>
               </li>
-              <li class="nav navbar-nav" th:if="${isLoggedIn} and (${isMember} or ${isAdmin})">
+              <li class="nav-item" th:if="${isLoggedIn} and (${isMember} or ${isAdmin})">
                 <a class="nav-link" href="/github/">GitHub</a>
               </li>
           </ul>
@@ -70,7 +70,7 @@
   th:if="${alertPrimary}"
   th:text="${alertPrimary}"
 >
-  This is a primary alert—check it out!
+  This is a primary alertcheck it out!
 </div>
 
 <div
@@ -79,7 +79,7 @@
   th:if="${alertSecondary}"
   th:text="${alertSecondary}"
 >
-  This is a secondary alert—check it out!
+  This is a secondary alertcheck it out!
 </div>
 <div
   class="alert alert-success"
@@ -87,7 +87,7 @@
   th:if="${alertSuccess}"
   th:text="${alertSuccess}"
 >
-  This is a success alert—check it out!
+  This is a success alertcheck it out!
 </div>
 <div
   class="alert alert-danger"
@@ -95,7 +95,7 @@
   th:if="${alertDanger}"
   th:text="${alertDanger}"
 >
-  This is a danger alert—check it out!
+  This is a danger alertcheck it out!
 </div>
 <div
   class="alert alert-warning"
@@ -103,7 +103,7 @@
   th:if="${alertWarning}"
   th:text="${alertWarning}"
 >
-  This is a warning alert—check it out!
+  This is a warning alertcheck it out!
 </div>
 <div
   class="alert alert-info"
@@ -111,7 +111,7 @@
   th:if="${alertInfo}"
   th:text="${alertInfo}"
 >
-  This is a info alert—check it out!
+  This is a info alertcheck it out!
 </div>
 <div
   class="alert alert-light"
@@ -119,7 +119,7 @@
   th:if="${alertLight}"
   th:text="${alertLight}"
 >
-  This is a light alert—check it out!
+  This is a light alertcheck it out!
 </div>
 <div
   class="alert alert-dark"
@@ -127,5 +127,5 @@
   th:if="${alertDark}"
   th:text="${alertDark}"
 >
-  This is a dark alert—check it out!
+  This is a dark alertcheck it out!
 </div>
