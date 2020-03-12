@@ -3,6 +3,7 @@ package edu.ucsb.cs56.mapache_search.membership;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import java.util.ArrayList;
 import java.util.List;
+import edu.ucsb.cs56.mapache_search.entities.*;
 
 public interface MembershipService {
 
@@ -24,6 +25,14 @@ public interface MembershipService {
      * */
     default public boolean isMemberOrAdmin(OAuth2AuthenticationToken oAuth2AuthenticationToken) {
         return isMember(oAuth2AuthenticationToken) || isAdmin(oAuth2AuthenticationToken);
+    }
+
+    default public List<GitHubTeam> getTeams(OAuth2AuthenticationToken oAuth2AuthenticationToken){
+        return getTeams(oAuth2AuthenticationToken);
+    }
+
+    default public List<GitHubOpenPRs> getOpenPullRequests(OAuth2AuthenticationToken oAuth2AuthenticationToken){
+        return getOpenPullRequests(oAuth2AuthenticationToken);
     }
 
     /** get list of properties 

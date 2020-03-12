@@ -20,6 +20,26 @@
 			</ul>
 		</tr>
 
+		<h2 class="text-center">Teams you are on</h2>
+
+		<tr th:each="team: ${getTeams}"> 
+			<ul style="list-style-type:none;">
+			<li>
+			<td><a th:href="${team.html_url}" th:text="${team.name}"></a></td>
+			</li>
+			</ul>
+		</tr>
+
+		<h2 class="text-center">Open pull requests</h2>
+
+		<tr th:each="openPR: ${getOpenPullRequests}"> 
+			<ul style="list-style-type:none;">
+			<li>
+			<td><a th:href="${openPR.html_url}" th:text="${openPR.title}"></a></td>
+			</li>
+			</ul>
+		</tr>
+
 		<div th:replace="fragments/bootstrap_footer.html"></div>
 	</div>
 	<div th:replace="fragments/bootstrap_scripts.html"></div>

@@ -20,10 +20,10 @@ import java.util.Date;
 @Controller
 public class LinkController {
 
-    private Logger logger = LoggerFactory.getLogger(SearchController.class);
+   private Logger logger = LoggerFactory.getLogger(SearchController.class);
 
-    @Autowired
-    private AuthControllerAdvice controllerAdvice;
+   @Autowired
+   private AuthControllerAdvice controllerAdvice;
 
     @Autowired
     private LinkRepository linkRepository;
