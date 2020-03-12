@@ -38,6 +38,9 @@ public class InstructorController {
     private VoteRepository voteRepository;
 
     @Autowired
+    private AuthControllerAdvice controllerAdvice;
+    
+    @Autowired
     private SearchTermsRepository searchtermsRepository;
 
     @Autowired
