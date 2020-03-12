@@ -79,8 +79,6 @@ public class InstructorController {
         AppUser appUser = userRepository.findByUsername(username).get(0);
         appUser.setIsInstructor(true);
         redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");   
-        //catch(NoSuchElementException e){
-        // redirAttrs.addFlashAttribute("alertDanger", "Instructor with that username does not exist."); }
         model.addAttribute("newInstructor", new AppUser());
         model.addAttribute("appUsers", userRepository.findAll());
         return "redirect:/instructor/add_instructor";
