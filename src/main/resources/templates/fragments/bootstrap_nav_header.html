@@ -40,10 +40,9 @@
             <li class="nav-item dropdown">
               <a class="dropdown-item" href=/user/settings>Settings</a>
               <!--                             ADMIN CHECK FOR INSTRUCTOR DROPDOWN -->
-            <li th:if="${isAdmin}" class="nav-item ">
+            <div th:if="${isAdmin}">
               <a class="dropdown-item" href=/instructor>Instructor</a>
-            </li>
-          </li>
+            </div>
             <!--                             <a class="dropdown-item" href = /instructor>Instructor</a> -->
         </li>
         <li role="separator" class="divider"></li>
