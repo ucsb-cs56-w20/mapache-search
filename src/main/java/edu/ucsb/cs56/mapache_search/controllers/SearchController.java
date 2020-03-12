@@ -12,11 +12,13 @@ import edu.ucsb.cs56.mapache_search.stackexchange.objects.Questions;
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import edu.ucsb.cs56.mapache_search.entities.Item;
 import edu.ucsb.cs56.mapache_search.entities.Tag;
+import edu.ucsb.cs56.mapache_search.entities.ResultTag;
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchQueriesRepository;
 import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 import edu.ucsb.cs56.mapache_search.repositories.TagRepository;
+import edu.ucsb.cs56.mapache_search.repositories.ResultTagRepository;
 
 import edu.ucsb.cs56.mapache_search.repositories.SearchResultRepository;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
@@ -105,6 +107,9 @@ public class SearchController {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private ResultTagRepository resultTagRepository;
+
     private Map<Item, StackExchangeItem> fetchFromStackExchange(SearchResult sr) {
         // index items by site, then by question id
         Map<String, Map<Integer, List<StackExchangeItem>>> itemsBySite = sr.getItems().stream()
@@ -156,10 +161,11 @@ public class SearchController {
         Long time = userRepository.findByUid(controllerAdvice.getUid(token)).get(0).getTime();
         Long currentTime = (long) (new Date().getTime()/1000/60/60/24); //get relative days as a Long
 
-        AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
-        u.setSearches(searches);
+       AppUser u = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        if (apiKey == "") {     u.setSearches(0l);  }
+        else {       u.setSearches(searches);        }
         userRepository.save(u);
-
+      
         SearchQueries searchQueries = new SearchQueries();
         searchQueries.setUid(u.getUid());
         searchQueries.setTimestamp(new Date());
@@ -187,10 +193,10 @@ public class SearchController {
             searchQueries.setId(searchTerm.getId());
             logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
         }
-
+      
         searchQueriesRepository.save(searchQueries);
         logger.info("uid is:" + searchQueries.getUid() + ", time stamp is: " + searchQueries.getTimestamp() + ", and Id of query is: " + searchQueries.getId());
-        
+       
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){
@@ -205,6 +211,15 @@ public class SearchController {
             System.out.println("ohdaijhdijsdisadhk, " + params.getWebsite() + " " + params.getLastUpdated());
         }
         */
+
+        Iterable<Tag> tags = tagRepository.findAll();
+        List<Tag> allTags = new ArrayList<Tag>();
+        for( Tag tag : tags ) {
+            allTags.add(tag);
+        }
+        Collections.sort(allTags, (t1, t2)->{
+            return t1.getName().toLowerCase().compareTo(t2.getName().toLowerCase());
+        });
 
         if(sr.getKind() != "error") {
             List<ResultVoteWrapper> voteResults = new ArrayList<>();
@@ -234,8 +249,19 @@ public class SearchController {
                         downvoted = true;
                     }
                 }
-                voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted));
 
+                List<Tag> otherTags = new ArrayList<Tag>(allTags);
+                List<Tag> addedTags = new ArrayList<Tag>();
+                List<ResultTag> resultTags = resultTagRepository.findByResult(result);
+                for (ResultTag resultTag : resultTags) {
+                    addedTags.add(resultTag.getTag());
+                }
+                Collections.sort(addedTags, (t1, t2)->{
+                    return t1.getName().toLowerCase().compareTo(t2.getName().toLowerCase());
+                });
+
+                otherTags.removeAll(addedTags);
+                voteResults.add(new ResultVoteWrapper(item, result, count, upvoted, downvoted, addedTags, otherTags));
 
                 if (++count == 10)
                     break;
@@ -249,6 +275,7 @@ public class SearchController {
         model.addAttribute("previousSearch", params.getQuery());
 
         if (json.equals("{\"error\": \"401: Unauthorized\"}")) {
+
             return "errors/401.html"; // corresponds to src/main/resources/templates/errors/401.html
         }
 
@@ -262,10 +289,9 @@ public class SearchController {
         Map<Item, StackExchangeItem> stackExchangeQuestions = fetchFromStackExchange(sr);
         model.addAttribute("stackExchangeQuestions", stackExchangeQuestions);
 
-        Iterable<Tag> tags = tagRepository.findAll();
-        model.addAttribute("tags", tags);
         return "searchResults"; // corresponds to src/main/resources/templates/searchResults.html
     }
+
 
     public class ResultVoteWrapper implements Comparable<ResultVoteWrapper> {
         private Item googleResult;
@@ -273,13 +299,17 @@ public class SearchController {
         private int position;
         private boolean didUpvote;
         private boolean didDownvote;
+        private List<Tag> addedTags;
+        private List<Tag> otherTags;
 
-        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position, boolean upvoted, boolean downvoted) {
+        public ResultVoteWrapper(Item googleResult, SearchResultEntity dbResult, int position, boolean upvoted, boolean downvoted, List<Tag> addedTags, List<Tag> otherTags) {
             this.googleResult = googleResult;
             this.dbResult = dbResult;
             this.position = position;
             this.didUpvote = upvoted;
             this.didDownvote = downvoted;
+            this.addedTags = addedTags;
+            this.otherTags = otherTags;
         }
 
         public SearchResultEntity getDBResult() {
@@ -300,6 +330,14 @@ public class SearchController {
 
         public boolean hasDownvoted() {
             return didDownvote;
+        }
+
+        public List<Tag> getAddedTags() {
+            return addedTags;
+        }
+
+        public List<Tag> getOtherTags() {
+            return otherTags;
         }
 
         public int compareTo(ResultVoteWrapper oWrapper) {
@@ -357,6 +395,46 @@ public class SearchController {
         }
 
         return String.valueOf(voteCount); // returns the new vote total
+    }
+
+    @GetMapping("/updateTags")
+    @ResponseBody
+    public String updateTags(@RequestParam(name = "tagName", required = true) String tagName, @RequestParam(name = "id", required = true) long id, Model model, OAuth2AuthenticationToken token) throws IOException {
+        String message = "failed";
+        List<SearchResultEntity> matchingResults = searchRepository.findById(id);
+        if (!matchingResults.isEmpty()) {
+
+            SearchResultEntity result = matchingResults.get(0);
+            AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+            List<Tag> tags = tagRepository.findByName(tagName);
+
+            Tag tag = null;
+            if(tags.size() > 0) {
+                tag = tags.get(0);
+            } else {
+                tag = new Tag();
+                tag.setName(tagName);
+                tagRepository.save(tag);
+            }
+
+            List<ResultTag> byUserAndResultAndTag = resultTagRepository.findByUserAndResultAndTag(user, result, tag);
+
+            if(byUserAndResultAndTag.size() > 0){
+                ResultTag toRemove = byUserAndResultAndTag.get(0);
+                resultTagRepository.delete(toRemove);
+                message = "removed";
+            } else {
+                ResultTag resultTag = new ResultTag();
+                resultTag.setTag(tag);
+                resultTag.setUser(user);
+                resultTag.setResult(result);
+                resultTag.setTimestamp(new Date());
+                resultTagRepository.save(resultTag);
+                message = "added";
+            }
+        }
+
+        return message; // returns the new vote total
     }
 
     // Removes whitespace from search terms //
