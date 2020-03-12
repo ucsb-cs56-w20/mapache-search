@@ -45,7 +45,7 @@ public class CSVDownloadController {
     @GetMapping("/VoteHistory")
     public void downloadCSV(HttpServletResponse response) throws IOException {
         response.setContentType("VoteHistory/csv");
-        response.setHeader("Content-Disposition", "attachment; file=VoteHistory.csv");
+        response.setHeader("Content-Disposition", "attachment; fileName=VoteHistory.csv");
 
 
         MapachetoCSV.writeSections(response.getWriter(),searchResultRepository);
