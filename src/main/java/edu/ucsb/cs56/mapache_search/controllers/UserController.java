@@ -99,12 +99,18 @@ public class UserController {
     
     @GetMapping("instructor/random_student_results")
     public String randomStudent(@ModelAttribute AppUser user, Model model, OAuth2AuthenticationToken token) {
+       AppUser current = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+       if (!current.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
         Random rand = new Random();     
         AppUser u = (userRepository.findAll()).get(Math.toIntExact(rand.nextInt()%userRepository.count()));
         Long searches = u.getSearches();
         Long time = u.getTime();
         userRepository.save(u);
-		List<SearchQueries> searchqueriesByUser = searchQueriesRepository.findByUid(u.getUid());
+	List<SearchQueries> searchqueriesByUser = searchQueriesRepository.findByUid(u.getUid());
         List<UserVote> voteByUser = voteRepository.findByUserAndUpvote(u, true);
         List<ResultTag> tagByUser = resultTagRepository.findByUser(u);
         model.addAttribute("user", u);
