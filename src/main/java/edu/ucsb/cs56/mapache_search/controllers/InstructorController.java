@@ -44,59 +44,7 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-/*     @GetMapping("instructor")
-    public String index(Model model) {
-        List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
-        int amountSearched = 0;
-        for(int pos = 0; pos < searchTermsList.size(); pos++) {
-            if (pos > 100) break;
-            SearchTerms searched = searchTermsList.get(pos);
-            amountSearched += searched.getCount();
-        }
-        model.addAttribute("searchCount",amountSearched);
-        return "instructor/index";
-    }
-
-    @GetMapping("instructor/data")
-    public String data(Model model) {
-        return "instructor/data_stub";
-    }
-
-    @GetMapping("instructor/upvotes")
-    public String upvotes(Model model) {
-        List<UserVote> upVoteList = voteRepository.findAll();
-        ArrayList<searchUpVotedWrapper> upVotedSearches = new ArrayList<>();
-        for(int pos = 0; pos < upVoteList.size(); pos++) {
-            if (pos > 100) break;
-            UserVote vote = upVoteList.get(pos);
-            upVotedSearches.add(new searchUpVotedWrapper(vote.getResult()));
-        }
-        Collections.sort(upVotedSearches, Collections.reverseOrder());
-        int x = upVotedSearches.size();
-        model.addAttribute("upVotedSearchesSize",x);
-        model.addAttribute("upVotedSearches", upVotedSearches);
-
-        return "instructor/upvote_page";
-    }
-
-        @GetMapping("instructor/popular_searches")
-        public String searches(Model model) {
-        List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
-        ArrayList<searchedTermsWrapper> searchedTerms = new ArrayList<>();
-        for(int pos = 0; pos < searchTermsList.size(); pos++) {
-            if (pos > 100) break;
-            SearchTerms searched = searchTermsList.get(pos);
-            searchedTerms.add(new searchedTermsWrapper(searched));
-        }
-        Collections.sort(searchedTerms, Collections.reverseOrder());
-        int x = searchedTerms.size();
-        model.addAttribute("searchedTermsSize",x);
-        model.addAttribute("searchedTerms", searchedTerms);
-
-        return "instructor/popular_searches";
-    } */
-
-  /*   WITH ADMIN CHECK */
+    
     @GetMapping("instructor")
     public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
@@ -171,49 +119,6 @@ public class InstructorController {
         model.addAttribute("searchedTerms", searchedTerms);
 
         return "instructor/popular_searches";
-    }
-
-    
-    @PostMapping("/instructor/delete/{uid}")
-    public String deleteViewer(@PathVariable("id") String uid, Model model,
-            RedirectAttributes redirAttrs, AppUser user) {
-        if (!user.getIsInstructor()) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        }
-
-        AppUser appUser = userRepository.findByUid(uid).get(0);
-        if (appUser == null) {
-            redirAttrs.addFlashAttribute("alertDanger", "Instructor with that uid does not exist.");
-        } else {
-            userRepository.findByUid(uid).get(0).setIsInstructor(false);
-            redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
-        }
-        return "redirect:/instructor/addInstructor";
-    }
-
-    @PostMapping("/instructor/add")
-    public String addInstructor(@Valid AppUser user, BindingResult result, Model model,
-            RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
-        if (!user.getIsInstructor()) {
-            redirAttrs.addFlashAttribute("alertDanger",
-                    "You do not have permission to access that page");
-            return "redirect:/";
-        }
-        AppUser appUser = userRepository.findByUid(user.getUid()).get(0);
-        if (appUser == null) {
-            redirAttrs.addFlashAttribute("alertDanger", "User with that uid does not exist.");
-        } else {
-            String uid = appUser.getUid();
-            if (appUser.getIsInstructor()) {
-                redirAttrs.addFlashAttribute("alertDanger", "User " + uid + " is already an Instructor.");    
-            } else {
-                appUser.setIsInstructor(true);
-                redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");    
-            }
-        }
-        return "redirect:/instructor/addInstructor";
     }
     
     public class searchUpVotedWrapper implements Comparable<searchUpVotedWrapper> {
