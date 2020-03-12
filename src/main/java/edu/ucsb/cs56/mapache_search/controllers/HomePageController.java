@@ -153,7 +153,7 @@ public class HomePageController {
         return "index";
     }
 
-    @GetMapping("/searchStatistics")
+    @GetMapping("/searchTerms")
     public String searchStats(Model model)
     {
         List<SearchTerms> searchQueryPopularity = searchTermsRepository.findByOrderByCountDesc();
@@ -163,7 +163,7 @@ public class HomePageController {
         if (recentSearches.size() > 5) recentSearches = recentSearches.subList(0,5);
         model.addAttribute("recentSearches",recentSearches);
 
-        return "searchStatistics";
+        return "searchTerms";
     }
 
     @GetMapping("/filter")

@@ -172,36 +172,36 @@ public class SearchController {
         userRepository.save(u);
       
         SearchQueries searchQueries = new SearchQueries();
-        searchQueries.setUid(u.getUid());
+        searchQueries.setUser(u);
         searchQueries.setTimestamp(new Date());
 
         boolean haveSearched = doesSearchExist(params.getQuery());
+        SearchTerms searchTerm;
         if (!haveSearched) // Have never been searched before
         {
-            SearchTerms searchTerm = new SearchTerms();
+            searchTerm = new SearchTerms();
             searchTerm.setSearchTerms(params.getQuery());
             searchTerm.setCount(1);
-            searchTerm.setTimestamp(new Date());
-            searchTermsRepository.save(searchTerm);
-            searchQueries.setId(searchTerm.getId());
-            logger.info("count is: " + searchTerm.getCount() + "query is: " + searchTerm.getSearchTerms());
         }
         else
         {
             String cleanedStrings = sanitizedSearchTerms(params.getQuery());
-            SearchTerms searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
-            searchTerm.setSearchTerms(params.getQuery());
+            searchTerm = searchTermsRepository.findOneBySearchTerms(cleanedStrings);
             int newSearchTermCount = searchTerm.getCount() + 1;
             searchTerm.setCount((newSearchTermCount));
-            searchTerm.setTimestamp(new Date());
-            searchTermsRepository.save(searchTerm);
-            searchQueries.setId(searchTerm.getId());
-            logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
         }
+
+        searchTerm.setSearchTerms(params.getQuery());
+        searchTerm.setTimestamp(new Date());
+        searchTermsRepository.save(searchTerm);
+
+
+
+        // logger.info("count is: " + searchTerm.getCount() + " and query is: " + searchTerm.getSearchTerms());
+        searchQueries.setTerm(searchTerm);
+
       
-        searchQueriesRepository.save(searchQueries);
-        logger.info("uid is:" + searchQueries.getUid() + ", time stamp is: " + searchQueries.getTimestamp() + ", and Id of query is: " + searchQueries.getId());
-       
+        searchQueriesRepository.save(searchQueries);       
 
         //up the search count, if maxed, dont search, if more than 24hrs reset.
         if(currentTime > time){

@@ -8,8 +8,16 @@
 
 <body class="text-center">
 	<div class="container">
-		<div th:replace="fragments/bootstrap_nav_header.html"></div>
-        <h2 class="text-center">Search Queries</h2>
+        <div th:replace="fragments/bootstrap_nav_header.html"></div>
+        <div class="col-xs-12" style="height:50px;"></div>
+        <ul class="nav nav-tabs nav-justified bg-light">
+            <li class="nav-item">
+                <a class="nav-link" href="searchTerms">Search Terms</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="searchQueries">Search Queries</a>
+            </li>
+        </ul>
         <table class = "table">
             <tbody>
                 <div th:if=" ${SearchQueries.size()} == 0">
@@ -17,14 +25,14 @@
                 </div>
                 <div th:if=" ${SearchQueries.size()} != 0">
                         <tr>
-                                <th>Uid</th>
-                                <th>ID of the search terms</th>
+                                <th>User #</th>
+                                <th>Search Term</th>
                                 <th>Time Stamp</th>
                             </tr>
                     <tr th:each="f: ${SearchQueries}"> 
-                        <td><a th:text="${f.getUid()}"></a> </td>
-                        <td><a th:text="${f.getId()}"></a></td>
-                        <td><a th:text="${f.getTimestamp()}"></a></td>
+                        <td><a th:text="${f.getUser().getId()}"></a> </td>
+                        <td><a th:text="${f.getTerm().getSearchTerms()}"></a></td>
+                        <td><a th:text="${#dates.format(f.getTimestamp(), 'HH:mm MM/dd/yyyy')}"></a></td>
                     </tr>
                 </div>
             </tbody>

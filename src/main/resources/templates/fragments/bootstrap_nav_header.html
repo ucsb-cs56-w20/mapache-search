@@ -11,16 +11,16 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <ul class="navbar-nav mr-auto">
-              <li class="nav-item">
-                <a class="nav-link" href= "/filter" >Filter Mapache Search</a>
+              <li class="nav-item" th:if="${isLoggedIn}">
+                <a class="nav-link" href="/filter">Filter Search</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href= "/tags" >Tags</a>
+              <li class="nav-item" th:if="${isLoggedIn}">
+                <a class="nav-link" href="/tags">Tags</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href= "/searchStatistics" >Search Statistics</a>
+              <li class="nav-item" th:if="${isLoggedIn}">
+                <a class="nav-link" href="/searchTerms">Search Statistics</a>
               </li>
-              <li class="nav navbar-nav" th:if="${isLoggedIn} and (${isMember} or ${isAdmin})">
+              <li class="nav-item" th:if="${isLoggedIn} and (${isMember} or ${isAdmin})">
                 <a class="nav-link" href="/github/">GitHub</a>
               </li>
           </ul>
