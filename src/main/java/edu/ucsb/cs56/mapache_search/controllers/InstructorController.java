@@ -14,6 +14,8 @@ import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 
 import edu.ucsb.cs56.mapache_search.entities.AppUser;
+
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.membership.MembershipService;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
@@ -38,13 +40,16 @@ public class InstructorController {
     private VoteRepository voteRepository;
 
     @Autowired
+    private AuthControllerAdvice controllerAdvice;
+
+    @Autowired
     private SearchTermsRepository searchtermsRepository;
 
     @Autowired
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-    
+
     @GetMapping("instructor")
     public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
@@ -63,7 +68,7 @@ public class InstructorController {
         model.addAttribute("searchCount",amountSearched);
         return "instructor/index";
     }
-
+    
     @GetMapping("instructor/data")
     public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
@@ -119,6 +124,60 @@ public class InstructorController {
         model.addAttribute("searchedTerms", searchedTerms);
 
         return "instructor/popular_searches";
+    }
+    
+    @PostMapping("/instructor/delete/{username}")
+    public String deleteViewer(@PathVariable("username") String username, Model model,
+            RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
+        AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/"; 
+        }
+
+        AppUser appUser = userRepository.findByUsername(username).get(0);
+        appUser.setIsInstructor(false);
+        redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
+        model.addAttribute("newInstructor", new AppUser());
+        model.addAttribute("appUsers", userRepository.findAll());
+        return "redirect:/instructor/add_instructor";
+    }
+
+    @PostMapping("/instructor/add/{username}")
+    public String addInstructor(@PathVariable("username") String username, Model model,
+            RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
+        AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        AppUser appUser = userRepository.findByUsername(username).get(0);
+        appUser.setIsInstructor(true);
+        redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");   
+        model.addAttribute("newInstructor", new AppUser());
+        model.addAttribute("appUsers", userRepository.findAll());
+        return "redirect:/instructor/add_instructor";
+    }
+
+
+    @GetMapping("/instructor/add_instructor")
+    public String getaddInstructor(Model model, RedirectAttributes redirAttrs, OAuth2AuthenticationToken token, AppUser newInstructor){
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        model.addAttribute("appUsers", userRepository.findAll());
+        return "instructor/add_instructor";
+    }
+    
+
+    @GetMapping("/instructor/random_student_generator")
+    public String getRandomStudent(Model model, OAuth2AuthenticationToken token){
+        return "instructor/random_student_generator";
     }
     
     public class searchUpVotedWrapper implements Comparable<searchUpVotedWrapper> {
