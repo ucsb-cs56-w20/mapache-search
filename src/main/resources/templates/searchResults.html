@@ -32,6 +32,10 @@
             }
           }
           var query = $(this).parent().data("url");
+
+          //what the user typed in the search box
+          var queryString = $(".form-control").val();
+          
           // hit the API endpoint to change the vote in the backend
           $.ajax({
             url: "../updateVote",
@@ -39,7 +43,7 @@
             data: {
               direction: direction,
               id: $(this).parent().attr("id"),
-              searchQuery: query,
+              searchQuery: queryString,
               url: encodeURI(query)
             }
           })

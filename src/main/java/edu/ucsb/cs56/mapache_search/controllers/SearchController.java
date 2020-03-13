@@ -265,7 +265,7 @@ public class SearchController {
 
     @GetMapping("/updateVote")
     @ResponseBody
-    public String updateVote(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "id", required = true) long id, Model model, @RequestParam(name = "searchQuery", required = true) String searchQuery , OAuth2AuthenticationToken token) throws IOException {
+    public String updateVote(@RequestParam(name = "direction", required = true) String direction, @RequestParam(name = "id", required = true) long id, @RequestParam(name = "searchQuery", required = true) String query, Model model, OAuth2AuthenticationToken token) throws IOException {
         long voteCount = 0;
 
         List<SearchResultEntity> matchingResults = searchRepository.findById(id);
@@ -285,7 +285,7 @@ public class SearchController {
                 vote.setUser(user);
                 vote.setResult(result);
                 vote.setTimestamp(new Date());
-                vote.setSearchQuery(searchQuery);
+                vote.setSearchQuery(query);
                 logger.debug("[VOTE ADDED] " + vote);
                 if (direction.equals("up")){
                     vote.setUpvote(true);
