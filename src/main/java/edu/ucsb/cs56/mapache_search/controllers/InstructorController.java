@@ -38,12 +38,12 @@ public class InstructorController {
 
     @Autowired
     private UserRepository userRepository;
-    
-    @Autowired
-    private AuthControllerAdvice controllerAdvice;
 
     @Autowired
     private VoteRepository voteRepository;
+
+    @Autowired
+    private AuthControllerAdvice controllerAdvice;
 
     @Autowired
     private SearchTermsRepository searchtermsRepository;
@@ -71,7 +71,7 @@ public class InstructorController {
         model.addAttribute("searchCount",amountSearched);
         return "instructor/index";
     }
-
+    
     @GetMapping("instructor/data")
     public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
@@ -129,53 +129,6 @@ public class InstructorController {
         return "instructor/popular_searches";
     }
     
-    public class searchUpVotedWrapper implements Comparable<searchUpVotedWrapper> {
-        private SearchResultEntity result;
-
-        public searchUpVotedWrapper(SearchResultEntity result) {
-            this.result = result;
-        }
-
-        public SearchResultEntity getResult() {
-            return result;
-        }
-
-        public int compareTo(searchUpVotedWrapper objSearch) {
-            if (getResult().getVotecount() > objSearch.getResult().getVotecount()) {
-                return 1;
-            }
-            else if (getResult().getVotecount() < objSearch.getResult().getVotecount()) {
-                return -1;
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    public class searchedTermsWrapper implements Comparable<searchedTermsWrapper> {
-        private SearchTerms result;
-
-        public searchedTermsWrapper(SearchTerms result) {
-            this.result = result;
-        }
-
-        public SearchTerms getResult() {
-            return result;
-        }
-
-        public int compareTo(searchedTermsWrapper objSearch) {
-            if (getResult().getCount() > objSearch.getResult().getCount()) {
-                return 1;
-            }
-            else if (getResult().getCount() < objSearch.getResult().getCount()) {
-                return -1;
-            } else {
-                return 0;
-            }
-        }
-    }
-
-
     @PostMapping("/instructor/delete/{username}")
     public String deleteViewer(@PathVariable("username") String username, Model model,
             RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
@@ -224,6 +177,58 @@ public class InstructorController {
         return "instructor/add_instructor";
     }
     
+
+    @GetMapping("/instructor/random_student_generator")
+    public String getRandomStudent(Model model, OAuth2AuthenticationToken token){
+        return "instructor/random_student_generator";
+    }
+    
+    public class searchUpVotedWrapper implements Comparable<searchUpVotedWrapper> {
+        private SearchResultEntity result;
+
+        public searchUpVotedWrapper(SearchResultEntity result) {
+            this.result = result;
+        }
+
+        public SearchResultEntity getResult() {
+            return result;
+        }
+
+        public int compareTo(searchUpVotedWrapper objSearch) {
+            if (getResult().getVotecount() > objSearch.getResult().getVotecount()) {
+                return 1;
+            }
+            else if (getResult().getVotecount() < objSearch.getResult().getVotecount()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    public class searchedTermsWrapper implements Comparable<searchedTermsWrapper> {
+        private SearchTerms result;
+
+        public searchedTermsWrapper(SearchTerms result) {
+            this.result = result;
+        }
+
+        public SearchTerms getResult() {
+            return result;
+        }
+
+        public int compareTo(searchedTermsWrapper objSearch) {
+            if (getResult().getCount() > objSearch.getResult().getCount()) {
+                return 1;
+            }
+            else if (getResult().getCount() < objSearch.getResult().getCount()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
 
     @GetMapping("/instructor/random_student_generator")
     public String getRandomStudent(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs){

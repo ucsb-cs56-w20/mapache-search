@@ -3,8 +3,8 @@
   <head>
     <title>Instructor</title>
     <div th:replace="fragments/bootstrap_head.html"></div>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
       <div th:replace="fragments/bootstrap_nav_header.html"></div>
       <h2 class="text-center">Instructor Page</h2>
@@ -18,7 +18,15 @@
         <a class="dropdown-item" href = /instructor/data>Data_Stub</a>
       </div>
       </div>
-    <table class = "table">
+    <div>
+      <a class="dropdown-toggle" href="#" id="Dropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Edit Instructors
+    </a>
+       <div class="dropdown-menu" aria-labelledby="Dropdown2">
+        <a class="dropdown-item" href = /instructor/add_instructor>Add/Remove Instructor</a>
+      </div>
+      </div>
+      <table class = "table">
       <thead class="text-center">
           <tr>
               <th>Amount of Searches Made</th>
@@ -27,11 +35,11 @@
       <tbody class="text-center">
           <td><a th:text="${searchCount}"></a></td>
       </tbody>
-    </table>
-    <h5><u>Student Information Generator</u></h5>
-            <a href=/instructor/random_student_generator>
-                Click Here to Generate a Random Student's Information
-            </a>
+      </table>
+      <h5><u>Student Information Generator</u></h5>
+      <a href=/instructor/random_student_generator>
+        Click Here to Generate a Random Student's Information
+      </a>
       <div th:replace="fragments/bootstrap_footer.html"></div>
     </div>
     <div th:replace="fragments/bootstrap_scripts.html"></div>
