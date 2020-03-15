@@ -48,7 +48,7 @@ public class OAuthUtils {
         Collection<? extends GrantedAuthority> authorities = principal.getAuthorities();
 
         String authorizedClientRegistrationId = "my-oauth-client";
-
+        
         return new OAuth2AuthenticationToken(principal, authorities, authorizedClientRegistrationId);
     }
 }
