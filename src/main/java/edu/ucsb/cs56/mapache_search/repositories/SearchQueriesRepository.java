@@ -14,8 +14,7 @@ import java.util.Date;
 
 @Repository
 public interface SearchQueriesRepository extends CrudRepository<SearchQueries, Long> {
-    // List<SearchQueries> findMostRecentEntries();
-	List<SearchQueries> findByUser(AppUser user);
     List<SearchQueries> findAllByOrderByTimestampDesc();
+
     
 };
