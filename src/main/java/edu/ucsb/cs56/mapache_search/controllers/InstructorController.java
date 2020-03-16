@@ -152,7 +152,6 @@ public class InstructorController {
         appUser.setIsInstructor(false);
         redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
         model.addAttribute("newInstructor", new AppUser());
-        model.addAttribute("appUsers", userRepository.findAll());
         return "redirect:/instructor/add_instructor";
     }
 
