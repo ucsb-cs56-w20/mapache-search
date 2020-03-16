@@ -35,6 +35,10 @@
       <tbody class="text-center">
           <td><a th:text="${searchCount}"></a></td>
       </tbody>
+    </table>
+    <form action="#" data-th-action="@{/VoteHistory}" data-th-object="${model}" method="get">
+      <button type="submit" name="Download" class="btn btn-primary">Download Vote CSV</button>
+    </form>
       </table>
       <h5><u>Student Information Generator</u></h5>
       <a href=/instructor/random_student_generator>

@@ -14,6 +14,15 @@ import edu.ucsb.cs56.mapache_search.repositories.VoteRepository;
 import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
 import edu.ucsb.cs56.mapache_search.repositories.SearchTermsRepository;
 
+import edu.ucsb.cs56.mapache_search.entities.AppUser;
+import edu.ucsb.cs56.mapache_search.repositories.UserRepository;
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.membership.MembershipService;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
@@ -143,7 +152,6 @@ public class InstructorController {
         appUser.setIsInstructor(false);
         redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
         model.addAttribute("newInstructor", new AppUser());
-        model.addAttribute("appUsers", userRepository.findAll());
         return "redirect:/instructor/add_instructor";
     }
 
