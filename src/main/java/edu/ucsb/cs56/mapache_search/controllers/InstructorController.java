@@ -23,10 +23,12 @@ import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ucsb.cs56.mapache_search.membership.AuthControllerAdvice;
 import edu.ucsb.cs56.mapache_search.membership.MembershipService;
 import edu.ucsb.cs56.mapache_search.entities.SearchResultEntity;
 import edu.ucsb.cs56.mapache_search.entities.UserVote;
 import edu.ucsb.cs56.mapache_search.entities.SearchTerms;
+import edu.ucsb.cs56.mapache_search.entities.AppUser;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.ArrayList;
@@ -37,17 +39,20 @@ import org.slf4j.LoggerFactory;
 
 @Controller
 public class InstructorController {
+
+    static final Logger logger = LoggerFactory.getLogger(InstructorController.class);
+
     @Autowired
     private MembershipService ms;
 
     @Autowired
     private UserRepository userRepository;
-    
-    @Autowired
-    private AuthControllerAdvice controllerAdvice;
 
     @Autowired
     private VoteRepository voteRepository;
+
+    @Autowired
+    private AuthControllerAdvice controllerAdvice;
 
     @Autowired
     private SearchTermsRepository searchtermsRepository;
@@ -56,11 +61,11 @@ public class InstructorController {
     public InstructorController(UserRepository repo) {
         this.userRepository = repo;
     }
-    
+
     @GetMapping("instructor")
-    public String index(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
-        String role = ms.role(token);
-        if (!role.equals("Admin")) {
+    public String index(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs) {
+       AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+       if (!user.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
@@ -75,26 +80,26 @@ public class InstructorController {
         model.addAttribute("searchCount",amountSearched);
         return "instructor/index";
     }
-
+    
     @GetMapping("instructor/data")
     public String data(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
         String role = ms.role(token);
         if (!role.equals("Admin")) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
-            return "redirect:/";
+            return "redirect:/"; 
         }
         return "instructor/data_stub";
     }
 
     @GetMapping("instructor/upvotes")
     public String upvotes(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
-        String role = ms.role(token);
-        if (!role.equals("Admin")) {
+        AppUser current = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+       if (!current.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
-        }
+       }
         List<UserVote> upVoteList = voteRepository.findAll();
         ArrayList<searchUpVotedWrapper> upVotedSearches = new ArrayList<>();
         for(int pos = 0; pos < upVoteList.size(); pos++) {
@@ -112,12 +117,12 @@ public class InstructorController {
     
     @GetMapping("instructor/popular_searches")
     public String searches(Model model, RedirectAttributes redirAttrs, AppUser user, OAuth2AuthenticationToken token) {
-        String role = ms.role(token);
-        if (!role.equals("Admin")) {
+        AppUser current = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+       if (!current.getIsInstructor()) {
             redirAttrs.addFlashAttribute("alertDanger",
                     "You do not have permission to access that page");
             return "redirect:/";
-        }
+       }
         List<SearchTerms> searchTermsList = searchtermsRepository.findAll();
         ArrayList<searchedTermsWrapper> searchedTerms = new ArrayList<>();
         for(int pos = 0; pos < searchTermsList.size(); pos++) {
@@ -133,11 +138,54 @@ public class InstructorController {
         return "instructor/popular_searches";
     }
     
+    @PostMapping("/instructor/delete/{username}")
+    public String deleteViewer(@PathVariable("username") String username, Model model,
+            RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
+        AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/"; 
+        }
 
-    @GetMapping("/instructor/random_student_generator")
-    public String getRandomStudent(Model model, OAuth2AuthenticationToken token){
-        return "instructor/random_student_generator";
+        AppUser appUser = userRepository.findByUsername(username).get(0);
+        appUser.setIsInstructor(false);
+        redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully deleted.");      
+        model.addAttribute("newInstructor", new AppUser());
+        model.addAttribute("appUsers", userRepository.findAll());
+        return "redirect:/instructor/add_instructor";
     }
+
+    @PostMapping("/instructor/add/{username}")
+    public String addInstructor(@PathVariable("username") String username, Model model,
+            RedirectAttributes redirAttrs, OAuth2AuthenticationToken token) {
+        AppUser user = userRepository.findByUsername(controllerAdvice.getTheUsername(token)).get(0);
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        AppUser appUser = userRepository.findByUsername(username).get(0);
+        appUser.setIsInstructor(true);
+        redirAttrs.addFlashAttribute("alertSuccess", "Instructor successfully added.");   
+        model.addAttribute("newInstructor", new AppUser());
+        model.addAttribute("appUsers", userRepository.findAll());
+        return "redirect:/instructor/add_instructor";
+    }
+
+
+    @GetMapping("/instructor/add_instructor")
+    public String getaddInstructor(Model model, RedirectAttributes redirAttrs, OAuth2AuthenticationToken token, AppUser newInstructor){
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        model.addAttribute("appUsers", userRepository.findAll());
+        return "instructor/add_instructor";
+    }
+    
     public class searchUpVotedWrapper implements Comparable<searchUpVotedWrapper> {
         private SearchResultEntity result;
 
@@ -184,4 +232,15 @@ public class InstructorController {
         }
     }
 
+
+    @GetMapping("/instructor/random_student_generator")
+    public String getRandomStudent(Model model, OAuth2AuthenticationToken token, RedirectAttributes redirAttrs){
+        AppUser user = userRepository.findByUid(controllerAdvice.getUid(token)).get(0);
+        if (!user.getIsInstructor()) {
+            redirAttrs.addFlashAttribute("alertDanger",
+                    "You do not have permission to access that page");
+            return "redirect:/";
+        }
+        return "instructor/random_student_generator";
+    }
 }

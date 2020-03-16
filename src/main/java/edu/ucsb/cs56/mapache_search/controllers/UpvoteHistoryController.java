@@ -60,5 +60,6 @@ public class UpvoteHistoryController {
         model.addAttribute("userVotes", byUser);
         return "user/upvotedescending";
     }
+
 }
 
