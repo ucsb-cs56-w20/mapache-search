@@ -174,12 +174,6 @@ public class InstructorController {
         return "instructor/add_instructor";
     }
     
-
-    @GetMapping("/instructor/random_student_generator")
-    public String getRandomStudent(Model model, OAuth2AuthenticationToken token){
-        return "instructor/random_student_generator";
-    }
-    
     public class searchUpVotedWrapper implements Comparable<searchUpVotedWrapper> {
         private SearchResultEntity result;
 
