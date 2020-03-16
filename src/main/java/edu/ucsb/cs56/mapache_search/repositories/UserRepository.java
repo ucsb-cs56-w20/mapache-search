@@ -11,5 +11,6 @@ import edu.ucsb.cs56.mapache_search.entities.AppUser;
 public interface UserRepository extends CrudRepository<AppUser, Long> {
    List<AppUser> findByUid(String uid); //any such attribute will work, as long as it's associated with the getter/setter
    List<AppUser> findByUsername(String username); //any such attribute will work, as long as it's associated with the getter/setter
-  
+   List<AppUser> findAll();
+
 }
